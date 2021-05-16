@@ -64,10 +64,9 @@ def do_make():
     os.chdir(build_dir)
 
     run_cmd([cmake_path, ".."])
-    run_cmd([cmake_path, "--build", ".", "--config", "Release"])
+    run_cmd([cmake_path, "--build", ".", "--config", "Release", "--verbose"])
     run_cmd([ctest_path])
     #run_cmd([cmake_path, "--install", ".", "--config", "Release"])
-    #run_cmd([cmake_path, "--verbose"])
 
     install_src_dir = os.path.join(build_dir, install_dir_name)
     install_dest_dir = os.path.join(cwd, install_dir_name)
