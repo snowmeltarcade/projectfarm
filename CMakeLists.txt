@@ -41,8 +41,6 @@ if (UNIX AND NOT APPLE)
 	set(LINUX TRUE)
 endif()
 
-configure_file("nuget.nuspec.in" "nuget.nuspec")
-
 if (MSVC)
 	if (IS_DEBUG)
 		set(CMAKE_INSTALL_DEBUG_LIBRARIES TRUE)
@@ -78,7 +76,8 @@ install(
 
 include("${CMAKE_CURRENT_LIST_DIR}/cmake/Functions.cmake")
 
-#add_subdirectory("libraries")
+set("LIBRARIES_ROOT_DIR" "${CMAKE_CURRENT_LIST_DIR}/libraries/")
+include("${CMAKE_CURRENT_LIST_DIR}/cmake/libraries.cmake")
 
 #find_package(Catch2 REQUIRED)
 

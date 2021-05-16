@@ -54,15 +54,18 @@ def cleanup_environment(build_dir, install_dir):
     print("Build environment prepared.")
 
 
-def do_make(build_dir):
+def do_make():
     print("Making...")
+
+    build_dir = os.path.join(cwd, "build")
+    make_dir(build_dir)
 
     os.chdir(build_dir)
 
-    run_cmd(["cmake", ".."])
-    run_cmd(["cmake", "--build", ".", "--config", "Release"])
-    run_cmd(["cmake", "--install", ".", "--config", "Release"])
-    run_cmd(["ctest", "--verbose"])
+    run_cmd([cmake_path, ".."])
+    run_cmd([cmake_path, "--build", ".", "--config", "Release"])
+    #run_cmd([cmake_path, "--install", ".", "--config", "Release"])
+    #run_cmd([cmake_path, "--verbose"])
 
     install_src_dir = os.path.join(build_dir, install_dir_name)
     install_dest_dir = os.path.join(cwd, install_dir_name)
@@ -138,9 +141,9 @@ def get_project_version():
 
 print("Starting build...")
 
-install_dependencies()
+#install_dependencies()
 
-#install_dir = do_make(build_dir)
+install_dir = do_make()
 #do_install(install_dir)
 #cleanup_environment(build_dir, install_dir)
 
