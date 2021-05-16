@@ -55,6 +55,14 @@ def cleanup_environment(build_dir, install_dir):
     print("Build environment prepared.")
 
 
+def get_platform_name():
+    if platform.system() == "Darwin":
+        return "darwin"
+    elif platform.system() == "Linux":
+        return "linux"
+    else:
+        return "windows"
+
 def do_make():
     print("Making...")
 
@@ -63,7 +71,12 @@ def do_make():
 
     os.chdir(build_dir)
 
-    run_cmd([cmake_path, ".."])
+    platform_name = get_platform_name()
+
+    clang_directory = os.path.join(cwd, "libraries", "clang-12", f"{platform_name}", "bin", "clang")
+    clangxx_directory = os.path.join(cwd, "libraries", "clang-12", f"{platform_name}", "bin", "clang++")
+
+    run_cmd([cmake_path, "-GNinja", f"-DCMAKE_C_COMPILER={clang_directory}", f"-DCMAKE_CXX_COMPILER={clangxx_directory}", ".."])
     run_cmd([cmake_path, "--build", ".", "--config", "Release", "--verbose"])
     run_cmd([ctest_path])
     run_cmd([cmake_path, "--install", ".", "--config", "Release"])
