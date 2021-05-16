@@ -79,14 +79,5 @@ include("${CMAKE_CURRENT_LIST_DIR}/cmake/Functions.cmake")
 set("LIBRARIES_ROOT_DIR" "${CMAKE_CURRENT_LIST_DIR}/libraries")
 include("${CMAKE_CURRENT_LIST_DIR}/cmake/libraries.cmake")
 
-#add_subdirectory("${LIBRARIES_ROOT_DIR}/catch2")
-
-#find_package(Catch2 REQUIRED)
-
-enable_testing()
-
-include(CTest)
-#include(Catch)
-
 add_subdirectory("src")
 #add_subdirectory("data")
