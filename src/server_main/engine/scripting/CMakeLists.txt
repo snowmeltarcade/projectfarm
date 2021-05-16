@@ -1,0 +1,13 @@
+target_sources(
+    "${SERVER_PROJECT_NAME}"
+    PUBLIC
+        server_script_factory.h
+        character_script.h
+        character_script_object.h
+        world_script.h
+    PRIVATE
+        client_script_factory.cpp
+        character_script.cpp
+        character_script_object.cpp
+        world_script.cpp
+)

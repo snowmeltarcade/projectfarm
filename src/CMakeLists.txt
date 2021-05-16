@@ -33,7 +33,7 @@ configure_file("version.h.in" "version.h")
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
 add_subdirectory("shared_library")
-#add_subdirectory("server_main")
+add_subdirectory("server_main")
 
 if (NOT LINUX)
 	#add_subdirectory("client_main")

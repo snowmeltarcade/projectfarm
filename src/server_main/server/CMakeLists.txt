@@ -1,0 +1,18 @@
+target_sources(
+	"${SERVER_PROJECT_NAME}"
+	PUBLIC
+		server.h
+		client.h
+		system_arguments.h
+		server_config.h
+		client_connection_manager.h
+		client_connection_manager_worker.h
+	PRIVATE
+		server.cpp
+		client.cpp
+		system_arguments.cpp
+		server_config.cpp
+		client_connection_manager.cpp
+		client_connection_manager_worker.cpp
+		platform.cpp
+)

@@ -1,0 +1,14 @@
+target_sources(
+    "${SERVER_PROJECT_NAME}"
+    PUBLIC
+        entity.h
+        world_entity.h
+        character.h
+        action_animations_manager.h
+        consume_action_animations_manager.h
+    PRIVATE
+        entity.cpp
+        world_entity.cpp
+        character.cpp
+        action_animations_manager.cpp
+)
