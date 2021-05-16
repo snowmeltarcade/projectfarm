@@ -1,0 +1,1 @@
+add_subdirectory("${LIBRARIES_ROOT_DIR}/sqlite3")
