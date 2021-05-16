@@ -7,6 +7,7 @@ import zipfile
 
 git_path = shutil.which("git")
 cmake_path = shutil.which("cmake")
+ctest_path = shutil.which("ctest")
 python3_path = shutil.which("python3")
 
 cwd = os.getcwd()
@@ -64,6 +65,7 @@ def do_make():
 
     run_cmd([cmake_path, ".."])
     run_cmd([cmake_path, "--build", ".", "--config", "Release"])
+    run_cmd([ctest_path])
     #run_cmd([cmake_path, "--install", ".", "--config", "Release"])
     #run_cmd([cmake_path, "--verbose"])
 
