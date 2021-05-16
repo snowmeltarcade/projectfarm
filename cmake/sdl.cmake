@@ -1,37 +1,34 @@
-if (LINUX)
-    set(SDL2_INCLUDE_DIRS "/usr/include/SDL2" CACHE INTERNAL "SDL2_INCLUDE_DIRS")
-    set(SDL2_NET_INCLUDE_DIRS "/usr/include/SDL2" CACHE INTERNAL "SDL2_NET_INCLUDE_DIRS")
-    set(SDL2_IMG_INCLUDE_DIRS "/usr/include/SDL2" CACHE INTERNAL "SDL2_IMG_INCLUDE_DIRS")
-    set(SDL2_TTF_INCLUDE_DIRS "/usr/include/SDL2" CACHE INTERNAL "SDL2_TTF_INCLUDE_DIRS")
+if (MSVC)
+    set(SDL2_INCLUDE_DIRS "${LIBRARIES_ROOT_DIR}/sdl/windows/include/SDL2" CACHE INTERNAL "SDL2_INCLUDE_DIRS")
+    set(SDL2_NET_INCLUDE_DIRS "${LIBRARIES_ROOT_DIR}/sdl_net/windows/include/SDL2" CACHE INTERNAL "SDL2_NET_INCLUDE_DIRS")
+    set(SDL2_IMG_INCLUDE_DIRS "${LIBRARIES_ROOT_DIR}/sdl_image/windows/include/SDL2" CACHE INTERNAL "SDL2_IMG_INCLUDE_DIRS")
+    set(SDL2_TTF_INCLUDE_DIRS "${LIBRARIES_ROOT_DIR}/sdl_ttf/windows/include/SDL2" CACHE INTERNAL "SDL2_TTF_INCLUDE_DIRS")
+elseif (LINUX)
+    set(SDL2_INCLUDE_DIRS "${LIBRARIES_ROOT_DIR}/sdl/linux/include/SDL2" CACHE INTERNAL "SDL2_INCLUDE_DIRS")
+    set(SDL2_NET_INCLUDE_DIRS "${LIBRARIES_ROOT_DIR}/sdl_net/linux/include/SDL2" CACHE INTERNAL "SDL2_NET_INCLUDE_DIRS")
+    set(SDL2_IMG_INCLUDE_DIRS "${LIBRARIES_ROOT_DIR}/sdl_image/linux/include/SDL2" CACHE INTERNAL "SDL2_IMG_INCLUDE_DIRS")
+    set(SDL2_TTF_INCLUDE_DIRS "${LIBRARIES_ROOT_DIR}/sdl_ttf/linux/include/SDL2" CACHE INTERNAL "SDL2_TTF_INCLUDE_DIRS")
 else()
     set(SDL2_INCLUDE_DIRS "${LIBRARIES_ROOT_DIR}/sdl/darwin/include/SDL2" CACHE INTERNAL "SDL2_INCLUDE_DIRS")
     set(SDL2_NET_INCLUDE_DIRS "${LIBRARIES_ROOT_DIR}/sdl_net/darwin/include/SDL2" CACHE INTERNAL "SDL2_NET_INCLUDE_DIRS")
-    set(SDL2_IMG_INCLUDE_DIRS "${LIBRARIES_ROOT_DIR}/sdl_img/darwin/include/SDL2" CACHE INTERNAL "SDL2_IMG_INCLUDE_DIRS")
+    set(SDL2_IMG_INCLUDE_DIRS "${LIBRARIES_ROOT_DIR}/sdl_image/darwin/include/SDL2" CACHE INTERNAL "SDL2_IMG_INCLUDE_DIRS")
     set(SDL2_TTF_INCLUDE_DIRS "${LIBRARIES_ROOT_DIR}/sdl_ttf/darwin/include/SDL2" CACHE INTERNAL "SDL2_TTF_INCLUDE_DIRS")
 endif()
 
 if (MSVC)
-    # Support both 32 and 64 bit builds
+    # Only support 64-bit
     if (${CMAKE_SIZEOF_VOID_P} MATCHES 8)
         set(SDL2_LIBRARIES "${LIBRARIES_ROOT_DIR}/sdl/lib/x64/SDL2.lib;${LIBRARIES_ROOT_DIR}/sdl/lib/x64/SDL2main.lib" CACHE INTERNAL "SDL2_LIBRARIES")
         set(SDL2_NET_LIBRARIES "${LIBRARIES_ROOT_DIR}/sdl_net/lib/x64/SDL2_net.lib" CACHE INTERNAL "SDL2_NET_LIBRARIES")
-        set(SDL2_IMG_LIBRARIES "${LIBRARIES_ROOT_DIR}/sdl_img/lib/x64/SDL2_image.lib" CACHE INTERNAL "SDL2_IMG_LIBRARIES")
+        set(SDL2_IMG_LIBRARIES "${LIBRARIES_ROOT_DIR}/sdl_image/lib/x64/SDL2_image.lib" CACHE INTERNAL "SDL2_IMG_LIBRARIES")
         set(SDL2_TTF_LIBRARIES "${LIBRARIES_ROOT_DIR}/sdl_ttf/lib/x64/SDL2_ttf.lib" CACHE INTERNAL "SDL2_TTF_LIBRARIES")
 
         set(SDL2_DLL_PATH "${LIBRARIES_ROOT_DIR}/sdl/lib/x64/SDL2.dll" CACHE INTERNAL "SDL2_DLL_PATH")
         set(SDL2_NET_DLL_PATH "${LIBRARIES_ROOT_DIR}/sdl_net/lib/x64/SDL2_net.dll" CACHE INTERNAL "SDL2_NET_DLL_PATH")
-        set(SDL2_IMG_DLL_PATH "${LIBRARIES_ROOT_DIR}/sdl_img/lib/x64/SDL2_image.dll;${LIBRARIES_ROOT_DIR}/sdl_img/lib/x64/libjpeg-9.dll;${LIBRARIES_ROOT_DIR}/sdl_img/lib/x64/libpng16-16.dll;${LIBRARIES_ROOT_DIR}/sdl_img/lib/x64/libtiff-5.dll;${LIBRARIES_ROOT_DIR}/sdl_img/lib/x64/libwebp-7.dll;${LIBRARIES_ROOT_DIR}/sdl/sdl_img/x64/zlib1.dll" CACHE INTERNAL "SDL2_IMG_DLL_PATH")
+        set(SDL2_IMG_DLL_PATH "${LIBRARIES_ROOT_DIR}/sdl_image/lib/x64/SDL2_image.dll;${LIBRARIES_ROOT_DIR}/sdl_img/lib/x64/libjpeg-9.dll;${LIBRARIES_ROOT_DIR}/sdl_img/lib/x64/libpng16-16.dll;${LIBRARIES_ROOT_DIR}/sdl_img/lib/x64/libtiff-5.dll;${LIBRARIES_ROOT_DIR}/sdl_img/lib/x64/libwebp-7.dll;${LIBRARIES_ROOT_DIR}/sdl/sdl_img/x64/zlib1.dll" CACHE INTERNAL "SDL2_IMG_DLL_PATH")
         set(SDL2_TTF_DLL_PATH "${LIBRARIES_ROOT_DIR}/sdl_ttf/lib/x64/SDL2_ttf.dll;${LIBRARIES_ROOT_DIR}/sdl_ttf/lib/x64/libfreetype-6.dll" CACHE INTERNAL "SDL2_TTF_DLL_PATH")
     else()
-        set(SDL2_LIBRARIES "${LIBRARIES_ROOT_DIR}/sdl/lib/x86/SDL2.lib;${LIBRARIES_ROOT_DIR}/sdl/lib/x86/SDL2main.lib" CACHE INTERNAL "SDL2_LIBRARIES")
-        set(SDL2_NET_LIBRARIES "${LIBRARIES_ROOT_DIR}/sdl_net/lib/x86/SDL2_net.lib" CACHE INTERNAL "SDL2_NET_LIBRARIES")
-        set(SDL2_IMG_LIBRARIES "${LIBRARIES_ROOT_DIR}/sdl_img/lib/x86/SDL2_image.lib" CACHE INTERNAL "SDL2_IMG_LIBRARIES")
-        set(SDL2_TTF_LIBRARIES "${LIBRARIES_ROOT_DIR}/sdl_ttf/lib/x86/SDL2_ttf.lib" CACHE INTERNAL "SDL2_TTF_LIBRARIES")
-
-        set(SDL2_DLL_PATH "${LIBRARIES_ROOT_DIR}/sdl/lib/x86/SDL2.dll" CACHE INTERNAL "SDL2_DLL_PATH")
-        set(SDL2_NET_DLL_PATH "${LIBRARIES_ROOT_DIR}/sdl_net/lib/x86/SDL2_net.dll" CACHE INTERNAL "SDL2_NET_DLL_PATH")
-        set(SDL2_IMG_DLL_PATH "${LIBRARIES_ROOT_DIR}/sdl_img/lib/x86/SDL2_image.dll;${LIBRARIES_ROOT_DIR}/sdl_img/lib/x86/libjpeg-9.dll;${LIBRARIES_ROOT_DIR}/sdl_img/lib/x86/libpng16-16.dll;${LIBRARIES_ROOT_DIR}/sdl_img/lib/x86/libtiff-5.dll;${LIBRARIES_ROOT_DIR}/sdl_img/lib/x86/libwebp-7.dll;${LIBRARIES_ROOT_DIR}/sdl_img/lib/x86/zlib1.dll" CACHE INTERNAL "SDL2_IMG_DLL_PATH")
-        set(SDL2_TTF_DLL_PATH "${LIBRARIES_ROOT_DIR}/sdl_ttf/lib/x86/SDL2_ttf.dll;${LIBRARIES_ROOT_DIR}/sdl_ttf/lib/x86/libfreetype-6.dll" CACHE INTERNAL "SDL2_TTF_DLL_PATH")
+        message(ERROR "32-bit is not supported.")
     endif()
 elseif (LINUX)
     set(OpenGL_GL_PREFERENCE "GLVND")
@@ -48,9 +45,9 @@ elseif (LINUX)
     set(SDL2_IMAGE_LIBRARIES "${SDL2_IMAGE_LIBRARIES}" CACHE INTERNAL "SDL2_IMAGE_LIBRARIES")
     set(SDL2_TTF_LIBRARIES "${SDL2_TTF_LIBRARIES}" CACHE INTERNAL "SDL2_TTF_LIBRARIES")
 else()
-    set(SDL2_LIBRARIES "${LIBRARIES_ROOT_DIR}/sdl/darwin/libSDL2.a" CACHE INTERNAL "SDL2_LIBRARIES")
+    set(SDL2_LIBRARIES "${LIBRARIES_ROOT_DIR}/sdl/darwin/libSDL2.a;${LIBRARIES_ROOT_DIR}/sdl/darwin/libSDL2main.a" CACHE INTERNAL "SDL2_LIBRARIES")
     set(SDL2_NET_LIBRARIES "${LIBRARIES_ROOT_DIR}/sdl_net/darwin/libSDL2_net.a" CACHE INTERNAL "SDL2_NET_LIBRARIES")
-    set(SDL2_IMG_LIBRARIES "${LIBRARIES_ROOT_DIR}/sdl_img/darwin/libSDL2_image.a" CACHE INTERNAL "SDL2_IMG_LIBRARIES")
+    set(SDL2_IMG_LIBRARIES "${LIBRARIES_ROOT_DIR}/sdl_image/darwin/libSDL2_image.a" CACHE INTERNAL "SDL2_IMG_LIBRARIES")
     set(SDL2_TTF_LIBRARIES "${LIBRARIES_ROOT_DIR}/sdl_ttf/darwin//libSDL2_ttf.a" CACHE INTERNAL "SDL2_TTF_LIBRARIES")
 endif()
 
@@ -62,10 +59,6 @@ string(STRIP "${SDL2_TTF_LIBRARIES}" SDL2_TTF_LIBRARIES)
 if (NOT LINUX)
     install(
         FILES
-            ${SDL2_LIBRARIES}
-            ${SDL2_NET_LIBRARIES}
-            ${SDL2_IMG_LIBRARIES}
-            ${SDL2_TTF_LIBRARIES}
             ${SDL2_DLL_PATH}
             ${SDL2_NET_DLL_PATH}
             ${SDL2_IMG_DLL_PATH}
@@ -76,10 +69,6 @@ if (NOT LINUX)
 
     install(
         FILES
-            ${SDL2_LIBRARIES}
-            ${SDL2_NET_LIBRARIES}
-            ${SDL2_IMG_LIBRARIES}
-            ${SDL2_TTF_LIBRARIES}
             ${SDL2_DLL_PATH}
             ${SDL2_NET_DLL_PATH}
             ${SDL2_IMG_DLL_PATH}
@@ -90,10 +79,6 @@ if (NOT LINUX)
 
     install(
         FILES
-            ${SDL2_LIBRARIES}
-            ${SDL2_NET_LIBRARIES}
-            ${SDL2_IMG_LIBRARIES}
-            ${SDL2_TTF_LIBRARIES}
             ${SDL2_DLL_PATH}
             ${SDL2_NET_DLL_PATH}
             ${SDL2_IMG_DLL_PATH}
