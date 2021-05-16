@@ -1,0 +1,12 @@
+target_sources(
+    "${SHARED_LIBRARY_PROJECT_NAME}"
+    PRIVATE
+        stopwatch.cpp
+        timer.cpp
+        clock.cpp
+    PUBLIC
+        stopwatch.h
+        timer.h
+        consume_timer.h
+        clock.h
+)

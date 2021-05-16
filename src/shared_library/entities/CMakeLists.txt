@@ -1,0 +1,14 @@
+target_sources(
+    "${SHARED_LIBRARY_PROJECT_NAME}"
+    PRIVATE
+        character_states.cpp
+        character_state_values.cpp
+        character_appearance_details.cpp
+    PUBLIC
+        entity_types.h
+        character_states.h
+        character_state_values.h
+        character_behaviour_states.h
+        character_behaviour_state_values.h
+        character_appearance_details.h
+)

@@ -1,0 +1,35 @@
+target_sources(
+	"${SHARED_LIBRARY_PROJECT_NAME}"
+	PRIVATE
+		server_client_load_world.cpp
+		client_server_world_loaded.cpp
+		server_client_entity_update.cpp
+		server_client_set_player_details.cpp
+		client_server_test_udp.cpp
+		client_server_entity_update.cpp
+		server_client_player_joined_world.cpp
+		server_client_player_left_world.cpp
+		server_client_remove_entity_from_world.cpp
+		server_client_character_set_details.cpp
+		client_server_player_authenticate.cpp
+		client_server_request_hashed_password.cpp
+		server_client_send_hashed_password.cpp
+		client_server_chatbox_message.cpp
+		server_client_chatbox_message.cpp
+	PUBLIC
+		server_client_load_world.h
+		client_server_world_loaded.h
+		server_client_entity_update.h
+		server_client_set_player_details.h
+		client_server_test_udp.h
+		client_server_entity_update.h
+		server_client_player_joined_world.h
+		server_client_player_left_world.h
+		server_client_remove_entity_from_world.h
+		server_client_character_set_details.h
+		client_server_player_authenticate.h
+		client_server_request_hashed_password.h
+		server_client_send_hashed_password.h
+		client_server_chatbox_message.h
+		server_client_chatbox_message.h
+)

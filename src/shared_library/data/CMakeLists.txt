@@ -1,0 +1,9 @@
+target_sources(
+        "${SHARED_LIBRARY_PROJECT_NAME}"
+        PRIVATE
+            data_provider.cpp
+        PUBLIC
+            data_provider.h
+            consume_data_provider.h
+            data_provider_locations.h
+)

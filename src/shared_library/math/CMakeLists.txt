@@ -1,0 +1,10 @@
+target_sources(
+    "${SHARED_LIBRARY_PROJECT_NAME}"
+    PRIVATE
+    PUBLIC
+        lerper.h
+        random_engine.h
+        consume_random_engine.h
+        hex.h
+        vector2d.h
+)

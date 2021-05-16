@@ -1,0 +1,9 @@
+target_sources(
+    "${SHARED_LIBRARY_PROJECT_NAME}"
+    PRIVATE
+        state_machine.cpp
+        state_item.cpp
+    PUBLIC
+        state_machine.h
+        state_item.h
+)

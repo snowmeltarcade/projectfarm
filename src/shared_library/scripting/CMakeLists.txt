@@ -1,0 +1,21 @@
+target_sources(
+    "${SHARED_LIBRARY_PROJECT_NAME}"
+    PRIVATE
+        script_system.cpp
+        script.cpp
+        function_parameter.cpp
+        gc_persistent.cpp
+    PUBLIC
+        script_system.h
+        script.h
+        script_types.h
+        function_types.h
+        consume_script_system.h
+        script_factory.h
+        function_parameter_types.h
+        function_parameter.h
+        gc_persistent.h
+        include_script.h
+)
+
+add_subdirectory("math")

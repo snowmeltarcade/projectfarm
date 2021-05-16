@@ -1,0 +1,14 @@
+target_sources(
+	"${SHARED_LIBRARY_PROJECT_NAME}"
+	PRIVATE
+		strings.cpp
+		memory.cpp
+		stream.cpp
+		sdl_util.cpp
+	PUBLIC
+		util.h
+		strings.h
+		memory.h
+		stream.h
+		sdl_util.h
+)

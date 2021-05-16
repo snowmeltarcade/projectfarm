@@ -1,0 +1,21 @@
+target_sources(
+	"${SHARED_LIBRARY_PROJECT_NAME}"
+	PRIVATE
+		networking.cpp
+		packet.cpp
+		packet_factory.cpp
+		packet_sender.cpp
+		packet_sender_worker.cpp
+		packet_receiver.cpp
+	PUBLIC
+		networking.h
+		packet.h
+		packet_factory.h
+		packet_sender.h
+		consume_packet_sender.h
+		packet_sender_worker.h
+		udp_packet_base.h
+		packet_receiver.h
+)
+
+add_subdirectory("packets")
