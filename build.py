@@ -76,13 +76,16 @@ def do_make():
     clang_directory = os.path.join(cwd, "libraries", "clang-12", f"{platform_name}", "bin", "clang")
     clangxx_directory = os.path.join(cwd, "libraries", "clang-12", f"{platform_name}", "bin", "clang++")
 
-    run_cmd([cmake_path, "-GNinja", f"-DCMAKE_C_COMPILER={clang_directory}", f"-DCMAKE_CXX_COMPILER={clangxx_directory}", ".."])
+    #run_cmd([cmake_path, "-GNinja", f"-DCMAKE_C_COMPILER={clang_directory}", f"-DCMAKE_CXX_COMPILER={clangxx_directory}", ".."])
+    run_cmd([cmake_path, ".."])
     run_cmd([cmake_path, "--build", ".", "--config", "Release", "--verbose"])
-    run_cmd([ctest_path])
+    #run_cmd([ctest_path])
     run_cmd([cmake_path, "--install", ".", "--config", "Release"])
 
     install_src_dir = os.path.join(build_dir, install_dir_name)
     install_dest_dir = os.path.join(cwd, install_dir_name)
+
+    make_dir(install_dest_dir)
 
     copy_dir(install_src_dir, install_dest_dir)
 
@@ -131,7 +134,7 @@ def remove_dir(dir):
 
 def copy_dir(src, dest):
     try:
-        shutil.copytree(src, dest)
+        shutil.copytree(src, dest, dirs_exist_ok=True)
     except OSError:
         print(f"Failed to copy: {src} to: {dest}")
     else:
@@ -155,11 +158,11 @@ def get_project_version():
 
 print("Starting build...")
 
-install_dependencies()
+#install_dependencies()
 
 build_dir, install_dir = do_make()
 do_install(install_dir)
 
-cleanup_environment(build_dir, install_dir)
+#cleanup_environment(build_dir, install_dir)
 
 print("Finished build.")

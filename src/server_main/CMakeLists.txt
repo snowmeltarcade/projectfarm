@@ -21,12 +21,26 @@ target_link_libraries(
     "${SERVER_PROJECT_NAME}"
     PRIVATE
     "${SHARED_LIBRARY_PROJECT_NAME}"
+	"${SDL2_LIBRARIES}"
+	"${SDL2_NET_LIBRARIES}"
 )
 
 target_include_directories(
 	"${SERVER_PROJECT_NAME}"
 	PUBLIC
 	"${CMAKE_CURRENT_SOURCE_DIR}"
+)
+
+target_include_directories(
+	"${SERVER_PROJECT_NAME}"
+	PRIVATE
+	${SDL2_INCLUDE_DIRS}
+)
+
+target_include_directories(
+    "${SERVER_PROJECT_NAME}"
+    PUBLIC
+    ${SDL2_NET_INCLUDE_DIRS}
 )
 
 if(IS_DEBUG)
