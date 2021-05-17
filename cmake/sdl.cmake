@@ -45,6 +45,7 @@ elseif (LINUX)
     set(SDL2_IMAGE_LIBRARIES "${SDL2_IMAGE_LIBRARIES}" CACHE INTERNAL "SDL2_IMAGE_LIBRARIES")
     set(SDL2_TTF_LIBRARIES "${SDL2_TTF_LIBRARIES}" CACHE INTERNAL "SDL2_TTF_LIBRARIES")
 else()
+    # These SDL linker flags were gleaned by running `sdl2-config --static-libs` locally
     set(SDL2_LIBRARIES "${LIBRARIES_ROOT_DIR}/sdl/darwin/libSDL2.a;-lm -liconv -Wl,-framework,CoreAudio -Wl,-framework,AudioToolbox -Wl,-weak_framework,CoreHaptics -Wl,-weak_framework,GameController -Wl,-framework,ForceFeedback -lobjc -Wl,-framework,CoreVideo -Wl,-framework,Cocoa -Wl,-framework,Carbon -Wl,-framework,IOKit -Wl,-weak_framework,QuartzCore -Wl,-weak_framework,Metal" CACHE INTERNAL "SDL2_LIBRARIES")
     set(SDL2_NET_LIBRARIES "${LIBRARIES_ROOT_DIR}/sdl_net/darwin/libSDL2_net.a" CACHE INTERNAL "SDL2_NET_LIBRARIES")
     set(SDL2_IMG_LIBRARIES "${LIBRARIES_ROOT_DIR}/sdl_image/darwin/libSDL2_image.a" CACHE INTERNAL "SDL2_IMG_LIBRARIES")
