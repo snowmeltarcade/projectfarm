@@ -1,0 +1,9 @@
+target_sources(
+	"${CLIENT_PROJECT_NAME}"
+	PRIVATE
+		network_client.h
+		network_client.cpp
+		consume_network_client.h
+		network_client_worker.h
+		network_client_worker.cpp
+)

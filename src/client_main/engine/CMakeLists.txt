@@ -1,0 +1,40 @@
+target_sources(
+	"${CLIENT_PROJECT_NAME}"
+	PUBLIC
+		game.h
+		keyboard_input.h
+		mouse_input.h
+		consume_game.h
+		system.h
+		system_arguments.h
+		actionable_entity.h
+		action_manager.h
+		action_input_source.h
+		action.h
+		debug_information.h
+		consume_debug_information.h
+		client_config.h
+		player.h
+        platform.h
+		action_types.h
+		consume_mouse_input.h
+	PRIVATE
+		game.cpp
+		keyboard_input.cpp
+		mouse_input.cpp
+		system.cpp
+		system_arguments.cpp
+		actionable_entity.cpp
+		action_manager.cpp
+		action_input_source.cpp
+		action.cpp
+		debug_information.cpp
+		client_config.cpp
+		player.cpp
+        platform.cpp
+)
+
+add_subdirectory("action_input_sources")
+add_subdirectory("world")
+add_subdirectory("entities")
+add_subdirectory("scripting")

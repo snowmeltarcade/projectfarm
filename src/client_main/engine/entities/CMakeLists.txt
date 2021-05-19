@@ -1,0 +1,15 @@
+target_sources(
+    "${CLIENT_PROJECT_NAME}"
+    PUBLIC
+        entity.h
+        world_entity.h
+        character.h
+        character_appearance_manager.h
+        character_appearance_library.h
+    PRIVATE
+        entity.cpp
+        world_entity.cpp
+        character.cpp
+        character_appearance_manager.cpp
+        character_appearance_library.cpp
+)

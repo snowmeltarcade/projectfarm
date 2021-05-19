@@ -1,0 +1,11 @@
+target_sources(
+	"${CLIENT_PROJECT_NAME}"
+	PRIVATE
+		loading_scene.cpp
+		world_scene.cpp
+		authenticate_scene.cpp
+	PUBLIC
+		loading_scene.h
+		world_scene.h
+		authenticate_scene.h
+)

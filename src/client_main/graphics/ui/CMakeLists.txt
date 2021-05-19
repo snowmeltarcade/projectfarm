@@ -1,0 +1,27 @@
+target_sources(
+	"${CLIENT_PROJECT_NAME}"
+	PRIVATE
+		ui.cpp
+		canvas.cpp
+		texture.cpp
+		base_control.cpp
+		control_size.cpp
+		label.cpp
+		control_position.cpp
+		mouse_cursor.cpp
+		custom.cpp
+		fit_types.cpp
+	PUBLIC
+		ui.h
+		canvas.h
+		texture.h
+		base_control.h
+		control_size.h
+		label.h
+		control_position.h
+		mouse_cursor.h
+		custom.h
+		consume_ui.h
+		fit_types.h
+		control_types.h
+)

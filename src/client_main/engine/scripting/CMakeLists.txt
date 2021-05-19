@@ -1,0 +1,17 @@
+target_sources(
+    "${CLIENT_PROJECT_NAME}"
+    PUBLIC
+        client_script_factory.h
+        ui_control_script.h
+        ui_base_control_script_object.h
+        ui_script_object.h
+        scene_script_object.h
+        keyboard_input_script_object.h
+    PRIVATE
+        client_script_factory.cpp
+        ui_control_script.cpp
+        ui_base_control_script_object.cpp
+        ui_script_object.cpp
+        scene_script_object.cpp
+        keyboard_input_script_object.cpp
+)

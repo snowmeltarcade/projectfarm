@@ -1,0 +1,66 @@
+target_sources(
+	"${CLIENT_PROJECT_NAME}"
+	PRIVATE
+		graphics.cpp
+		renderable.cpp
+		texture.cpp
+		font_manager.cpp
+		font.cpp
+		SDL_freeable_surface.cpp
+		tile_map.cpp
+		render_manager.cpp
+		render_layer.cpp
+		camera.cpp
+		tile_map_tile.cpp
+		tile_map_tile_layer.cpp
+		tile_set.cpp
+		shader_program.cpp
+		shader.cpp
+		tiling_mesh.cpp
+		opengl_errors.cpp
+		texture_pool.cpp
+		tile_set_pool.cpp
+		tile_map_tile_animation_data.cpp
+		graphics_dependencies.cpp
+		material.cpp
+		shape_mesh.cpp
+		render_origin_points.cpp
+	PUBLIC
+		graphics.h
+		renderable.h
+		texture.h
+		font_manager.h
+		font.h
+		SDL_freeable_surface.h
+		consume_graphics.h
+		consume_font_manager.h
+		tile_map.h
+		render_manager.h
+		consume_render_manager.h
+		render_layer.h
+		camera.h
+		tile_map_tile.h
+		tile_map_tile_layer.h
+		render_origin_points.h
+		tile_set.h
+		shader_program.h
+		shader.cpp
+		shader_types.h
+		tiling_mesh.h
+		material.h
+		opengl_errors.h
+		texture_pool.h
+		texture_pool_data.h
+		tile_set_pool.h
+		tile_set_pool_data.h
+		consume_tile_set_pool.h
+		tile_map_tile_animation_data.h
+		graphics_dependencies.h
+		font_styles.h
+		material_types.h
+		material_render_details.h
+		shape_mesh.h
+)
+
+add_subdirectory("shapes")
+add_subdirectory("ui")
