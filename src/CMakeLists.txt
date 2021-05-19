@@ -36,5 +36,5 @@ add_subdirectory("shared_library")
 add_subdirectory("server_main")
 
 if (NOT LINUX)
-	#add_subdirectory("client_main")
+	add_subdirectory("client_main")
 endif()
