@@ -3,7 +3,7 @@ import re
 import shutil
 import platform
 import subprocess
-import zipfile
+import argparse
 
 git_path = shutil.which("git")
 cmake_path = shutil.which("cmake")
@@ -13,6 +13,17 @@ python3_path = shutil.which("python3")
 cwd = os.getcwd()
 build_dir_name = "build"
 install_dir_name = "install"
+
+
+def configure_arguments():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-i", "--install-dependencies", action="store_true", required=False, help="install library dependencies before build")
+    parser.add_argument("-nb", "--no-build", action="store_true", required=False, help="do not perform build")
+    parser.add_argument("-ni", "--no-install", action="store_true", required=False, help="do not install after build")
+    parser.add_argument("-c", "--cleanup", action="store_true", required=False, help="clean up build and install data/temp files after build")
+    args = parser.parse_args()
+
+    return args
 
 
 def install_dependencies():
@@ -63,7 +74,7 @@ def get_platform_name():
     else:
         return "windows"
 
-def do_make():
+def do_make(no_build):
     print("Making...")
 
     build_dir = os.path.join(cwd, build_dir_name)
@@ -76,11 +87,12 @@ def do_make():
     clang_directory = os.path.join(cwd, "libraries", "clang-12", f"{platform_name}", "bin", "clang")
     clangxx_directory = os.path.join(cwd, "libraries", "clang-12", f"{platform_name}", "bin", "clang++")
 
-    #run_cmd([cmake_path, "-GNinja", f"-DCMAKE_C_COMPILER={clang_directory}", f"-DCMAKE_CXX_COMPILER={clangxx_directory}", ".."])
-    run_cmd([cmake_path, ".."])
-    run_cmd([cmake_path, "--build", ".", "--config", "Release", "--verbose"])
-    #run_cmd([ctest_path])
-    run_cmd([cmake_path, "--install", ".", "--config", "Release"])
+    if not no_build:
+        #run_cmd([cmake_path, "-GNinja", f"-DCMAKE_C_COMPILER={clang_directory}", f"-DCMAKE_CXX_COMPILER={clangxx_directory}", ".."])
+        run_cmd([cmake_path, ".."])
+        run_cmd([cmake_path, "--build", ".", "--config", "Release", "--verbose"])
+        #run_cmd([ctest_path])
+        run_cmd([cmake_path, "--install", ".", "--config", "Release"])
 
     install_src_dir = os.path.join(build_dir, install_dir_name)
     install_dest_dir = os.path.join(cwd, install_dir_name)
@@ -158,11 +170,17 @@ def get_project_version():
 
 print("Starting build...")
 
-#install_dependencies()
+args = configure_arguments()
 
-build_dir, install_dir = do_make()
-do_install(install_dir)
+if args.install_dependencies:
+    install_dependencies()
 
-#cleanup_environment(build_dir, install_dir)
+build_dir, install_dir = do_make(args.no_build)
+
+if not args.no_install:
+    do_install(install_dir)
+
+if args.cleanup:
+    cleanup_environment(build_dir, install_dir)
 
 print("Finished build.")
