@@ -91,7 +91,7 @@ def do_make(no_build):
         run_cmd([cmake_path, "-GNinja", f"-DCMAKE_C_COMPILER={clang_directory}", f"-DCMAKE_CXX_COMPILER={clangxx_directory}", ".."])
         run_cmd([cmake_path, ".."])
         run_cmd([cmake_path, "--build", ".", "--config", "Release", "--verbose"])
-        #run_cmd([ctest_path])
+        run_cmd([ctest_path])
         run_cmd([cmake_path, "--install", ".", "--config", "Release"])
 
     install_src_dir = os.path.join(build_dir, install_dir_name)
