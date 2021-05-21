@@ -95,7 +95,7 @@ def do_make(no_build):
         run_cmd([cmake_path, "--install", ".", "--config", "Release"])
 
     install_src_dir = os.path.join(build_dir, install_dir_name)
-    install_dest_dir = os.path.join(cwd, install_dir_name)
+    install_dest_dir = os.path.join(cwd, install_dir_name, platform.system())
 
     make_dir(install_dest_dir)
 
