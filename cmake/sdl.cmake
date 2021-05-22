@@ -25,7 +25,7 @@ if (MSVC)
 
         set(SDL2_DLL_PATH "${LIBRARIES_ROOT_DIR}/sdl/windows/SDL2.dll" CACHE INTERNAL "SDL2_DLL_PATH")
         set(SDL2_NET_DLL_PATH "${LIBRARIES_ROOT_DIR}/sdl_net/windows/SDL2_net.dll" CACHE INTERNAL "SDL2_NET_DLL_PATH")
-        set(SDL2_IMG_DLL_PATH "${LIBRARIES_ROOT_DIR}/sdl_image/windows/SDL2_image.dll;${LIBRARIES_ROOT_DIR}/sdl_img/windows/libjpeg-9.dll;${LIBRARIES_ROOT_DIR}/sdl_img/windows/libpng16-16.dll;${LIBRARIES_ROOT_DIR}/sdl_img/windows/libtiff-5.dll;${LIBRARIES_ROOT_DIR}/sdl_img/windows/libwebp-7.dll;${LIBRARIES_ROOT_DIR}/sdl/sdl_img/windows/zlib1.dll" CACHE INTERNAL "SDL2_IMG_DLL_PATH")
+        set(SDL2_IMG_DLL_PATH "${LIBRARIES_ROOT_DIR}/sdl_image/windows/SDL2_image.dll;${LIBRARIES_ROOT_DIR}/sdl_image/windows/libjpeg-9.dll;${LIBRARIES_ROOT_DIR}/sdl_image/windows/libpng16-16.dll;${LIBRARIES_ROOT_DIR}/sdl_image/windows/libtiff-5.dll;${LIBRARIES_ROOT_DIR}/sdl_image/windows/libwebp-7.dll;${LIBRARIES_ROOT_DIR}/sdl_image/windows/zlib1.dll" CACHE INTERNAL "SDL2_IMG_DLL_PATH")
         set(SDL2_TTF_DLL_PATH "${LIBRARIES_ROOT_DIR}/sdl_ttf/windows/SDL2_ttf.dll;${LIBRARIES_ROOT_DIR}/sdl_ttf/windows/libfreetype-6.dll" CACHE INTERNAL "SDL2_TTF_DLL_PATH")
     else()
         message(ERROR "32-bit is not supported.")
