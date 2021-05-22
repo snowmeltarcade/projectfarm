@@ -9,6 +9,7 @@ git_path = shutil.which("git")
 cmake_path = shutil.which("cmake")
 ctest_path = shutil.which("ctest")
 python3_path = shutil.which("python3")
+ninja_path = shutil.which("ninja")
 
 cwd = os.getcwd()
 build_dir_name = "build"
@@ -88,7 +89,14 @@ def do_make(no_build):
     clangxx_directory = os.path.join(cwd, "libraries", "clang-12", f"{platform_name}", "bin", "clang++")
 
     if not no_build:
-        run_cmd([cmake_path, "-GNinja", f"-DCMAKE_C_COMPILER={clang_directory}", f"-DCMAKE_CXX_COMPILER={clangxx_directory}", ".."])
+        cmd = [cmake_path]
+
+        if ninja_path and len(ninja_path) > 0:
+            cmd += ["-GNinja"]
+
+        cmd += [f"-DCMAKE_C_COMPILER={clang_directory}", f"-DCMAKE_CXX_COMPILER={clangxx_directory}", ".."]
+
+        run_cmd(cmd)
         run_cmd([cmake_path, ".."])
         run_cmd([cmake_path, "--build", ".", "--config", "Release", "--verbose"])
         run_cmd([ctest_path])
@@ -128,7 +136,7 @@ def run_cmd(cmd):
 
 def make_dir(dir):
     try:
-        os.mkdir(dir, 0o755)
+        os.makedirs(dir, 0o755, exist_ok=True)
     except OSError:
         print(f"Failed to create dir: {dir}")
     else:
