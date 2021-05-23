@@ -97,7 +97,6 @@ def do_make(no_build):
         cmd += [f"-DCMAKE_C_COMPILER={clang_directory}", f"-DCMAKE_CXX_COMPILER={clangxx_directory}", ".."]
 
         run_cmd(cmd)
-        run_cmd([cmake_path, ".."])
         run_cmd([cmake_path, "--build", ".", "--config", "Release", "--verbose"])
         run_cmd([ctest_path])
         run_cmd([cmake_path, "--install", ".", "--config", "Release"])
