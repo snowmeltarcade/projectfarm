@@ -1,4 +1,4 @@
-if (MSVC)
+if (WIN32)
     # Support both 32 and 64 bit builds
     if (${CMAKE_SIZEOF_VOID_P} MATCHES 8)
         set(LIBSODIUM_LIBRARIES "${LIBRARIES_ROOT_DIR}/libsodium/Windows/lib/libsodium.lib" CACHE INTERNAL "LIBSODIUM_LIBRARIES")

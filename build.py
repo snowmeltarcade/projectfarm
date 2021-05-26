@@ -85,21 +85,43 @@ def do_make(no_build):
 
     platform_name = get_platform_name()
 
-    clang_directory = os.path.join(cwd, "libraries", "clang-12", f"{platform_name}", "bin", "clang")
-    clangxx_directory = os.path.join(cwd, "libraries", "clang-12", f"{platform_name}", "bin", "clang++")
+    clang_path = os.path.join(cwd, "libraries", "clang-12", platform_name, "bin")
+
+    clang_directory = os.path.join(clang_path, "clang")
+    clangxx_directory = os.path.join(clang_path, "clang++")
+    llvmrc_directory = os.path.join(clang_path, "llvm-rc.exe")
+
+    if platform.system() == "Windows":
+        # we get cmake errors if we use backslash on Windows, so
+        # ensure we always use a forward slash
+        clang_directory = clang_directory.replace("\\", "/") + ".exe"
+        clangxx_directory = clangxx_directory.replace("\\", "/") + ".exe"
+        llvmrc_directory = llvmrc_directory.replace("\\", "/") + ".exe"
 
     if not no_build:
         cmd = [cmake_path]
 
-        if ninja_path and len(ninja_path) > 0:
-            cmd += ["-GNinja"]
+        ninja_path = os.path.join(cwd, "libraries", "ninja", platform_name, "ninja")
+        if platform.system() == "Windows":
+            ninja_path = ninja_path.replace("\\", "/") + ".exe"
 
-        cmd += [f"-DCMAKE_C_COMPILER={clang_directory}", f"-DCMAKE_CXX_COMPILER={clangxx_directory}", ".."]
+        cmd += [f"-DCMAKE_MAKE_PROGRAM={ninja_path}", "-GNinja"]
+
+        cmd += [f"-DCMAKE_C_COMPILER={clang_directory}",
+                f"-DCMAKE_CXX_COMPILER={clangxx_directory}",
+                f"-DCMAKE_RC_COMPILER={llvmrc_directory}",
+                ".."]
 
         run_cmd(cmd)
-        run_cmd([cmake_path, "--build", ".", "--config", "Release", "--verbose"])
-        run_cmd([ctest_path])
-        run_cmd([cmake_path, "--install", ".", "--config", "Release"])
+
+        cmd = [cmake_path, "--build", ".", "--config", "Release", "--verbose"]
+        run_cmd(cmd)
+
+        cmd = [ctest_path]
+        run_cmd(cmd)
+
+        cmd = [cmake_path, "--install", ".", "--config", "Release"]
+        run_cmd(cmd)
 
     install_src_dir = os.path.join(build_dir, install_dir_name)
     install_dest_dir = os.path.join(cwd, install_dir_name, platform.system())
@@ -131,6 +153,11 @@ def do_install(install_dir):
 def run_cmd(cmd):
     print(f"Running command: {cmd}")
     subprocess.run(cmd)
+
+
+def run_cmd_env(cmd, env):
+    print(f"Running command: {cmd}")
+    subprocess.run(cmd, env=env)
 
 
 def make_dir(dir):

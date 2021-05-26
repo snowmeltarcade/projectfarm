@@ -13,9 +13,28 @@ target_link_libraries(
 
 target_include_directories(
     "${SHARED_LIBRARY_TEST_PROJECT_NAME}"
-    PRIVATE
+    SYSTEM PRIVATE
     "${CATCH2_INCLUDE_DIRS}"
 )
+
+target_include_directories(
+	"${SHARED_LIBRARY_TEST_PROJECT_NAME}"
+	SYSTEM PRIVATE
+	${SDL2_INCLUDE_DIRS}
+)
+
+target_link_libraries(
+	"${SHARED_LIBRARY_TEST_PROJECT_NAME}"
+	${SDL2_LIBRARIES}
+)
+
+# Used for v8
+add_definitions(-DV8_31BIT_SMIS_ON_64BIT_ARCH -DV8_COMPRESS_POINTERS)
+
+# to link against v8
+if (WIN32)
+	set_property(TARGET "${SHARED_LIBRARY_TEST_PROJECT_NAME}" PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded")
+endif()
 
 add_subdirectory("math")
 add_subdirectory("scripts")

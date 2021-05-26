@@ -1,5 +1,6 @@
 #include <iostream>
 #include <memory>
+#include <SDL.h>
 
 #include "engine/platform.h"
 #if !defined(IS_IOS)

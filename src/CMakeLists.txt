@@ -1,14 +1,20 @@
+if (WIN32)
+	# as we use clang on Windows, make sure this is properly defined
+	add_definitions(-DWIN32)
+
+	# SDL defines its own main, so ensure we choose the correct main
+	add_link_options(-Wl,-subsystem:windows)
+endif()
+
 if (MSVC)
-	if (IS_DEBUG)
-		set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /Zi")
-	else()
-		set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /O2")
-	endif()
+	# if (IS_DEBUG)
+	# 	set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /Zi")
+	# else()
+	# 	set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /O2")
+	# endif()
 
-	# max warnings; warnings as errors; ignore warnings from system headers; compile using standard C++ unwind semantics
-	add_compile_options(/W4 /WX /external:anglebrackets /external:W0 /experimental:external /EHsc /MT)
-
-	set(CMAKE_GENERATOR "Ninja")
+	# # max warnings; warnings as errors; ignore warnings from system headers; compile using standard C++ unwind semantics
+	# add_compile_options(/W4 /WX /external:anglebrackets /external:W0 /experimental:external /EHsc /MT)
 else()
 	if (IS_DEBUG)
 		# -fsanitize=memory is not supported on MacOS

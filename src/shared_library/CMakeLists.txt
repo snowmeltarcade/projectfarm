@@ -10,7 +10,7 @@ target_include_directories(
 
 target_include_directories(
 	"${SHARED_LIBRARY_PROJECT_NAME}"
-	PRIVATE
+	SYSTEM PRIVATE
 	${SDL2_INCLUDE_DIRS}
 )
 
@@ -21,7 +21,7 @@ target_link_libraries(
 
 target_include_directories(
     "${SHARED_LIBRARY_PROJECT_NAME}"
-    PUBLIC
+    SYSTEM PRIVATE
     ${SDL2_NET_INCLUDE_DIRS}
 )
 
@@ -44,7 +44,7 @@ target_link_libraries(
 add_definitions(-DV8_31BIT_SMIS_ON_64BIT_ARCH -DV8_COMPRESS_POINTERS)
 
 # to link against v8
-if (MSVC)
+if (WIN32)
 	set_property(TARGET "${SHARED_LIBRARY_PROJECT_NAME}" PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded")
 endif()
 
@@ -80,7 +80,7 @@ if (LINUX)
 	)
 endif()
 
-if (MSVC)
+if (WIN32)
 	file (
 		COPY "${SDL2_DLL_PATH}"
 		DESTINATION "${PROJECT_BINARY_DIR}/bin"

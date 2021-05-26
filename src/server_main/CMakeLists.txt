@@ -33,13 +33,13 @@ target_include_directories(
 
 target_include_directories(
 	"${SERVER_PROJECT_NAME}"
-	PRIVATE
+	SYSTEM PRIVATE
 	${SDL2_INCLUDE_DIRS}
 )
 
 target_include_directories(
     "${SERVER_PROJECT_NAME}"
-    PUBLIC
+    SYSTEM PRIVATE
     ${SDL2_NET_INCLUDE_DIRS}
 )
 
@@ -55,7 +55,7 @@ endif()
 add_definitions(-DV8_31BIT_SMIS_ON_64BIT_ARCH -DV8_COMPRESS_POINTERS)
 
 # to link against v8
-if (MSVC)
+if (WIN32)
 	set_property(TARGET "${SERVER_PROJECT_NAME}" PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded")
 endif()
 

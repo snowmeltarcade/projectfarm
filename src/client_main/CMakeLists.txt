@@ -24,7 +24,7 @@ target_include_directories(
 
 target_include_directories(
 	"${CLIENT_PROJECT_NAME}"
-	PRIVATE
+	SYSTEM PRIVATE
 	${SDL2_INCLUDE_DIRS}
 )
 
@@ -35,7 +35,7 @@ target_link_libraries(
 
 target_include_directories(
 	"${CLIENT_PROJECT_NAME}"
-	PRIVATE
+	SYSTEM PRIVATE
 	${SDL2_NET_INCLUDE_DIRS}
 )
 
@@ -46,7 +46,7 @@ target_link_libraries(
 
 target_include_directories(
 	"${CLIENT_PROJECT_NAME}"
-	PRIVATE
+	SYSTEM PRIVATE
 	${SDL2_IMG_INCLUDE_DIRS}
 )
 
@@ -73,7 +73,7 @@ target_link_libraries(
 
 target_include_directories(
 	"${CLIENT_PROJECT_NAME}"
-	PRIVATE
+	SYSTEM PRIVATE
 	${GLEW_INCLUDE_DIRS}
 )
 
@@ -90,7 +90,7 @@ if(IS_DEBUG)
 	)
 endif()
 
-if (MSVC)
+if (WIN32)
 	file(
 		COPY "${GLEW_DLL_PATH}"
 		DESTINATION "${PROJECT_BINARY_DIR}/bin"
@@ -101,7 +101,7 @@ endif()
 add_definitions(-DV8_31BIT_SMIS_ON_64BIT_ARCH -DV8_COMPRESS_POINTERS)
 
 # to link against v8
-if (MSVC)
+if (WIN32)
 	set_property(TARGET "${CLIENT_PROJECT_NAME}" PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded")
 endif()
 
