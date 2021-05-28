@@ -34,6 +34,10 @@ else()
 	endif()
 
 	add_compile_options(-Wall -Wextra -pedantic -Werror -pedantic-errors -Wshadow -Wstrict-aliasing)
+
+	if (LINUX)
+		set(CMAKE_CXX_FLAGS "-pthread")
+	endif()
 endif()
 
 configure_file("version.h.in" "version.h")
