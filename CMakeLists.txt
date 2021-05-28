@@ -37,39 +37,6 @@ if (UNIX AND NOT APPLE)
 	set(LINUX TRUE)
 endif()
 
-if (WIN32)
-	if (IS_DEBUG)
-		set(CMAKE_INSTALL_DEBUG_LIBRARIES TRUE)
-	endif()
-
-	# the final forward slash is needed to ensure that we copy the files within the folder, not the actual
-	# folder itself
-	set(CMAKE_INSTALL_UCRT_LIBRARIES TRUE)
-	set(CMAKE_INSTALL_SYSTEM_RUNTIME_DESTINATION "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/system_runtimes/")
-	include(InstallRequiredSystemLibraries)
-
-	# install(
-	# 	FILES
-	# 		${CMAKE_INSTALL_SYSTEM_RUNTIME_DESTINATION}
-	# 	DESTINATION
-	# 		${INSTALL_CLIENT_DIRECTORY}
-	# )
-
-	# install(
-	# 	FILES
-	# 		${CMAKE_INSTALL_SYSTEM_RUNTIME_DESTINATION}
-	# 	DESTINATION
-	# 		${INSTALL_SERVER_DIRECTORY}
-	# )
-
-	# install(
-	# 	FILES
-	# 		${CMAKE_INSTALL_SYSTEM_RUNTIME_DESTINATION}
-	# 	DESTINATION
-	# 		${INSTALL_LATEST_DIRECTORY}
-	# )
-endif()
-
 include("${CMAKE_CURRENT_LIST_DIR}/cmake/Functions.cmake")
 
 set("LIBRARIES_ROOT_DIR" "${CMAKE_CURRENT_LIST_DIR}/libraries")

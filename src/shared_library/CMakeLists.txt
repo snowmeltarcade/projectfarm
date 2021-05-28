@@ -44,7 +44,7 @@ target_link_libraries(
 add_definitions(-DV8_31BIT_SMIS_ON_64BIT_ARCH -DV8_COMPRESS_POINTERS)
 
 # to link against v8
-if (WIN32)
+if (MSVC)
 	set_property(TARGET "${SHARED_LIBRARY_PROJECT_NAME}" PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded")
 endif()
 

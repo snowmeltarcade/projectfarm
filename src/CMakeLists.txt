@@ -8,14 +8,15 @@ if (WIN32)
 endif()
 
 if (MSVC)
-	# if (IS_DEBUG)
-	# 	set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /Zi")
-	# else()
-	# 	set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /O2")
-	# endif()
+	# although the builder will not use MSVC to build, it might be used for dev at times
+	if (IS_DEBUG)
+		set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /Zi")
+	else()
+		set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /O2")
+	endif()
 
-	# # max warnings; warnings as errors; ignore warnings from system headers; compile using standard C++ unwind semantics
-	# add_compile_options(/W4 /WX /external:anglebrackets /external:W0 /experimental:external /EHsc /MT)
+	# max warnings; warnings as errors; ignore warnings from system headers; compile using standard C++ unwind semantics
+	add_compile_options(/W4 /WX /external:anglebrackets /external:W0 /experimental:external /EHsc /MT)
 else()
 	if (IS_DEBUG)
 		# -fsanitize=memory is not supported on MacOS
