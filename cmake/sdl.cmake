@@ -33,17 +33,10 @@ if (WIN32)
 elseif (LINUX)
     set(OpenGL_GL_PREFERENCE "GLVND")
     
-    list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/sdl2)
-
-    find_package(SDL2 REQUIRED)
-    find_package(SDL2_net REQUIRED)
-    find_package(SDL2_image REQUIRED)
-    find_package(SDL2_ttf REQUIRED)
-
-    set(SDL2_LIBRARIES "${SDL2_LIBRARIES}" CACHE INTERNAL "SDL2_LIBRARIES")
-    set(SDL2_NET_LIBRARIES "${SDL2_NET_LIBRARIES}" CACHE INTERNAL "SDL2_NET_LIBRARIES")
-    set(SDL2_IMAGE_LIBRARIES "${SDL2_IMAGE_LIBRARIES}" CACHE INTERNAL "SDL2_IMAGE_LIBRARIES")
-    set(SDL2_TTF_LIBRARIES "${SDL2_TTF_LIBRARIES}" CACHE INTERNAL "SDL2_TTF_LIBRARIES")
+    set(SDL2_LIBRARIES "${LIBRARIES_ROOT_DIR}/sdl/linux/libSDL2.a;" CACHE INTERNAL "SDL2_LIBRARIES")
+    set(SDL2_NET_LIBRARIES "${LIBRARIES_ROOT_DIR}/sdl_net/linux/libSDL2_net.a" CACHE INTERNAL "SDL2_NET_LIBRARIES")
+    set(SDL2_IMG_LIBRARIES "${LIBRARIES_ROOT_DIR}/sdl_image/linux/libSDL2_image.a" CACHE INTERNAL "SDL2_IMG_LIBRARIES")
+    set(SDL2_TTF_LIBRARIES "${LIBRARIES_ROOT_DIR}/sdl_ttf/linux//libSDL2_ttf.a" CACHE INTERNAL "SDL2_TTF_LIBRARIES")
 else()
     # These SDL linker flags were gleaned by running `sdl2-config --static-libs` locally
     set(SDL2_LIBRARIES "${LIBRARIES_ROOT_DIR}/sdl/darwin/libSDL2.a;-lm -liconv -Wl,-framework,CoreAudio -Wl,-framework,AudioToolbox -Wl,-weak_framework,CoreHaptics -Wl,-weak_framework,GameController -Wl,-framework,ForceFeedback -lobjc -Wl,-framework,CoreVideo -Wl,-framework,Cocoa -Wl,-framework,Carbon -Wl,-framework,IOKit -Wl,-weak_framework,QuartzCore -Wl,-weak_framework,Metal" CACHE INTERNAL "SDL2_LIBRARIES")
