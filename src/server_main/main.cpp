@@ -1,5 +1,4 @@
 #include <iostream>
-#include <SDL.h>
 
 #include "server/platform.h"
 #if !defined(IS_IOS)

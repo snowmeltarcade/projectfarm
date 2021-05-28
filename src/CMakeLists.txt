@@ -1,9 +1,10 @@
 if (WIN32)
 	# as we use clang on Windows, make sure this is properly defined
-	add_definitions(-DWIN32)
+	# SDL needs __WIN32__
+	add_definitions(-DWIN32 -D__WIN32__)
 
 	# SDL defines its own main, so ensure we choose the correct main
-	add_link_options(-Wl,-subsystem:windows)
+	add_link_options(-Wl,-subsystem:console)
 endif()
 
 if (MSVC)

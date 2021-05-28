@@ -3,3 +3,4 @@ libraries/*
 build/*
 archives/*
 install/*
+.vscode/*
