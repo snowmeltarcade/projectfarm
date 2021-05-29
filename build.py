@@ -18,6 +18,7 @@ install_dir_name = "install"
 
 def configure_arguments():
     parser = argparse.ArgumentParser()
+    parser.add_argument("-a", "--install-assets", action="store_true", required=False, help="install assets before build")
     parser.add_argument("-i", "--install-dependencies", action="store_true", required=False, help="install library dependencies before build")
     parser.add_argument("-nb", "--no-build", action="store_true", required=False, help="do not perform build")
     parser.add_argument("-ni", "--no-install", action="store_true", required=False, help="do not install after build")
@@ -25,6 +26,35 @@ def configure_arguments():
     args = parser.parse_args()
 
     return args
+
+
+def install_assets():
+    print("Installing assets...")
+
+    temp_dir = os.path.join(cwd, "__temp")
+    make_dir(temp_dir)
+
+    os.chdir(temp_dir)
+
+    print("Cloning assets...")
+
+    cmd = [git_path, "clone", "https://github.com/snowmeltarcade/projectfarm-assets.git"]
+    run_cmd(cmd)
+
+    print("Installing project assets...")
+
+    project_assets_path = os.path.join(temp_dir, "projectfarm-assets")
+    os.chdir(project_assets_path)
+
+    # cwd = project path
+    cmd = [python3_path, "install.py", "-p", cwd]
+    run_cmd(cmd)
+
+    os.chdir(cwd)
+
+    remove_dir(temp_dir)
+
+    print("Installed assets.")
 
 
 def install_dependencies():
@@ -35,7 +65,7 @@ def install_dependencies():
 
     os.chdir(temp_dir)
 
-    print("Clonging project dependencies...")
+    print("Cloning project dependencies...")
 
     cmd = [git_path, "clone", "https://github.com/snowmeltarcade/project-dependencies.git"]
     run_cmd(cmd)
@@ -205,6 +235,9 @@ def get_project_version():
 print("Starting build...")
 
 args = configure_arguments()
+
+if args.install_assets:
+    install_assets()
 
 if args.install_dependencies:
     install_dependencies()

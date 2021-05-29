@@ -37,10 +37,8 @@ if (UNIX AND NOT APPLE)
 	set(LINUX TRUE)
 endif()
 
-include("${CMAKE_CURRENT_LIST_DIR}/cmake/Functions.cmake")
-
 set("LIBRARIES_ROOT_DIR" "${CMAKE_CURRENT_LIST_DIR}/libraries")
 include("${CMAKE_CURRENT_LIST_DIR}/cmake/libraries.cmake")
 
 add_subdirectory("src")
-#add_subdirectory("data")
+add_subdirectory("data")
