@@ -3,6 +3,7 @@ A multiplayer farming simulator.
 
 
 ## Build
+### CLI
 ##### Correct as of 2021-05-20
 
 To build, run `build.py`:
@@ -59,3 +60,21 @@ For instance:
 ```
 projectfarm-1.0.45-darwin.zip
 ```
+
+### CLion
+##### Correct as of 2021-05-29
+Open the project at the project root and CLion will recognize the base `CMakeLists.txt` file.
+
+The supported build configurations are:
+
+* `projectfarm_shared` This will build the shared library.
+* `projectfarm_server` This will build the server and shared library.
+* `projectfarm_client` This will build the client and shared library.
+
+Set the CMake settings as follows:
+
+> Toolchains -> Make -> /*{project_root}*/libraries/ninja/darwin/ninja
+
+> CMake -> Toolchain -> *Set to the toolchain with Ninja as the make tool*
+
+> CMake -> CMake options -> -GNinja -DCMAKE_CXX_COMPILER=/*{project_root}*/libraries/clang-12/darwin/bin/clang++ -DCMAKE_C_COMPILER=/*{project_root}*/libraries/clang-12/darwin/bin/clang
