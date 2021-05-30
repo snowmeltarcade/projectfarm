@@ -1,0 +1,52 @@
+{
+    "dependencies": [
+        {
+            "name": "catch2",
+            "version": "2.13.6"
+        },
+        {
+            "name": "clang",
+            "version": "12.0.0"
+        },
+        {
+            "name": "glew",
+            "version": "2.2.0"
+        },
+        {
+            "name": "libsodium",
+            "version": "1.0.18"
+        },
+        {
+            "name": "ninja",
+            "version": "1.10.2"
+        },
+        {
+            "name": "catch2",
+            "version": "2.13.6"
+        },
+        {
+            "name": "nlohmann_json",
+            "version": "3.9.1"
+        },
+        {
+            "name": "sdl",
+            "version": "2.0.14"
+        },
+        {
+            "name": "sdl_image",
+            "version": "2.0.5"
+        },
+        {
+            "name": "sdl_net",
+            "version": "2.0.1"
+        },
+        {
+            "name": "sqlite3",
+            "version": "3.35.5"
+        },
+        {
+            "name": "v8",
+            "version": "9.0"
+        }
+    ]
+}
