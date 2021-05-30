@@ -55,7 +55,7 @@ endif()
 add_definitions(-DV8_31BIT_SMIS_ON_64BIT_ARCH -DV8_COMPRESS_POINTERS)
 
 # to link against v8
-if (MSVC)
+if (WIN32)
 	set_property(TARGET "${SERVER_PROJECT_NAME}" PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded")
 endif()
 
