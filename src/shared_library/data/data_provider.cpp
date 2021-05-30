@@ -114,7 +114,7 @@ namespace projectfarm::shared
         std::ifstream file(filePath);
         if (!file.is_open())
         {
-            this->LogMessage("Failed to load " + fileName.u8string());
+            this->LogMessage("Failed to load " + filePath.u8string());
             return false;
         }
 
