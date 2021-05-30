@@ -115,7 +115,7 @@ def do_make(no_build):
 
     platform_name = get_platform_name()
 
-    clang_path = os.path.join(cwd, "libraries", "clang-12", platform_name, "bin")
+    clang_path = os.path.join(cwd, "libraries", "clang", platform_name, "bin")
 
     clang_directory = os.path.join(clang_path, "clang")
     clangxx_directory = os.path.join(clang_path, "clang++")
