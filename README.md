@@ -80,3 +80,7 @@ Set the CMake settings as follows:
 > CMake -> CMake options -> -GNinja -DCMAKE_CXX_COMPILER=/*{project_root}*/libraries/clang-12/darwin/bin/clang++ -DCMAKE_C_COMPILER=/*{project_root}*/libraries/clang-12/darwin/bin/clang
 
 **Tip**: Add a `projectfarm_client` build configuration with the `-startserver` flag as a program argument. This will start the server each time the client is started, and close the server each time the client is closed.
+
+### Visual Studio
+##### Correct as of 2021-05-30
+As of Visual Studio 2019 (16.9.5), LLVM crashes with an error of `out of memory`, `illegal instruction`. Due to this, building with Visual Studio is not officially supported.
