@@ -16,7 +16,9 @@ jobs:
 
     - name: Get Date
       id: date
-      run: echo '::set-output name=DATE::$(python3 ./.github/tools/getdate.py)'
+      run: |
+        DATE=$(python3 ./.github/tools/getdate.py)
+        echo '::set-output name=DATE::$DATE'
 
     - name: Build
       run: python3 build.py -a -i
