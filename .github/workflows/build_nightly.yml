@@ -39,5 +39,6 @@ jobs:
       with:
         upload_url: ${{ steps.nightly.outputs.upload_url }}
         asset_path: ./archives/projectfarm-1.0.45-linux.zip
+        asset_name: ${{ steps.build.outputs.ASSET_NAME }}
         asset_content_type: application/zip
       
