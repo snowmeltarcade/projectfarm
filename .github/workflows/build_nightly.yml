@@ -35,7 +35,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.nightly.outputs.upload_url }}
-        asset_path: ./artifacts/projectfarm-1.0.45-linux.zip
+        asset_path: ./archives/projectfarm-1.0.45-linux.zip
         asset_name: nightly_linux.zip
         asset_content_type: application/zip
       
