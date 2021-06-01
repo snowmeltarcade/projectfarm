@@ -18,7 +18,7 @@ jobs:
       id: build
       run: |
         python3 build.py -a -i
-        echo '::set-output name=ASSET_NAME::$(python3 ./.github/tools/getdate.py)'
+        echo '::set-output name=ASSET_NAME::' + $(python3 ./.github/tools/getdate.py)
       
     - name: Release Nightly
       id: nightly
