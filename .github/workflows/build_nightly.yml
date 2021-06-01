@@ -14,6 +14,9 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
+    - name: Get Date
+      run: python3 ./.github/tools/getdate.py >> $DATE
+
     - name: Build
       run: python3 build.py -a -i
       
@@ -24,7 +27,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         tag_name: 'nightly'
-        release_name: 'nightly_linux'
+        release_name: 'nightly_${{ env.DATE }}'
         draft: false
         prerelease: false
       
@@ -36,6 +39,6 @@ jobs:
       with:
         upload_url: ${{ steps.nightly.outputs.upload_url }}
         asset_path: ./archives/projectfarm-1.0.45-linux.zip
-        asset_name: nightly_linux.zip
+        asset_name: nightly_linux_${{ env.DATE }}.zip
         asset_content_type: application/zip
       
