@@ -4,6 +4,8 @@ on:
   schedule:
       # run everyday at midnight
     - cron: "0 0 * * *"
+  # allow manual running of this job
+  workflow_dispatch:
 
 jobs:
   build:
