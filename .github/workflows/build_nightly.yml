@@ -26,8 +26,8 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: 'nightly'
-        release_name: 'linux_nightly_'$(python3 ./.github/tools/getdate.py)
+        tag_name: nightly
+        release_name: linux_nightly_$(python3 ./.github/tools/getdate.py)
         draft: false
         prerelease: false
       
