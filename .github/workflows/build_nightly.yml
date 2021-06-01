@@ -17,11 +17,22 @@ jobs:
     - name: Build
       run: python3 build.py -a -i
       
-    - uses: actions/upload-artifact@v2.2.3
+    - name: Release Nightly
+      id: nightly
+      uses: actions/create-release@latest
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        name: nightly
-        path: ./archives/*.zip 
-        if-no-files-found: error
-        # use default retention
-        retention-days: 0
+        tag_name: 'nightly'
+        release_name: 'nightly_linux'
+        draft: false
+        prerelease: false
+      
+    #- uses: actions/upload-artifact@v2.2.3
+     # with:
+     #   name: nightly_linux
+     #   path: ./archives/*.zip 
+     #   if-no-files-found: error
+     #   # use default retention
+     #   retention-days: 0
       
