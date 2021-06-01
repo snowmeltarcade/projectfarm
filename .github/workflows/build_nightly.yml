@@ -1,0 +1,17 @@
+name: Build Nightly
+
+on:
+  schedule:
+      # run everyday at midnight
+    - cron: "0 0 * * *"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Build
+      run: python3 build.py -a -i
+      
