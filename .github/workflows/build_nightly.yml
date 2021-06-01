@@ -20,7 +20,7 @@ jobs:
     - name: Get Date
       id: date
       run: |
-        DATE=$(python3 ./.github/tools/getdate.py)
+        echo "$(python3 ./.github/tools/getdate.py)" >> $DATE
         echo '::set-output name=DATE::$DATE'
 
     - name: Echo Date
