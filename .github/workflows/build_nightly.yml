@@ -7,9 +7,6 @@ on:
   # allow manual running of this job
   workflow_dispatch:
 
-env:
-  DATE: ""
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -18,7 +15,8 @@ jobs:
     - uses: actions/checkout@v2
 
     - name: Get Date
-      run: DATE=$(python3 ./.github/tools/getdate.py)
+      id: date
+      run: echo '::set-output name=DATE::$(python3 ./.github/tools/getdate.py)'
 
     - name: Build
       run: python3 build.py -a -i
@@ -30,7 +28,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         tag_name: 'nightly'
-        release_name: 'nightly_${{ env.DATE }}'
+        release_name: 'nightly_${{ steps.date.outputs.DATE }}'
         draft: false
         prerelease: false
       
@@ -42,6 +40,6 @@ jobs:
       with:
         upload_url: ${{ steps.nightly.outputs.upload_url }}
         asset_path: ./archives/projectfarm-1.0.45-linux.zip
-        asset_name: nightly_linux_${{ env.DATE }}.zip
+        asset_name: nightly_linux_${{ steps.date.outputs.DATE }}.zip
         asset_content_type: application/zip
       
