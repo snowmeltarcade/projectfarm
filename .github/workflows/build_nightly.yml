@@ -7,6 +7,9 @@ on:
   # allow manual running of this job
   workflow_dispatch:
 
+env:
+  DATE: ""
+
 jobs:
   build:
     runs-on: ubuntu-latest
