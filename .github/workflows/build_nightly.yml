@@ -17,3 +17,11 @@ jobs:
     - name: Build
       run: python3 build.py -a -i
       
+    - uses: actions/upload-artifact@v2.2.3
+      with:
+        name: nightly
+        path: ./install/*.zip 
+        if-no-files-found: error
+        # use default retention
+        retention-days: 0
+      
