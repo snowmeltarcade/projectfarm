@@ -22,6 +22,7 @@ def configure_arguments():
     parser.add_argument("-i", "--install-dependencies", action="store_true", required=False, help="install library dependencies before build")
     parser.add_argument("-nb", "--no-build", action="store_true", required=False, help="do not perform build")
     parser.add_argument("-ni", "--no-install", action="store_true", required=False, help="do not install after build")
+    parser.add_argument("-an", "--archive-name", action="store", required=False, help="what to name the built archive")
     parser.add_argument("-c", "--cleanup", action="store_true", required=False, help="clean up build and install data/temp files after build")
     args = parser.parse_args()
 
@@ -165,13 +166,18 @@ def do_make(no_build):
     return (build_dir, install_dest_dir)
 
 
-def do_install(install_dir):
+def do_install(install_dir, archive_name_override):
     print("Installing...")
 
     format = "zip"
     version = get_project_version()
 
-    archive_name = os.path.join(cwd, "archives", f"projectfarm-{version}-{platform.system().lower()}")
+    archive_file_name = f"projectfarm-{version}-{platform.system().lower()}"
+
+    if not archive_name_override is None and len(archive_name_override) > 0:
+        archive_file_name = archive_name_override
+
+    archive_name = os.path.join(cwd, "archives", archive_file_name)
 
     shutil.make_archive(archive_name, format, install_dir)
 
@@ -245,7 +251,7 @@ if args.install_dependencies:
 build_dir, install_dir = do_make(args.no_build)
 
 if not args.no_install:
-    do_install(install_dir)
+    do_install(install_dir, args.archive_name)
 
 if args.cleanup:
     cleanup_environment(build_dir, install_dir)
