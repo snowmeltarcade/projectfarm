@@ -24,5 +24,7 @@ jobs:
         echo '::set-output name=DATE::$DATE'
 
     - name: Echo Date
-      run: echo ${{ env.DATE }}
+      run: |
+        echo ${{ env.DATE }}
+        echo ${{ steps.date.outputs.DATE }}
       
