@@ -20,7 +20,7 @@ jobs:
     - uses: actions/upload-artifact@v2.2.3
       with:
         name: nightly
-        path: ./install/*.zip 
+        path: ./archives/*.zip 
         if-no-files-found: error
         # use default retention
         retention-days: 0
