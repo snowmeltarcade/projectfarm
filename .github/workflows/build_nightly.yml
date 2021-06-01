@@ -8,8 +8,42 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
+  # build_linux:
+  #   runs-on: ubuntu-latest
+
+  #   steps:
+  #   - uses: actions/checkout@v2
+
+  #   - name: Build
+  #     id: build
+  #     run: |
+  #       python3 build.py --install-assets --install-dependencies --archive-name=projectfarm_linux
+  #       echo '::set-output name=RELEASE_DATE::'$(python3 ./.github/tools/getdate.py)
+      
+  #   - name: Release Nightly
+  #     id: nightly
+  #     uses: actions/create-release@latest
+  #     env:
+  #       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  #     with:
+  #       tag_name: nightly
+  #       release_name: linux_nightly_${{ steps.build.outputs.RELEASE_DATE }}
+  #       draft: false
+  #       prerelease: false
+      
+  #   - name: Upload Release Asset
+  #     id: upload-release-asset 
+  #     uses: actions/upload-release-asset@v1
+  #     env:
+  #       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  #     with:
+  #       upload_url: ${{ steps.nightly.outputs.upload_url }}
+  #       asset_path: ./archives/projectfarm_linux.zip
+  #       asset_name: linux_nightly_${{ steps.build.outputs.RELEASE_DATE }}.zip
+  #       asset_content_type: application/zip
+      
+build_windows:
+    runs-on: windows_latest
 
     steps:
     - uses: actions/checkout@v2
@@ -17,7 +51,7 @@ jobs:
     - name: Build
       id: build
       run: |
-        python3 build.py -a -i
+        python3 build.py --install-assets --install-dependencies --archive-name=projectfarm_windows
         echo '::set-output name=RELEASE_DATE::'$(python3 ./.github/tools/getdate.py)
       
     - name: Release Nightly
@@ -27,7 +61,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         tag_name: nightly
-        release_name: linux_nightly_${{ steps.build.outputs.RELEASE_DATE }}
+        release_name: windows_nightly_${{ steps.build.outputs.RELEASE_DATE }}
         draft: false
         prerelease: false
       
@@ -38,7 +72,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.nightly.outputs.upload_url }}
-        asset_path: ./archives/projectfarm-1.0.45-linux.zip
-        asset_name: linux_nightly_${{ steps.build.outputs.RELEASE_DATE }}.zip
+        asset_path: ./archives/projectfarm_windows.zip
+        asset_name: windows_nightly_${{ steps.build.outputs.RELEASE_DATE }}.zip
         asset_content_type: application/zip
       
