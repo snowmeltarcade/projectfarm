@@ -57,8 +57,7 @@ jobs:
     - name: Build
       id: build
       run: |
-        python3 ./.github/tools/getdate.py > $RELEASE_DATE
-        echo '::set-output name=RELEASE_DATE::'$RELEASE_DATE
+        echo '::set-output name=RELEASE_DATE::'$(python3 ./.github/tools/getdate.py)
       
     # - name: Release Nightly
     #   id: nightly
