@@ -48,6 +48,12 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
+    # `build.py` requires python 3.8 minimum
+    - name: Setup Python
+      uses: actions/setup-python@v2.2.2
+      with:
+        python-version: 3.8
+
     - name: Build
       id: build
       run: |
