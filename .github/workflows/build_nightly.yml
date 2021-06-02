@@ -21,7 +21,7 @@ jobs:
         echo '::set-output name=RELEASE_DATE::'$(python3 ./.github/tools/getdate.py)
       
     - name: Release Nightly
-      id: linux_nightly
+      id: nightly
       uses: actions/create-release@latest
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
