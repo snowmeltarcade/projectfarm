@@ -42,8 +42,8 @@ jobs:
   #       asset_name: linux_nightly_${{ steps.build.outputs.RELEASE_DATE }}.zip
   #       asset_content_type: application/zip
       
-build_windows:
-    runs-on: windows_latest
+  build_windows:
+    runs-on: windows-latest
 
     steps:
     - uses: actions/checkout@v2
