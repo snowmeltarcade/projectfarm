@@ -97,13 +97,6 @@ if (WIN32)
 			DESTINATION "${PROJECT_BINARY_DIR}/bin"
 		)
 	endforeach()
-
-	foreach(DLL_PATH ${SDL2_TTF_DLL_PATH})
-		file (
-			COPY "${DLL_PATH}"
-			DESTINATION "${PROJECT_BINARY_DIR}/bin"
-		)
-	endforeach()
 endif()
 
 add_subdirectory("logging")
