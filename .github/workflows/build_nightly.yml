@@ -59,16 +59,16 @@ jobs:
       run: |
         echo '::set-output name=RELEASE_DATE::'$(python3 ./.github/tools/getdate.py)
       
-    # - name: Release Nightly
-    #   id: nightly
-    #   uses: actions/create-release@latest
-    #   env:
-    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    #   with:
-    #     tag_name: nightly
-    #     release_name: windows_nightly_${{ steps.build.outputs.RELEASE_DATE }}
-    #     draft: false
-    #     prerelease: false
+    - name: Release Nightly
+      id: nightly
+      uses: actions/create-release@latest
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: nightly
+        release_name: windows_nightly_${{ steps.build.outputs.RELEASE_DATE }}
+        draft: false
+        prerelease: false
       
     # - name: Upload Release Asset
     #   id: upload-release-asset 
