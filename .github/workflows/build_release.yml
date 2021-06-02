@@ -4,8 +4,9 @@ on:
   # allow manual running of this job
   workflow_dispatch:
     inputs:
-      description: "Version"
-      required: true
+      version:
+        description: "Version"
+        required: true
       
 jobs:
   build_linux:
