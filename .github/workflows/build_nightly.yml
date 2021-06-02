@@ -83,7 +83,7 @@ jobs:
   #       asset_content_type: application/zip
       
   build_mac:
-    runs-on: mac-latest
+    runs-on: macos-latest
 
     steps:
     - uses: actions/checkout@v2
