@@ -34,7 +34,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        upload_url: ${{ steps.nightly.outputs.upload_url }}
+        upload_url: ${{ steps.version.outputs.upload_url }}
         asset_path: ./archives/projectfarm_linux.zip
         asset_name: projectfarm_linux_${{ steps.build.outputs.VERSION }}.zip
         asset_content_type: application/zip
