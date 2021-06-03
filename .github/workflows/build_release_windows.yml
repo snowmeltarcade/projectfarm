@@ -16,6 +16,12 @@ jobs:
       uses: actions/setup-python@v2.2.2
       with:
         python-version: 3.8
+        
+    - name: Build
+      id: build
+      run: |
+        python3 build.py --install-assets --install-dependencies --archive-name=projectfarm_windows
+        echo "::set-output name=VERSION::$(python3 ./.github/tools/getversion.py)"
 
     - name: Release Version
       id: version
