@@ -3,10 +3,6 @@ name: Build Release
 on:
   # allow manual running of this job
   workflow_dispatch:
-    inputs:
-      version:
-        description: "Version"
-        required: true
       
 jobs:
   build_linux:
@@ -18,16 +14,17 @@ jobs:
     - name: Build
       id: build
       run: |
-        python3 build.py --install-assets --install-dependencies
+        python3 build.py --install-assets --install-dependencies --archive-name=projectfarm_linux
+        echo '::set-output name=VERSION::'$(python3 ./.github/tools/getversion.py)
       
-    - name: Release Nightly
-      id: nightly
+    - name: Release Version
+      id: version
       uses: actions/create-release@latest
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: linux_nightly_${{ steps.build.outputs.RELEASE_DATE }}
-        release_name: linux_nightly_${{ steps.build.outputs.RELEASE_DATE }}
+        tag_name: linux_version_${{ steps.build.outputs.VERSION }}
+        release_name: linux_version_${{ steps.build.outputs.VERSION }}
         draft: false
         prerelease: false
       
@@ -39,7 +36,7 @@ jobs:
       with:
         upload_url: ${{ steps.nightly.outputs.upload_url }}
         asset_path: ./archives/projectfarm_linux.zip
-        asset_name: linux_nightly_${{ steps.build.outputs.RELEASE_DATE }}.zip
+        asset_name: projectfarm_linux_${{ steps.build.outputs.VERSION }}.zip
         asset_content_type: application/zip
       
   # build_windows:
