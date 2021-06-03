@@ -1,4 +1,4 @@
-name: Build Release
+name: Build Release Linux
 
 on:
   # allow manual running of this job
