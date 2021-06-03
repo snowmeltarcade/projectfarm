@@ -1,6 +1,11 @@
 # Project Farm
 A multiplayer farming simulator.
 
+## Build Status
+### Nighty
+![Nightly Windows](https://github.com/snowmeltarcade/projectfarm/actions/workflows/build_nightly_windows.yml/badge.svg)
+![Nightly Mac](https://github.com/snowmeltarcade/projectfarm/actions/workflows/build_nightly_mac.yml/badge.svg)
+![Nightly Linux](https://github.com/snowmeltarcade/projectfarm/actions/workflows/build_nightly_linux.yml/badge.svg)
 
 ## Build
 ### CLI
