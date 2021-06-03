@@ -33,7 +33,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         tag_name: linux_nightly
-        release_name: linux_nightly_
+        release_name: linux_nightly
         draft: false
         prerelease: false
       
