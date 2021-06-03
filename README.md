@@ -7,6 +7,11 @@ A multiplayer farming simulator.
 ![Nightly Mac](https://github.com/snowmeltarcade/projectfarm/actions/workflows/build_nightly_mac.yml/badge.svg)
 ![Nightly Linux](https://github.com/snowmeltarcade/projectfarm/actions/workflows/build_nightly_linux.yml/badge.svg)
 
+### Release
+![Nightly Windows](https://github.com/snowmeltarcade/projectfarm/actions/workflows/build_release_windows.yml/badge.svg)
+![Nightly Mac](https://github.com/snowmeltarcade/projectfarm/actions/workflows/build_release_mac.yml/badge.svg)
+![Nightly Linux](https://github.com/snowmeltarcade/projectfarm/actions/workflows/build_release_linux.yml/badge.svg)
+
 ## Build
 ### CLI
 ##### Correct as of 2021-05-20
