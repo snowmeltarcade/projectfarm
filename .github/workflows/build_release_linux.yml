@@ -23,8 +23,8 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: linux_version_${{ steps.build.outputs.VERSION }}
-        release_name: linux_version_${{ steps.build.outputs.VERSION }}
+        tag_name: linux_version_${{ steps.build.outputs.VERSION }}.${{ github.run_number }}
+        release_name: linux_version_${{ steps.build.outputs.VERSION }}.${{ github.run_number }}
         draft: false
         prerelease: false
       
@@ -36,7 +36,7 @@ jobs:
       with:
         upload_url: ${{ steps.version.outputs.upload_url }}
         asset_path: ./archives/projectfarm_linux.zip
-        asset_name: projectfarm_linux_${{ steps.build.outputs.VERSION }}.zip
+        asset_name: projectfarm_linux_${{ steps.build.outputs.VERSION }}.${{ github.run_number }}.zip
         asset_content_type: application/zip
       
   # build_windows:
