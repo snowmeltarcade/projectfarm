@@ -1,4 +1,16 @@
-name: Build Nightly
+
+  build_windows:
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    # `build.py` requires python 3.8 minimum
+    - name: Setup Python
+      uses: actions/setup-python@v2.2.2
+      with:
+        python-version: 3.8
+name: Build Nightly Windows
 
 on:
   schedule:
@@ -8,22 +20,17 @@ on:
   workflow_dispatch:
 
 jobs:
-  build_linux:
-    runs-on: ubuntu-latest
-
-    steps:
-    - uses: actions/checkout@v2
-
+  build_windows:
     - name: Build
       id: build
       run: |
-        python3 build.py --install-assets --install-dependencies --archive-name=projectfarm_linux
-        echo '::set-output name=RELEASE_DATE::'$(python3 ./.github/tools/getdate.py)
+        python3 build.py --install-assets --install-dependencies --archive-name=projectfarm_windows
+        echo "::set-output name=RELEASE_DATE::$(python3 ./.github/tools/getdate.py)"
       
     - uses: dev-drprasad/delete-tag-and-release@v0.2.0
       with:
         delete_release: true
-        tag_name: linux_nightly
+        tag_name: windows_nightly
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       
@@ -33,8 +40,8 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: linux_nightly
-        release_name: linux_nightly
+        tag_name: windows_nightly
+        release_name: windows_nightly
         draft: false
         prerelease: false
       
@@ -45,7 +52,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.nightly.outputs.upload_url }}
-        asset_path: ./archives/projectfarm_linux.zip
-        asset_name: linux_nightly_${{ steps.build.outputs.RELEASE_DATE }}.zip
+        asset_path: ./archives/projectfarm_windows.zip
+        asset_name: windows_nightly_${{ steps.build.outputs.RELEASE_DATE }}.zip
         asset_content_type: application/zip
-        
+      
