@@ -65,11 +65,25 @@ target_link_libraries(
 	"nlohmann_json::nlohmann_json"
 )
 
-find_package(OpenGL REQUIRED)
-target_link_libraries(
-	"${CLIENT_PROJECT_NAME}"
-	OpenGL::GL
-)
+if (IOS)
+	find_package(OpenGLES REQUIRED)
+	target_link_libraries(
+		"${CLIENT_PROJECT_NAME}"
+		"${OPENGLES_LIBRARIES}"
+	)
+
+	target_include_directories(
+		"${CLIENT_PROJECT_NAME}"
+		SYSTEM PRIVATE
+		${OPENGLES_INCLUDE_DIR}
+	)
+else()
+	find_package(OpenGL REQUIRED)
+	target_link_libraries(
+		"${CLIENT_PROJECT_NAME}"
+		OpenGL::GL
+	)
+endif()
 
 target_include_directories(
 	"${CLIENT_PROJECT_NAME}"
