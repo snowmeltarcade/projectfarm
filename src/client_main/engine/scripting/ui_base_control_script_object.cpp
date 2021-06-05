@@ -59,6 +59,10 @@ namespace projectfarm::engine::scripting
                                      UIBaseControlScriptObject::IsVisibleGetter,
                                      UIBaseControlScriptObject::IsVisibleSetter);
 
+        controlTemplate->SetAccessor(shared::scripting::Script::StringToParameter("is_enabled", isolate),
+                                     UIBaseControlScriptObject::IsEnabledGetter,
+                                     UIBaseControlScriptObject::IsEnabledSetter);
+
         controlTemplate->Set(v8::String::NewFromUtf8(isolate, "get_custom_property_string").ToLocalChecked(),
                              v8::FunctionTemplate::New(isolate, &UIBaseControlScriptObject::GetCustomPropertyString));
 
@@ -317,7 +321,7 @@ namespace projectfarm::engine::scripting
 
         auto isEnabled = value->BooleanValue(isolate);
 
-        control->SetIsVisible(isEnabled);
+        control->SetIsEnabled(isEnabled);
     }
 
     void UIBaseControlScriptObject::GetCustomPropertyString(const v8::FunctionCallbackInfo<v8::Value>& args)
