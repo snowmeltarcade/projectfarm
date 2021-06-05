@@ -289,6 +289,7 @@ namespace projectfarm::graphics::ui
     {
         if (!this->_canFocus ||
             !this->GetIsVisible() ||
+            !this->GetIsEnabled() ||
             !this->IsPointInControl(x, y))
         {
             return {};
@@ -319,6 +320,12 @@ namespace projectfarm::graphics::ui
         {
             // use this as a string to allow for parameters in uesr controls
             this->_isVisible = isVisible->get<std::string>() == "true";
+        }
+
+        if (auto canFocus = json.find("canFocus"); canFocus != json.end())
+        {
+            // use this as a string to allow for parameters in uesr controls
+            this->_canFocus = canFocus->get<std::string>() == "true";
         }
 
         if (auto fitType = json.find("fitType"); fitType != json.end())
