@@ -14,8 +14,13 @@
 #define IS_LINUX
 #endif
 
+#include "platform_types.h"
+
 namespace projectfarm::engine
 {
+    // returns the current platform
+    // if the platform is unknown, a runtime error is thrown
+    PlatformTypes GetPlatformType();
 }
 
 #endif

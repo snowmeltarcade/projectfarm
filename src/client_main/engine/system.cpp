@@ -1,10 +1,18 @@
 #include <thread>
 #include <filesystem>
+#include <sstream>
 
 #include "system.h"
 
 namespace projectfarm::engine
 {
+    void System::Initialize() noexcept
+    {
+        this->_platformType = engine::GetPlatformType();
+
+        this->LogSystemInfo();
+    }
+
 	void System::StartServer()
 	{
 #if !defined(IS_IOS)
@@ -57,4 +65,77 @@ namespace projectfarm::engine
 			this->StopServer();
 		}
 	}
+
+    void System::LogSystemInfo() noexcept
+    {
+        std::stringstream ss;
+
+        ss << "System Information" << std::endl;
+        ss << "==================" << std::endl;
+
+        ss << "Platform: ";
+
+        switch (this->_platformType)
+        {
+            case PlatformTypes::Windows:
+            {
+                ss << "Windows";
+                break;
+            }
+            case PlatformTypes::MacOS:
+            {
+                ss << "MacOS";
+                break;
+            }
+            case PlatformTypes::Linux:
+            {
+                ss << "Linux";
+                break;
+            }
+            case PlatformTypes::iOS:
+            {
+                ss << "iOS";
+                break;
+            }
+            case PlatformTypes::iOS_Simulator:
+            {
+                ss << "iOS Simulator";
+                break;
+            }
+            case PlatformTypes::iPadOS:
+            {
+                ss << "iPadOS";
+                break;
+            }
+            case PlatformTypes::iPadOS_Simulator:
+            {
+                ss << "iPadOS Simulator";
+                break;
+            }
+            case PlatformTypes::tvOS:
+            {
+                ss << "tvOS";
+                break;
+            }
+            case PlatformTypes::Android:
+            {
+                ss << "Android";
+                break;
+            }
+            case PlatformTypes::AndroidTablet:
+            {
+                ss << "Android Tablet";
+                break;
+            }
+            case PlatformTypes::Unknown:
+            {
+                ss << "Unknown";
+                break;
+            }
+        }
+
+        ss << std::endl;
+
+        this->_logger->LogMessage(ss.str());
+    }
 }

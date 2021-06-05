@@ -19,6 +19,7 @@ target_sources(
 		action_types.h
 		consume_mouse_input.h
 		device_capabilities.h
+		platform_types.h
 	PRIVATE
 		game.cpp
 		keyboard_input.cpp
