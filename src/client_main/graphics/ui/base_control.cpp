@@ -50,6 +50,18 @@ namespace projectfarm::graphics::ui
         this->UpdateVisibility();
     }
 
+    bool BaseControl::GetIsEnabled() const noexcept
+    {
+        // this control itself may be enabled, but if a parent control
+        // is not enabled, then this control does not count as enabled
+        if (this->_parent && !this->_parent->GetIsEnabled())
+        {
+            return false;
+        }
+
+        return this->_isEnabled;
+    }
+
     void BaseControl::HandleClick(uint32_t x, uint32_t y) noexcept
     {
         if (this->IsPointInControl(x, y))
@@ -277,6 +289,7 @@ namespace projectfarm::graphics::ui
     {
         if (!this->_canFocus ||
             !this->GetIsVisible() ||
+            !this->GetIsEnabled() ||
             !this->IsPointInControl(x, y))
         {
             return {};
@@ -307,6 +320,12 @@ namespace projectfarm::graphics::ui
         {
             // use this as a string to allow for parameters in uesr controls
             this->_isVisible = isVisible->get<std::string>() == "true";
+        }
+
+        if (auto canFocus = json.find("canFocus"); canFocus != json.end())
+        {
+            // use this as a string to allow for parameters in uesr controls
+            this->_canFocus = canFocus->get<std::string>() == "true";
         }
 
         if (auto fitType = json.find("fitType"); fitType != json.end())

@@ -18,6 +18,7 @@ target_sources(
         platform.h
 		action_types.h
 		consume_mouse_input.h
+		device_capabilities.h
 	PRIVATE
 		game.cpp
 		keyboard_input.cpp
@@ -32,6 +33,7 @@ target_sources(
 		client_config.cpp
 		player.cpp
         platform.cpp
+		device_capabilities.cpp
 )
 
 add_subdirectory("action_input_sources")

@@ -14,6 +14,7 @@
 #include "networking/packets/server_client_chatbox_message.h"
 #include "engine/action_input_sources/action_input_source_keyboard.h"
 #include "time/clock.h"
+#include "engine/device_capabilities.h"
 
 using namespace std::literals;
 
@@ -389,12 +390,23 @@ namespace projectfarm::scenes::implemented_scenes
             return;
         }
 
+        auto deviceCaps = engine::GetDeviceCapabilities();
+
         std::stringstream ss;
+        ss << std::boolalpha;
 
         ss << "FPS: " << this->GetTimer()->GetFPS() << std::endl;
         ss << "Draw Calls: " << this->GetDebugInformation()->GetLastFrameDrawCalls() << std::endl;
         ss << "Drawn Tiles: " << this->GetDebugInformation()->GetLastFrameTilesDrawn() << std::endl;
         ss << "Pooled Textures: " << this->GetDebugInformation()->GetNumberOfTexturesLoaded();
+        ss << std::endl;
+        ss << "Device Capabilities:" << std::endl;
+        ss << "Has Physical Keyboard: " << deviceCaps.HasPhysicalKeyboard << std::endl;
+        ss << "Has On Screen Keyboard: " << deviceCaps.HasOnScreenKeyboard << std::endl;
+        ss << "Has Physical Mouse: " << deviceCaps.HasPhysicalMouse << std::endl;
+        ss << "Has Touch Screen: " << deviceCaps.HasTouchScreen << std::endl;
+        ss << "Has Game Controller: " << deviceCaps.HasGameController << std::endl;
+        ss << "Has Joystick: " << deviceCaps.HasJoystick << std::endl;
 
         auto debugInfo = ss.str();
 
