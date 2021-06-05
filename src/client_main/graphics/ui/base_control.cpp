@@ -50,6 +50,18 @@ namespace projectfarm::graphics::ui
         this->UpdateVisibility();
     }
 
+    bool BaseControl::GetIsEnabled() const noexcept
+    {
+        // this control itself may be enabled, but if a parent control
+        // is not enabled, then this control does not count as enabled
+        if (this->_parent && !this->_parent->GetIsEnabled())
+        {
+            return false;
+        }
+
+        return this->_isEnabled;
+    }
+
     void BaseControl::HandleClick(uint32_t x, uint32_t y) noexcept
     {
         if (this->IsPointInControl(x, y))

@@ -110,7 +110,9 @@ namespace projectfarm::graphics::ui
     {
         this->UpdateFocusedControlAtPoint(x, y);
 
-        if (this->_focusedControl && *this->_focusedControl)
+        if (this->_focusedControl &&
+            *this->_focusedControl &&
+            (*this->_focusedControl)->GetIsEnabled())
         {
             (*this->_focusedControl)->HandleClick(x, y);
         }
@@ -136,7 +138,9 @@ namespace projectfarm::graphics::ui
         if (mouseOverControl != this->_mouseOverControl)
         {
             // invoke the leave first
-            if (this->_mouseOverControl && *this->_mouseOverControl)
+            if (this->_mouseOverControl &&
+                *this->_mouseOverControl &&
+                (*this->_mouseOverControl)->GetIsEnabled())
             {
                 (*this->_mouseOverControl)->HandleMouseLeave(x, y);
             }
@@ -144,7 +148,9 @@ namespace projectfarm::graphics::ui
             this->_mouseOverControl = mouseOverControl;
 
             // now invoke the enter
-            if (this->_mouseOverControl && *this->_mouseOverControl)
+            if (this->_mouseOverControl &&
+                *this->_mouseOverControl &&
+                (*this->_mouseOverControl)->GetIsEnabled())
             {
                 (*this->_mouseOverControl)->HandleMouseEnter(x, y);
             }
@@ -174,12 +180,19 @@ namespace projectfarm::graphics::ui
             this->_dragControl = this->_baseCanvas->GetFocusedControlAtPoint(x, y);
         }
 
-        (*this->_dragControl)->HandleDrag(x, y, dx, dy);
+        if (this->_dragControl &&
+            *this->_dragControl &&
+            (*this->_dragControl)->GetIsEnabled())
+        {
+            (*this->_dragControl)->HandleDrag(x, y, dx, dy);
+        }
     }
 
     void UI::HandleKeyPress() noexcept
     {
-        if (this->_focusedControl && *this->_focusedControl)
+        if (this->_focusedControl &&
+            *this->_focusedControl &&
+            (*this->_focusedControl)->GetIsEnabled())
         {
             (*this->_focusedControl)->HandleKeyPress();
         }
@@ -187,7 +200,9 @@ namespace projectfarm::graphics::ui
 
     void UI::HandleKeyPress_Enter() noexcept
     {
-        if (this->_focusedControl && *this->_focusedControl)
+        if (this->_focusedControl &&
+            *this->_focusedControl &&
+            (*this->_focusedControl)->GetIsEnabled())
         {
             (*this->_focusedControl)->HandleKeyPress_Enter();
         }

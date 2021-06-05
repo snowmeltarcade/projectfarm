@@ -292,6 +292,34 @@ namespace projectfarm::engine::scripting
         control->SetIsVisible(isVisible);
     }
 
+    void UIBaseControlScriptObject::IsEnabledGetter(v8::Local<v8::String>,
+                                                    const v8::PropertyCallbackInfo<v8::Value>& info)
+    {
+        auto self = info.Holder();
+
+        auto wrap = v8::Local<v8::External>::Cast(self->GetInternalField(
+                UIBaseControlScriptObject::InternalFieldIndex_Control));
+        auto control = static_cast<graphics::ui::BaseControl*>(wrap->Value());
+
+        auto isEnabled = control->GetIsEnabled();
+        info.GetReturnValue().Set(isEnabled);
+    }
+
+    void UIBaseControlScriptObject::IsEnabledSetter(v8::Local<v8::String>, v8::Local<v8::Value> value,
+                                                    const v8::PropertyCallbackInfo<void>& info)
+    {
+        auto self = info.Holder();
+        auto isolate = info.GetIsolate();
+
+        auto wrap = v8::Local<v8::External>::Cast(self->GetInternalField(
+                UIBaseControlScriptObject::InternalFieldIndex_Control));
+        auto control = static_cast<graphics::ui::BaseControl*>(wrap->Value());
+
+        auto isEnabled = value->BooleanValue(isolate);
+
+        control->SetIsVisible(isEnabled);
+    }
+
     void UIBaseControlScriptObject::GetCustomPropertyString(const v8::FunctionCallbackInfo<v8::Value>& args)
     {
         auto isolate = args.GetIsolate();
