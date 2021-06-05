@@ -59,6 +59,11 @@ namespace projectfarm::engine::scripting
         static void IsVisibleSetter(v8::Local<v8::String> property, v8::Local<v8::Value> value,
                                     const v8::PropertyCallbackInfo<void>& info);
 
+        static void IsEnabledGetter(v8::Local<v8::String> property,
+                                    const v8::PropertyCallbackInfo<v8::Value>& info);
+        static void IsEnabledSetter(v8::Local<v8::String> property, v8::Local<v8::Value> value,
+                                    const v8::PropertyCallbackInfo<void>& info);
+
         static void GetCustomPropertyString(const v8::FunctionCallbackInfo<v8::Value>& args);
         static void GetCustomPropertyInt(const v8::FunctionCallbackInfo<v8::Value>& args);
         static void GetCustomPropertyBool(const v8::FunctionCallbackInfo<v8::Value>& args);
