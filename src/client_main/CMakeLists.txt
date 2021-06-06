@@ -1,6 +1,13 @@
 add_executable(
 	"${CLIENT_PROJECT_NAME}"
-	main.cpp)
+	main.cpp
+)
+
+set_target_properties(
+	"${CLIENT_PROJECT_NAME}"
+	MACOSX_BUNDLE TRUE
+	MACOSX_FRAMEWORK_INFO_PLIST ${CMAKE_CURRENT_SOURCE_DIR}/Info.plist
+)
 
 install(
 	TARGETS
