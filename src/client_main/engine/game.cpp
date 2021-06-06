@@ -1,6 +1,7 @@
 #include <SDL.h>
 
 #include "game.h"
+#include "device_capabilities.h"
 #include "scenes/implemented_scenes/authenticate_scene.h"
 
 namespace projectfarm::engine
@@ -249,6 +250,8 @@ namespace projectfarm::engine
 
 		while (SDL_PollEvent(&e))
 		{
+            engine::UpdateDeviceCapabilities(e);
+
 			switch (e.type)
 			{
             case SDL_WINDOWEVENT:
