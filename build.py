@@ -116,7 +116,8 @@ def do_make(no_build):
 
     platform_name = get_platform_name()
 
-    clang_path = os.path.join(cwd, "libraries", "clang", platform_name, "bin")
+    clang_platform_path = os.path.join(cwd, "libraries", "clang", platform_name)
+    clang_path = os.path.join(clang_platform_path, "bin")
 
     clang_directory = os.path.join(clang_path, "clang")
     clangxx_directory = os.path.join(clang_path, "clang++")
@@ -145,7 +146,7 @@ def do_make(no_build):
 
         # ensure clang is on PATH
         env = os.environ.copy()
-        env["PATH"] += os.pathsep + "clang_path"
+        env["PATH"] += os.pathsep + clang_platform_path
 
         run_cmd_env(cmd, env)
 
