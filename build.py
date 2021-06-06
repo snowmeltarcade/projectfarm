@@ -143,16 +143,20 @@ def do_make(no_build):
                 f"-DCMAKE_RC_COMPILER={llvmrc_directory}",
                 ".."]
 
-        run_cmd(cmd)
+        # ensure clang is on PATH
+        env = os.environ.copy()
+        env["PATH"] += os.pathsep + "clang_path"
+
+        run_cmd_env(cmd, env)
 
         cmd = [cmake_path, "--build", ".", "--config", "Release", "--verbose"]
-        run_cmd(cmd)
+        run_cmd_env(cmd, env)
 
         cmd = [ctest_path]
-        run_cmd(cmd)
+        run_cmd_env(cmd, env)
 
         cmd = [cmake_path, "--install", ".", "--config", "Release"]
-        run_cmd(cmd)
+        run_cmd_env(cmd, env)
 
     install_src_dir = os.path.join(build_dir, install_dir_name)
     install_dest_dir = os.path.join(cwd, install_dir_name, platform.system())
