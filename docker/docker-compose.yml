@@ -1,0 +1,8 @@
+version: "3.9"
+
+services:
+  linux_server:
+    build:
+      context: ../
+      dockerfile: ./docker/LinuxServer.dockerfile
+  
