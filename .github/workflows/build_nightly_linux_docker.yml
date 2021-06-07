@@ -22,5 +22,5 @@ jobs:
         password: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Build
-      run: docker compose -f ./docker/linux-server.yml build
+      run: docker compose build -f ./docker/linux-server.yml
       
