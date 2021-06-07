@@ -25,8 +25,8 @@ jobs:
     - name: Build
       run: docker-compose -f ./docker/linux-server.yml build
       env:
-        BRANCH_NAME: release-${{ steps.build.outputs.VERSION }}
-        IMAGE_VERSION: ${{ steps.build.outputs.VERSION }}
+        BRANCH_NAME: release-${{ steps.version.outputs.VERSION }}
+        IMAGE_VERSION: ${{ steps.version.outputs.VERSION }}
       
     - name: Push
-      run: docker push ghcr.io/snowmeltarcade/projectfarm/projectfarm_server:${{ steps.build.outputs.VERSION }}
+      run: docker push ghcr.io/snowmeltarcade/projectfarm/projectfarm_server:${{ steps.version.outputs.VERSION }}
