@@ -39,4 +39,10 @@ RUN apt-get update -y && \
     rm -rf /usr/projectfarm/client/ && \
     rm -rf /usr/projectfarm/server/
 
+# TCP
+EXPOSE 40000
+
+# UDP
+EXPOSE 40002
+
 CMD ["/usr/projectfarm/latest/bin/projectfarm_server"]
