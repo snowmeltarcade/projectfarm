@@ -5,7 +5,7 @@ services:
     build:
       context: ../
       dockerfile: ./docker/LinuxServer.dockerfile
-    image: projectfarm_server:${IMAGE_VERSION:-latest}
+    image: ghcr.io/snowmeltarcade/projectfarm/projectfarm_server:${IMAGE_VERSION:-latest}
     ports:
       # TCP
       - "40000:40000"
