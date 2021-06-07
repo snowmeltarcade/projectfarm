@@ -21,8 +21,6 @@ jobs:
         username: ${{ github.repository_owner }}
         password: ${{ secrets.GITHUB_TOKEN }}
 
-    - name: Docker Buildx Bake
-      uses: docker/bake-action@v1.4.2
-      with:
-        files: ./docker/linux-server.yml
+    - name: Build
+      run: docker compose -f ./docker/linux-server.yml build
       
