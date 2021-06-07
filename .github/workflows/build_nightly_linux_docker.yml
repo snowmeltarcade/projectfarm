@@ -25,5 +25,5 @@ jobs:
       uses: docker/bake-action@v1.4.2
       with:
         files: |
-          ./docker/linux-server.yml
+          ./projectfarm/docker/linux-server.yml
       
