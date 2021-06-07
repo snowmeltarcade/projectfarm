@@ -1,0 +1,15 @@
+name: Build Nightly Linux Docker
+
+on:
+  schedule:
+      # run everyday at midnight
+    - cron: "0 0 * * *"
+  # allow manual running of this job
+  workflow_dispatch:
+
+jobs:
+  build_linux_docker:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
