@@ -1,0 +1,28 @@
+name: Build Release Linux Docker
+
+on:
+  # allow manual running of this job
+  workflow_dispatch:
+
+jobs:
+  build_linux_docker:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    
+    - name: Login to GitHub Container Registry
+      uses: docker/login-action@v1
+      with:
+        registry: ghcr.io
+        username: ${{ github.repository_owner }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Build
+      run: |
+        export BRANCH_NAME=release-$(python3 ./github/getversion.py)
+        export IMAGE_NAME=$(python3 ./github/getversion.py)
+        docker-compose -f ./docker/linux-server.yml build
+      
+    - name: Push
+      run: docker push ghcr.io/snowmeltarcade/projectfarm/projectfarm_server:release-$(python3 ./github/getversion.py)
