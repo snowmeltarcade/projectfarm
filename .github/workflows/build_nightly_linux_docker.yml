@@ -24,7 +24,5 @@ jobs:
     - name: Docker Buildx Bake
       uses: docker/bake-action@v1.4.2
       with:
-        # using a full path here doesn't seem correct
-        files: |
-          /home/runner/work/projectfarm/projectfarm/docker/linux-server.yml
+        files: ./docker/linux-server.yml
       
