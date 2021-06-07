@@ -9,7 +9,7 @@ RUN apt-get update -y && \
     apt-get dist-upgrade -y && \
     apt-get autoclean -y && \
     apt-get autoremove -y && \
-    apt-get install -y software-properties-common python3.8 git cmake curl && \
+    apt-get install -y apt-utils software-properties-common python3.8 git cmake curl wget && \
     # install the clang dependencies for the compiler we use
     bash -c "$(wget -O - https://apt.llvm.org/llvm.sh)"
 
@@ -17,17 +17,22 @@ WORKDIR /src
 
 RUN git clone https://github.com/snowmeltarcade/projectfarm.git && \
     cd ./projectfarm && \
-    python3 build.py --install-assets --install-dependencies --archive-name=projectfarm && \
-    ls /src/archives/
+    python3 build.py --install-assets --install-dependencies --archive-name=projectfarm
 
 FROM ubuntu:20.04 as prod
 
-COPY --from=dev /src/archives/projectfarm.zip /temp/projectfarm.zip
+COPY --from=dev /src/projectfarm/archives/ /temp/
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+WORKDIR /usr/projectfarm/
 
 RUN apt-get update -y && \
     apt-get upgrade -y && \
     apt-get dist-upgrade -y && \
     apt-get autoclean -y && \
     apt-get autoremove -y && \
-    apt-get install -y unzip \
-    unzip /temp/projectfarm.zip -d /usr/projectfarm/
+    apt-get install -y zip unzip && \
+    unzip /temp/projectfarm.zip
+
+CMD ["/usr/projectfarm/latest/bin/projectfarm_server"]
