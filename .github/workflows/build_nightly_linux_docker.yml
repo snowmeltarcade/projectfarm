@@ -25,7 +25,4 @@ jobs:
       run: docker-compose -f ./docker/linux-server.yml build
       
     - name: Push
-      uses: docker/build-push-action@v2
-      with:
-        push: true
-        tags: projectfarm_server:latest
+      run: docker push projectfarm_server:latest
