@@ -25,5 +25,6 @@ jobs:
       uses: docker/bake-action@v1.4.2
       with:
         files: |
-          docker/linux-server.yml
+          # using a full path here doesn't seem correct
+          /home/runner/work/projectfarm/projectfarm/docker/linux-server.yml
       
