@@ -4,6 +4,8 @@ FROM ubuntu:20.04 as dev
 # https://askubuntu.com/questions/909277/avoiding-user-interaction-with-tzdata-when-installing-certbot-in-a-docker-contai
 ENV DEBIAN_FRONTEND=noninteractive
 
+ENV BRANCH_NAME=main
+
 RUN apt-get update -y && \
     apt-get upgrade -y && \
     apt-get dist-upgrade -y && \
@@ -17,6 +19,7 @@ WORKDIR /src
 
 RUN git clone https://github.com/snowmeltarcade/projectfarm.git && \
     cd ./projectfarm && \
+    git checkout origin/${BRANCH_NAME} && \
     python3 build.py --install-assets --install-dependencies --archive-name=projectfarm
 
 FROM ubuntu:20.04 as prod
