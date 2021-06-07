@@ -19,10 +19,10 @@ jobs:
         password: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Build
-      run: |
-        export BRANCH_NAME=release-$(python3 ./github/getversion.py)
-        export IMAGE_NAME=$(python3 ./github/getversion.py)
-        docker-compose -f ./docker/linux-server.yml build
+      run: docker-compose -f ./docker/linux-server.yml build
+      env:
+        BRANCH_NAME: release-$(python3 ./github/getversion.py)
+        IMAGE_NAME: $(python3 ./github/getversion.py)
       
     - name: Push
       run: docker push ghcr.io/snowmeltarcade/projectfarm/projectfarm_server:release-$(python3 ./github/getversion.py)
