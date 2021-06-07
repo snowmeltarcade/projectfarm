@@ -1,0 +1,13 @@
+version: "3.9"
+
+services:
+  linux_server:
+    build:
+      context: ../
+      dockerfile: ./docker/LinuxServer.dockerfile
+    image: projectfarm_server:${IMAGE_VERSION:-latest}
+    ports:
+      # TCP
+      - "40000:40000"
+      # UDP
+      - "40002:40002"
