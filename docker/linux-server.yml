@@ -1,0 +1,15 @@
+version: "3.9"
+
+services:
+  linux_server:
+    build:
+      context: ../
+      dockerfile: ./docker/LinuxServer.dockerfile
+    image: ghcr.io/snowmeltarcade/projectfarm/projectfarm_server:${IMAGE_VERSION:-latest}
+    environment:
+      - BRANCH_NAME=${BRANCH_NAME:-main}
+    ports:
+      # TCP
+      - "40000:40000"
+      # UDP
+      - "40002:40002"
