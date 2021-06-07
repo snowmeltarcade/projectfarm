@@ -33,6 +33,10 @@ RUN apt-get update -y && \
     apt-get autoclean -y && \
     apt-get autoremove -y && \
     apt-get install -y zip unzip && \
-    unzip /temp/projectfarm.zip
+    unzip /temp/projectfarm.zip && \
+    # remove the files we don't need to run the server
+    rm /temp/projectfarm.zip && \
+    rm -rf /usr/projectfarm/client/ && \
+    rm -rf /usr/projectfarm/server/
 
 CMD ["/usr/projectfarm/latest/bin/projectfarm_server"]
