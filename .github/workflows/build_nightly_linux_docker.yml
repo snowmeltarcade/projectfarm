@@ -25,4 +25,4 @@ jobs:
       run: docker-compose -f ./docker/linux-server.yml build
       
     - name: Push
-      run: docker push projectfarm_server:latest
+      run: docker push ghcr.io/snowmeltarcade/projectfarm/projectfarm_server:latest
