@@ -57,6 +57,10 @@ namespace projectfarm::engine
 		    return false;
         }
 
+        this->_system.SetLogger(this->_logger);
+        this->_system.SetDataProvider(this->_dataProvider);
+        this->_system.Initialize();
+
 		this->_clientConfig.SetLogger(this->_logger);
 		this->_clientConfig.SetDataProvider(this->_dataProvider);
 		if (!this->_clientConfig.LoadConfig())
@@ -64,9 +68,6 @@ namespace projectfarm::engine
 		    this->_logger->LogMessage("Failed to load client config.");
 		    return false;
         }
-
-		this->_system.SetLogger(this->_logger);
-		this->_system.SetDataProvider(this->_dataProvider);
 
 		if (this->_systemArguments.GetShouldStartServer())
 		{
