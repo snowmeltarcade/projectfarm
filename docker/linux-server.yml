@@ -6,7 +6,7 @@ services:
       context: ../
       dockerfile: ./docker/LinuxServer.dockerfile
     image: ghcr.io/snowmeltarcade/projectfarm/projectfarm_server:${IMAGE_VERSION:-latest}
-    environment:
+    args:
       - BRANCH_NAME=${BRANCH_NAME:-main}
     ports:
       # TCP
