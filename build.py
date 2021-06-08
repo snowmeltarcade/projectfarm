@@ -147,8 +147,6 @@ def do_make(no_build, ios, ios_simulator):
                     "-DCMAKE_OSX_DEPLOYMENT_TARGET=9.3",
                     "-DMACOSX_BUNDLE_BUNDLE_NAME=ProjectFarm",
                     f"-DMACOSX_BUNDLE_BUNDLE_VERSION={get_project_version()}",
-                    f"-MACOSX_BUNDLE_LONG_VERSION_STRING={get_project_version()}",
-                    f"-MACOSX_BUNDLE_SHORT_VERSION_STRING={get_project_version()}",
                     "-DMACOSX_BUNDLE_COPYRIGHT=\"Snow Melt Arcade © 2021\"",
                     "-DMACOSX_BUNDLE_INFO_STRING=© 2021",
                     "-DMACOSX_BUNDLE_GUI_IDENTIFIER=com.snowmeltarcade.projectfarm"]

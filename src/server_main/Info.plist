@@ -1,0 +1,6 @@
+<key>CFBundleName</key>
+    <string>Project Farm Server</string>
+<key>CFBundleVersion</key>
+    <string>1.0.46</string>
+<key>CFBundleIdentifier</key>
+    <string>com.snowmeltarcade.projectfarm.server</string>
