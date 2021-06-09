@@ -40,6 +40,7 @@ namespace projectfarm::server
 		if (SDL_Init(SDL_INIT_EVENTS) < 0)
         {
 		    this->_logger->LogMessage("Failed to init SDL.");
+            this->_logger->LogMessage(SDL_GetError());
 		    return false;
         }
 
