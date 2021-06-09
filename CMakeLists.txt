@@ -36,7 +36,11 @@ else()
 endif()
 
 if (UNIX AND NOT APPLE)
+	message(INFO "Linux == True")
 	set(LINUX TRUE)
+elseif(APPLE AND CMAKE_SYSTEM_NAME STREQUAL "iOS")
+	message(INFO "iOS == True")
+	set(IOS TRUE)
 endif()
 
 set("LIBRARIES_ROOT_DIR" "${CMAKE_CURRENT_LIST_DIR}/libraries")
