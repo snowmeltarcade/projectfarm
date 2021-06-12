@@ -10,3 +10,8 @@ elseif (APPLE)
 else()
     set(V8_LIBRARIES "${LIBRARIES_ROOT_DIR}/v8/linux/libv8_libbase.a;${LIBRARIES_ROOT_DIR}/v8/linux/libv8_monolith.a" CACHE INTERNAL "V8_LIBRARIES")
 endif()
+
+# iOS doesn't support v8 pointer compression
+if (NOT IOS)
+    add_definitions(-DV8_31BIT_SMIS_ON_64BIT_ARCH -DV8_COMPRESS_POINTERS)
+endif()
