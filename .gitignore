@@ -7,3 +7,4 @@ install/*
 cmake-build-*/*
 data/*
 iosbuild/*
+iossimbuild/*
