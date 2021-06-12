@@ -89,7 +89,7 @@ You can also pass the following flags:
 * `-ios` builds just the iOS project file
 * `-iossim` builds just the iOS Simulator project file
 
-Please first run `build.py` to install the assets and dependencies.
+Please first [run `build.py`](#build) to install the assets and dependencies.
 
 When building the iOS project, you will need to manually set the team and other signing details.
 
