@@ -88,6 +88,7 @@ You can also pass the following flags:
 
 * `-ios` builds just the iOS project file
 * `-iossim` builds just the iOS Simulator project file
+* `-c` sets the build configuration. You can choose `debug` or `release`.
 
 Please first [run `build.py`](#build) to install the assets and dependencies.
 
