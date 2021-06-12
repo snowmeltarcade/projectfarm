@@ -7,8 +7,12 @@ if (IOS)
 		"${SHARED_LIBRARY_PROJECT_NAME}"
 		PROPERTIES
 			MACOSX_BUNDLE TRUE
-			MACOSX_BUNDLE_INFO_PLIST ${CMAKE_CURRENT_SOURCE_DIR}/Info.plist
+			MACOSX_BUNDLE_INFO_PLIST ${CMAKE_CURRENT_BINARY_DIR}/Info.plist
+			XCODE_ATTRIBUTE_BUNDLE_IDENTIFIER "com.snowmeltarcade.projectfarm.shared"
+			XCODE_ATTRIBUTE_PRODUCT_BUNDLE_IDENTIFIER "com.snowmeltarcade.projectfarm.shared"
 	)
+
+	configure_file("Info.plist.in" "Info.plist")
 endif()
 
 target_include_directories(
