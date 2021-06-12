@@ -89,6 +89,8 @@ You can also pass the following flags:
 * `-ios` builds just the iOS project file
 * `-iossim` builds just the iOS Simulator project file
 
+Please first run `build.py` to install the assets and dependencies.
+
 When building the iOS project, you will need to manually set the team and other signing details.
 
 Note: This will only run on MacOS.
@@ -116,3 +118,7 @@ Set the CMake settings as follows:
 ### Visual Studio
 ##### Correct as of 2021-05-30
 As of Visual Studio 2019 (16.9.5), LLVM crashes with an error of `out of memory`, `illegal instruction`. Due to this, building with Visual Studio is not officially supported.
+
+## License
+
+![GitHub](https://img.shields.io/github/license/snowmeltarcade/projectfarm?style=plastic)
