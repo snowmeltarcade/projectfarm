@@ -71,6 +71,28 @@ For instance:
 projectfarm-1.0.45-darwin.zip
 ```
 
+#### iOS
+##### Correct as of 2021-06-12
+Currently, there is not automated way of building for iOS. You can generate the iOS and iOS Simulator Xcode project files by running `generate_ios_projects.py`:
+
+```
+python3 generate_ios_projects.py
+```
+
+This will create two folders:
+
+* `iosbuild` contains the project file for iOS
+* `iossimbuild` contains the project file for iOS Simulator
+
+You can also pass the following flags:
+
+* `-ios` builds just the iOS project file
+* `-iossim` builds just the iOS Simulator project file
+
+When building the iOS project, you will need to manually set the team and other signing details.
+
+Note: This will only run on MacOS.
+
 ### CLion
 ##### Correct as of 2021-05-29
 Open the project at the project root and CLion will recognize the base `CMakeLists.txt` file.
