@@ -26,6 +26,9 @@ function(SetupiOSBuild PROJECT_NAME IDENTIFIER NAME)
 			XCODE_ATTRIBUTE_PRODUCT_NAME "Project Farm ${NAME}"
 			XCODE_ATTRIBUTE_BUNDLE_NAME "Project Farm ${NAME}"
 			XCODE_ATTRIBUTE_EXECUTABLE_NAME "projectfarm${IDENTIFIER}"
+			# some of the libraries we use are not build with bitcode, so
+			# disable it for the main build also
+			XCODE_ATTRIBUTE_ENABLE_BITCODE "No"
 	)
 
 	configure_file("Info.plist.in" "Info.plist")
