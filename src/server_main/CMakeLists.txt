@@ -4,19 +4,7 @@ add_executable(
 )
 
 if (IOS)
-	set_target_properties(
-		"${SERVER_PROJECT_NAME}"
-		PROPERTIES
-			MACOSX_BUNDLE TRUE
-			MACOSX_BUNDLE_INFO_PLIST ${CMAKE_CURRENT_BINARY_DIR}/Info.plist
-			XCODE_ATTRIBUTE_BUNDLE_IDENTIFIER "com.snowmeltarcade.projectfarm.server"
-			XCODE_ATTRIBUTE_PRODUCT_BUNDLE_IDENTIFIER "com.snowmeltarcade.projectfarm.server"
-			XCODE_ATTRIBUTE_PRODUCT_NAME "Project Farm Server"
-			XCODE_ATTRIBUTE_BUNDLE_NAME "Project Farm Server"
-			XCODE_ATTRIBUTE_EXECUTABLE_NAME "projectfarmserver"
-	)
-
-	configure_file("Info.plist.in" "Info.plist")
+	SetupiOSBuild("${SERVER_PROJECT_NAME}" "server" "Server")
 endif()
 
 install(

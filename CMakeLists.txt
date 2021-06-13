@@ -43,8 +43,15 @@ elseif(APPLE AND CMAKE_SYSTEM_NAME STREQUAL "iOS")
 	set(IOS TRUE)
 endif()
 
-set("LIBRARIES_ROOT_DIR" "${CMAKE_CURRENT_LIST_DIR}/libraries")
-include("${CMAKE_CURRENT_LIST_DIR}/cmake/libraries.cmake")
+if (IOS)
+	set_property(GLOBAL PROPERTY IOS_RESOURCE_FILES_FROM "")
+	set_property(GLOBAL PROPERTY IOS_RESOURCE_FILES_TO "")
+endif()
 
-add_subdirectory("src")
+set("LIBRARIES_ROOT_DIR" "${CMAKE_CURRENT_LIST_DIR}/libraries")
+
+include("${CMAKE_CURRENT_LIST_DIR}/cmake/libraries.cmake")
+include("${CMAKE_CURRENT_LIST_DIR}/cmake/Functions.cmake")
+
 add_subdirectory("data")
+add_subdirectory("src")
