@@ -6,3 +6,5 @@ install/*
 .vscode/*
 cmake-build-*/*
 data/*
+iosbuild/*
+iossimbuild/*

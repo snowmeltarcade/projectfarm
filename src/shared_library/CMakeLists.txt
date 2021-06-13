@@ -2,6 +2,19 @@ add_library(
     "${SHARED_LIBRARY_PROJECT_NAME}"
 )
 
+if (IOS)
+	set_target_properties(
+		"${SHARED_LIBRARY_PROJECT_NAME}"
+		PROPERTIES
+			MACOSX_BUNDLE TRUE
+			MACOSX_BUNDLE_INFO_PLIST ${CMAKE_CURRENT_BINARY_DIR}/Info.plist
+			XCODE_ATTRIBUTE_BUNDLE_IDENTIFIER "com.snowmeltarcade.projectfarm.shared"
+			XCODE_ATTRIBUTE_PRODUCT_BUNDLE_IDENTIFIER "com.snowmeltarcade.projectfarm.shared"
+	)
+
+	configure_file("Info.plist.in" "Info.plist")
+endif()
+
 target_include_directories(
     "${SHARED_LIBRARY_PROJECT_NAME}"
     PUBLIC
@@ -39,9 +52,6 @@ target_link_libraries(
 	"${SHARED_LIBRARY_PROJECT_NAME}"
 	"${SQLITE_PROJECT_NAME}::${SQLITE_PROJECT_NAME}"
 )
-
-# Used for v8
-add_definitions(-DV8_31BIT_SMIS_ON_64BIT_ARCH -DV8_COMPRESS_POINTERS)
 
 # to link against v8
 if (WIN32)

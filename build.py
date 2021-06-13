@@ -24,6 +24,8 @@ def configure_arguments():
     parser.add_argument("-ni", "--no-install", action="store_true", required=False, help="do not install after build")
     parser.add_argument("-an", "--archive-name", action="store", required=False, help="what to name the built archive")
     parser.add_argument("-c", "--cleanup", action="store_true", required=False, help="clean up build and install data/temp files after build")
+    parser.add_argument("-ios", "--ios", action="store_true", required=False, help="build for iOS. Note: Only works on MacOS")
+    parser.add_argument("-iossim", "--ios-simulator", action="store_true", required=False, help="build for iOS Simulator. Note: Only works on MacOS")
     args = parser.parse_args()
 
     return args
@@ -106,8 +108,12 @@ def get_platform_name():
     else:
         return "windows"
 
-def do_make(no_build):
+def do_make(no_build, ios, ios_simulator):
     print("Making...")
+
+    if (ios or ios_simulator) and platform.system() != "Darwin":
+        print("Can only build iOS and iOS Simulator on MacOS")
+        return
 
     build_dir = os.path.join(cwd, build_dir_name)
     make_dir(build_dir)
@@ -133,11 +139,28 @@ def do_make(no_build):
     if not no_build:
         cmd = [cmake_path]
 
-        ninja_path = os.path.join(cwd, "libraries", "ninja", platform_name, "ninja")
-        if platform.system() == "Windows":
-            ninja_path = ninja_path.replace("\\", "/") + ".exe"
+        # don't use Ninja when building for iOS/iOS Simulator
+        if ios or ios_simulator:
+            cmd += ["-GXcode",
+                    "-DCMAKE_SYSTEM_NAME=iOS",
+                    "-DCMAKE_XCODE_ATTRIBUTE_ONLY_ACTIVE_ARCH=NO",
+                    "-DCMAKE_OSX_DEPLOYMENT_TARGET=9.3",
+                    "-DMACOSX_BUNDLE_BUNDLE_NAME=ProjectFarm",
+                    f"-DMACOSX_BUNDLE_BUNDLE_VERSION={get_project_version()}",
+                    "-DMACOSX_BUNDLE_COPYRIGHT=\"Snow Melt Arcade © 2021\"",
+                    "-DMACOSX_BUNDLE_INFO_STRING=© 2021",
+                    "-DMACOSX_BUNDLE_GUI_IDENTIFIER=com.snowmeltarcade.projectfarm"]
+                    
+            if ios:
+                cmd += ["-DCMAKE_OSX_ARCHITECTURES=arm64"]
+            else:
+                cmd += ["-DCMAKE_OSX_ARCHITECTURES=x86_64"]
+        else:
+            ninja_path = os.path.join(cwd, "libraries", "ninja", platform_name, "ninja")
+            if platform.system() == "Windows":
+                ninja_path = ninja_path.replace("\\", "/") + ".exe"
 
-        cmd += [f"-DCMAKE_MAKE_PROGRAM={ninja_path}", "-GNinja"]
+            cmd += [f"-DCMAKE_MAKE_PROGRAM={ninja_path}", "-GNinja"]
 
         cmd += [f"-DCMAKE_C_COMPILER={clang_directory}",
                 f"-DCMAKE_CXX_COMPILER={clangxx_directory}",
@@ -151,6 +174,12 @@ def do_make(no_build):
         run_cmd_env(cmd, env)
 
         cmd = [cmake_path, "--build", ".", "--config", "Release", "--verbose"]
+
+        if ios:
+            cmd += ["--", "-sdk", "iphoneos"]
+        elif ios_simulator:
+            cmd += ["--", "-sdk", "iphonesimulator"]
+
         run_cmd_env(cmd, env)
 
         cmd = [ctest_path]
@@ -253,7 +282,7 @@ if args.install_assets:
 if args.install_dependencies:
     install_dependencies()
 
-build_dir, install_dir = do_make(args.no_build)
+build_dir, install_dir = do_make(args.no_build, args.ios, args.ios_simulator)
 
 if not args.no_install:
     do_install(install_dir, args.archive_name)

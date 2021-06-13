@@ -3,6 +3,10 @@ add_executable(
     main.cpp
 )
 
+if (IOS)
+	SetupiOSBuild("${SERVER_PROJECT_NAME}" "server" "Server")
+endif()
+
 install(
 	TARGETS
 		"${SERVER_PROJECT_NAME}"
@@ -50,9 +54,6 @@ if(IS_DEBUG)
 		LOGGING_PACKET_DEBUG_INFO
 	)
 endif()
-
-# Used for v8
-add_definitions(-DV8_31BIT_SMIS_ON_64BIT_ARCH -DV8_COMPRESS_POINTERS)
 
 # to link against v8
 if (WIN32)

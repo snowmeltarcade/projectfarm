@@ -31,6 +31,11 @@ elseif (LINUX)
     set(SDL2_LIBRARIES "${LIBRARIES_ROOT_DIR}/sdl/linux/libSDL2.a;" CACHE INTERNAL "SDL2_LIBRARIES")
     set(SDL2_NET_LIBRARIES "${LIBRARIES_ROOT_DIR}/sdl_net/linux/libSDL2_net.a" CACHE INTERNAL "SDL2_NET_LIBRARIES")
     set(SDL2_IMG_LIBRARIES "${LIBRARIES_ROOT_DIR}/sdl_image/linux/libSDL2_image.a" CACHE INTERNAL "SDL2_IMG_LIBRARIES")
+elseif (IOS)
+    # we can include both the arm64 and x86_64 libs here as Xcode will choose the correct ones
+    set(SDL2_LIBRARIES "${LIBRARIES_ROOT_DIR}/sdl/ios/libSDL2.a;${LIBRARIES_ROOT_DIR}/sdl/ios/libSDL2main.a;${LIBRARIES_ROOT_DIR}/sdl/ios_simulator/libSDL2.a;${LIBRARIES_ROOT_DIR}/sdl/ios_simulator/libSDL2main.a;-lm -liconv -Wl,-framework,CoreAudio -Wl,-framework,AudioToolbox -Wl,-weak_framework,CoreHaptics -Wl,-weak_framework,GameController -lobjc -Wl,-framework,CoreVideo,-framework,IOKit -Wl,-weak_framework,QuartzCore -Wl,-weak_framework,Metal -Wl,-weak_framework,AVFoundation -Wl,-weak_framework,CoreMotion -Wl,-weak_framework,CoreGraphics -Wl,-weak_framework,OpenGLES -Wl,-weak_framework,UIKit -Wl,-weak_framework,Foundation -Wl,-weak_framework,ImageIO -Wl,-weak_framework,MobileCoreServices" CACHE INTERNAL "SDL2_LIBRARIES")
+    set(SDL2_NET_LIBRARIES "${LIBRARIES_ROOT_DIR}/sdl_net/ios/libSDL2_net.a;${LIBRARIES_ROOT_DIR}/sdl_net/ios_simulator/libSDL2_net.a" CACHE INTERNAL "SDL2_NET_LIBRARIES")
+    set(SDL2_IMG_LIBRARIES "${LIBRARIES_ROOT_DIR}/sdl_image/ios/libSDL2_image.a;${LIBRARIES_ROOT_DIR}/sdl_image/ios_simulator/libSDL2_image.a" CACHE INTERNAL "SDL2_IMG_LIBRARIES")
 else()
     # These SDL linker flags were gleaned by running `sdl2-config --static-libs` locally
     set(SDL2_LIBRARIES "${LIBRARIES_ROOT_DIR}/sdl/darwin/libSDL2.a;-lm -liconv -Wl,-framework,CoreAudio -Wl,-framework,AudioToolbox -Wl,-weak_framework,CoreHaptics -Wl,-weak_framework,GameController -Wl,-framework,ForceFeedback -lobjc -Wl,-framework,CoreVideo -Wl,-framework,Cocoa -Wl,-framework,Carbon -Wl,-framework,IOKit -Wl,-weak_framework,QuartzCore -Wl,-weak_framework,Metal" CACHE INTERNAL "SDL2_LIBRARIES")

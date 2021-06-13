@@ -5,6 +5,9 @@ if (WIN32)
 
 	# SDL defines its own main, so ensure we choose the correct main
 	add_link_options(-Wl,-subsystem:console)
+elseif (IOS)
+	# for SDL
+	add_definitions(-D__IPHONEOS__)
 endif()
 
 if (MSVC)

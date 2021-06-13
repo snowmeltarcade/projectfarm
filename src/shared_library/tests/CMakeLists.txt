@@ -5,6 +5,15 @@ add_executable(
     test_util.h
 )
 
+if (IOS)
+	set_target_properties(
+		"${SHARED_LIBRARY_TEST_PROJECT_NAME}"
+		PROPERTIES
+			MACOSX_BUNDLE TRUE
+			MACOSX_BUNDLE_INFO_PLIST ${CMAKE_CURRENT_SOURCE_DIR}/Info.plist
+	)
+endif()
+
 target_link_libraries(
     "${SHARED_LIBRARY_TEST_PROJECT_NAME}"
     Catch2::Catch2
@@ -27,9 +36,6 @@ target_link_libraries(
 	"${SHARED_LIBRARY_TEST_PROJECT_NAME}"
 	${SDL2_LIBRARIES}
 )
-
-# Used for v8
-add_definitions(-DV8_31BIT_SMIS_ON_64BIT_ARCH -DV8_COMPRESS_POINTERS)
 
 # to link against v8
 if (WIN32)

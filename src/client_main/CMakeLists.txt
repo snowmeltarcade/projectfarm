@@ -1,6 +1,11 @@
 add_executable(
 	"${CLIENT_PROJECT_NAME}"
-	main.cpp)
+	main.cpp
+)
+
+if (IOS)
+	SetupiOSBuild("${CLIENT_PROJECT_NAME}" "client" "Client")
+endif()
 
 install(
 	TARGETS
@@ -65,11 +70,25 @@ target_link_libraries(
 	"nlohmann_json::nlohmann_json"
 )
 
-find_package(OpenGL REQUIRED)
-target_link_libraries(
-	"${CLIENT_PROJECT_NAME}"
-	OpenGL::GL
-)
+if (IOS)
+	find_package(OpenGLES REQUIRED)
+	target_link_libraries(
+		"${CLIENT_PROJECT_NAME}"
+		"${OPENGLES_LIBRARIES}"
+	)
+
+	target_include_directories(
+		"${CLIENT_PROJECT_NAME}"
+		SYSTEM PRIVATE
+		${OPENGLES_INCLUDE_DIR}
+	)
+else()
+	find_package(OpenGL REQUIRED)
+	target_link_libraries(
+		"${CLIENT_PROJECT_NAME}"
+		OpenGL::GL
+	)
+endif()
 
 target_include_directories(
 	"${CLIENT_PROJECT_NAME}"
@@ -96,9 +115,6 @@ if (WIN32)
 		DESTINATION "${PROJECT_BINARY_DIR}/bin"
 	)
 endif()
-
-# Used for v8
-add_definitions(-DV8_31BIT_SMIS_ON_64BIT_ARCH -DV8_COMPRESS_POINTERS)
 
 # to link against v8
 if (WIN32)
