@@ -11,24 +11,24 @@
 	<key>CFBundleIconFile</key>
 	<string></string>
 	<key>CFBundleIdentifier</key>
-	<string>com.snowmeltarcade.projectfarm.client</string>
+	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleLongVersionString</key>
-	<string>1.0.46</string>
+	<string>@PROJECT_VERSION@</string>
 	<key>CFBundleName</key>
-	<string>Project Farm Client</string>
+	<string>$(BUNDLE_NAME)</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.0.46</string>
+	<string>@PROJECT_VERSION@</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>1.0.46</string>
+	<string>@PROJECT_VERSION@6</string>
 	<key>CSResourcesFileMapped</key>
 	<true/>
-	<key>NSHumanReadableCopyright</key>
+	<key>Copyright © Snow Melt Arcade 2021</key>
 	<string></string>
 </dict>
 </plist>

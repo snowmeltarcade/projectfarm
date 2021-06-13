@@ -4,12 +4,7 @@ add_executable(
 )
 
 if (IOS)
-	set_target_properties(
-		"${CLIENT_PROJECT_NAME}"
-		PROPERTIES
-			MACOSX_BUNDLE TRUE
-			MACOSX_BUNDLE_INFO_PLIST ${CMAKE_CURRENT_SOURCE_DIR}/Info.plist
-	)
+	SetupiOSBuild("${CLIENT_PROJECT_NAME}" "client" "Client")
 endif()
 
 install(
