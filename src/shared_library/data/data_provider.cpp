@@ -1,6 +1,7 @@
 #include <nlohmann/json.hpp>
 #include <fstream>
 #include <string>
+#include <cstdlib>
 
 #include "data_provider.h"
 
