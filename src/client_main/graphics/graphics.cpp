@@ -214,14 +214,23 @@ namespace projectfarm::graphics
 		this->_tileSetPool->Empty();
 		this->_texturePool->Empty();
 
-        this->_renderManager->Shutdown();
-		this->_renderManager = nullptr;
+        if (this->_renderManager)
+        {
+            this->_renderManager->Shutdown();
+            this->_renderManager = nullptr;
+        }
 
-		SDL_GL_DeleteContext(this->_context);
-		this->_context = nullptr;
+        if (this->_context)
+        {
+            SDL_GL_DeleteContext(this->_context);
+            this->_context = nullptr;
+        }
 
-		SDL_DestroyWindow(this->_window);
-		this->_window = nullptr;
+        if (this->_window)
+        {
+            SDL_DestroyWindow(this->_window);
+            this->_window = nullptr;
+        }
 
 		IMG_Quit();
 
