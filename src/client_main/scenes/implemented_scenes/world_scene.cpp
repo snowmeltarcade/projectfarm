@@ -437,6 +437,7 @@ namespace projectfarm::scenes::implemented_scenes
     void WorldScene::ReconfirmPixelSizes() noexcept
     {
         this->_world->ReconfirmPixelSizes();
+        this->_ui->ReconfirmSize();
     }
 
     std::string WorldScene::SendUIMessage(const std::string& key,

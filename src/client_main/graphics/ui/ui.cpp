@@ -12,21 +12,14 @@ using namespace std::literals;
 
 namespace projectfarm::graphics::ui
 {
-	bool UI::Initialize() const noexcept
+	bool UI::Initialize() noexcept
 	{
 		this->LogMessage("Initializing UI...");
 
 		this->_baseCanvas->SetGraphics(this->GetGraphics());
 		this->_baseCanvas->SetLogger(this->_logger);
 
-		const auto& graphics = this->GetGraphics();
-		uint32_t screenWidth = graphics->GetScreenWidth();
-        uint32_t screenHeight = graphics->GetScreenHeight();
-
-        ControlSize size;
-        size.SetParentSize(screenWidth, screenHeight);
-        size.SetSizePercent(100.0f, 100.0f);
-        this->_baseCanvas->SetSize(size);
+		this->ReconfirmSize();
 
 		this->LogMessage("Initialized UI.");
 
@@ -100,6 +93,18 @@ namespace projectfarm::graphics::ui
 
 		this->_baseCanvas->Clear();
 	}
+
+    void UI::ReconfirmSize() noexcept
+    {
+        const auto& graphics = this->GetGraphics();
+        uint32_t screenWidth = graphics->GetScreenWidth();
+        uint32_t screenHeight = graphics->GetScreenHeight();
+
+        ControlSize size;
+        size.SetParentSize(screenWidth, screenHeight);
+        size.SetSizePercent(100.0f, 100.0f);
+        this->_baseCanvas->SetSize(size);
+    }
 
 	void UI::Render() const noexcept
 	{
