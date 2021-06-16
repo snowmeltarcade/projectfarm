@@ -36,7 +36,7 @@ namespace projectfarm::graphics
         }
 
         [[nodiscard]]
-        bool SetSize(uint32_t width, uint32_t height);
+        bool SetSize(bool fullScreen, uint32_t width, uint32_t height);
 
         [[nodiscard]]
         bool RenderTexture(const std::shared_ptr<Texture>& texture,
@@ -48,7 +48,8 @@ namespace projectfarm::graphics
                          bool isDestWorldSpace = true,
                          uint32_t renderLayerIndex = 0) noexcept;
 
-        [[nodiscard]] const SDL_Rect& GetViewport() const
+        [[nodiscard]]
+        const SDL_Rect& GetViewport() const
         {
             return this->_viewport;
         }
@@ -69,11 +70,27 @@ namespace projectfarm::graphics
             return this->_pixelsPerMeter;
         }
 
+        [[nodiscard]]
+        bool GetFullScreen() const noexcept
+        {
+            return this->_fullScreen;
+        }
+
+        [[nodiscard]]
+        // this assumes x and y are in the range of 0.0f...1.0f
+        std::pair<uint32_t, uint32_t> GetPositionAtPercent(float x, float y) const noexcept
+        {
+            return { static_cast<uint32_t>(static_cast<float>(this->_viewport.w) * x),
+                     static_cast<uint32_t>(static_cast<float>(this->_viewport.h) * y) };
+        }
+
     private:
         SDL_Rect _viewport {};
 
         uint32_t _screenWidthInMeters {10};
         uint32_t _pixelsPerMeter {1};
+
+        bool _fullScreen {false};
     };
 }
 

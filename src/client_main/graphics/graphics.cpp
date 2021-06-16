@@ -61,7 +61,7 @@ namespace projectfarm::graphics
                                              SDL_WINDOW_ALLOW_HIGHDPI | SDL_WINDOW_SHOWN);
         }
 #endif
-		if (this->_window == nullptr)
+		if (!this->_window)
 		{
 			this->LogMessage("Failed to create window.");
 			this->LogMessage(SDL_GetError());
@@ -79,7 +79,7 @@ namespace projectfarm::graphics
 #endif
 
 		this->_context = SDL_GL_CreateContext(this->_window);
-		if (this->_context == nullptr)
+		if (!this->_context)
         {
 		    this->LogMessage("Failed to create OpenGL context.");
 		    this->LogMessage(SDL_GetError());
@@ -136,7 +136,7 @@ namespace projectfarm::graphics
 		this->_camera->SetGraphics(this->shared_from_this());
 		this->_camera->SetDebugInformation(this->GetDebugInformation());
         this->_camera->SetScreenWidthInMeters(screenWidthInMeters);
-		if (!this->_camera->SetSize(this->_screenWidth, this->_screenHeight))
+		if (!this->_camera->SetSize(fullScreen, this->_screenWidth, this->_screenHeight))
         {
 		    this->LogMessage("Failed to set camera size.");
 		    return false;
@@ -420,7 +420,8 @@ namespace projectfarm::graphics
         this->_screenWidth = width;
         this->_screenHeight = height;
         
-        if (!this->_camera->SetSize(this->_screenWidth, this->_screenHeight))
+        if (!this->_camera->SetSize(this->_camera->GetFullScreen(),
+                                    this->_screenWidth, this->_screenHeight))
         {
             this->LogMessage("Failed to set window size: " + std::to_string(this->_screenWidth) +
                              "x" + std::to_string(this->_screenHeight));
