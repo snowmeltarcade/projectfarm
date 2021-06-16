@@ -347,7 +347,7 @@ namespace projectfarm::engine
             {
                 if (e.button.which == SDL_TOUCH_MOUSEID)
                 {
-                    //break;
+                    break;
                 }
 
                 if (e.button.button == SDL_BUTTON_LEFT)
@@ -357,17 +357,37 @@ namespace projectfarm::engine
 
                 break;
             }
+            case SDL_FINGERDOWN:
+            {
+                auto [x, y] = this->GetGraphics()->GetCamera()->GetPositionAtPercent(e.tfinger.x, e.tfinger.y);
+
+                this->_mouseInput->SetPosition(x, y);
+
+                this->_mouseInput->SetButtonState(true);
+
+                break;
+            }
             case SDL_MOUSEBUTTONUP:
             {
                 if (e.button.which == SDL_TOUCH_MOUSEID)
                 {
-                    //break;
+                    break;
                 }
 
                 if (e.button.button == SDL_BUTTON_LEFT)
                 {
                     this->_mouseInput->SetButtonState(false);
                 }
+
+                break;
+            }
+            case SDL_FINGERUP:
+            {
+                auto [x, y] = this->GetGraphics()->GetCamera()->GetPositionAtPercent(e.tfinger.x, e.tfinger.y);
+
+                this->_mouseInput->SetPosition(x, y);
+
+                this->_mouseInput->SetButtonState(false);
 
                 break;
             }
