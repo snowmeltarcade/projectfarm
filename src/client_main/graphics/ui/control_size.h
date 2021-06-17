@@ -11,6 +11,11 @@ namespace projectfarm::graphics::ui
         ControlSize() = default;
         ~ControlSize() = default;
 
+        void SetParentSize(const ControlSize& parentSize) noexcept
+        {
+            this->SetParentSize(parentSize.GetWidth(), parentSize.GetHeight());
+        }
+
         void SetParentSize(uint32_t parentWidth, uint32_t parentHeight) noexcept
         {
             this->_parentWidth = parentWidth;
@@ -29,6 +34,12 @@ namespace projectfarm::graphics::ui
             return this->_height;
         }
 
+        // this is useful if the parent size gets updated for instance
+        void ReconfirmSize() noexcept
+        {
+            this->SetSizePercent(this->_widthPercent, this->_heightPercent);
+        }
+
         void SetSize(uint32_t width, uint32_t height) noexcept
         {
             this->_width = width;
@@ -38,7 +49,8 @@ namespace projectfarm::graphics::ui
             this->_heightPercent = ((float)this->_parentHeight / 100.0f) * (float)this->_height;
         }
 
-        [[nodiscard]] float GetHeightPercent() const noexcept
+        [[nodiscard]]
+        float GetHeightPercent() const noexcept
         {
             return this->_heightPercent;
         }

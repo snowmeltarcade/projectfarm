@@ -97,8 +97,8 @@ namespace projectfarm::graphics::ui
     void UI::ReconfirmSize() noexcept
     {
         const auto& graphics = this->GetGraphics();
-        uint32_t screenWidth = graphics->GetScreenWidth();
-        uint32_t screenHeight = graphics->GetScreenHeight();
+        uint32_t screenWidth = graphics->GetCamera()->GetViewport().w;
+        uint32_t screenHeight = graphics->GetCamera()->GetViewport().h;
 
         ControlSize size;
         size.SetParentSize(screenWidth, screenHeight);

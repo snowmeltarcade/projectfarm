@@ -6,7 +6,7 @@
 
 namespace projectfarm::graphics
 {
-    bool Camera::SetSize(bool fullScreen, uint32_t width, uint32_t height)
+    bool Camera::SetSize(bool fullScreen, uint32_t width, uint32_t height) noexcept
     {
         this->_fullScreen = fullScreen;
 
@@ -24,7 +24,7 @@ namespace projectfarm::graphics
 
         // the screen size may not have changed in fullscreen mode (e.g. on iOS),
         // so just go with whatever it ended up as
-        if (fullScreen)
+        if (fullScreen) // this should check if we are HDPI, not fullscreen
         {
             width = w;
             height = h;

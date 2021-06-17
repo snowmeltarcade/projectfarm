@@ -63,18 +63,6 @@ namespace projectfarm::graphics
         }
 
         [[nodiscard]]
-        uint32_t GetScreenWidth() const noexcept
-        {
-            return this->_screenWidth;
-        }
-
-        [[nodiscard]]
-        uint32_t GetScreenHeight() const noexcept
-        {
-            return this->_screenHeight;
-        }
-
-        [[nodiscard]]
         const std::shared_ptr<Camera>& GetCamera() const noexcept
         {
 		    return this->_camera;
@@ -169,9 +157,6 @@ namespace projectfarm::graphics
 		SDL_Window* _window {nullptr};
 		SDL_Renderer* _renderer {nullptr};
 		SDL_GLContext _context {nullptr};
-
-        uint32_t _screenWidth {0};
-        uint32_t _screenHeight {0};
 
 		std::shared_ptr<Camera> _camera;
 		std::shared_ptr<RenderManager> _renderManager;

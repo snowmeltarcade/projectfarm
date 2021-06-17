@@ -40,7 +40,23 @@ namespace projectfarm::graphics::ui
             this->_maskSurface = {};
         }
 
+        for (auto& child : this->_children)
+        {
+            child->SetParentSize(this->_size);
+        }
+
         this->UpdateVisibility();
+    }
+
+    void BaseControl::SetParentSize(const ControlSize& size) noexcept
+    {
+        this->_size.SetParentSize(size);
+        this->_size.ReconfirmSize();
+
+        for (auto& child : this->_children)
+        {
+            child->SetParentSize(this->_size);
+        }
     }
 
     void BaseControl::SetPosition(const ControlPosition& position) noexcept

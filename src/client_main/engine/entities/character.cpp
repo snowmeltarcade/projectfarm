@@ -24,11 +24,11 @@ namespace projectfarm::engine::entities
             auto graphics = this->GetGraphics();
             auto camera = graphics->GetCamera();
 
-            auto offsetX = graphics->GetScreenWidth() * 0.5f;
-            offsetX -= graphics->MetersToPixels(0.5f); // all characters are currently 1mx1m
+            auto offsetX = camera->GetViewport().w * 0.5f;
+            offsetX -= graphics->MetersToPixels(0.5f); // TODO: all characters are currently 1mx1m
 
-            auto offsetY = graphics->GetScreenHeight() * 0.5f;
-            offsetY -= graphics->MetersToPixels(0.5f); // all characters are currently 1mx1m
+            auto offsetY = camera->GetViewport().h * 0.5f;
+            offsetY -= graphics->MetersToPixels(0.5f); // TODO: all characters are currently 1mx1m
 
             camera->SetPosition(graphics->MetersToPixels(this->_positionX) - offsetX,
                                 graphics->MetersToPixels(this->_positionY) - offsetY);

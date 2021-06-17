@@ -112,9 +112,6 @@ namespace projectfarm::graphics
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         CHECK_OPENGL_ERROR
-        
-        this->_screenWidth = screenWidth;
-        this->_screenHeight = screenHeight;
 
         this->_texturePool->SetLogger(this->_logger);
         this->_texturePool->SetDebugInformation(this->GetDebugInformation());
@@ -136,7 +133,7 @@ namespace projectfarm::graphics
 		this->_camera->SetGraphics(this->shared_from_this());
 		this->_camera->SetDebugInformation(this->GetDebugInformation());
         this->_camera->SetScreenWidthInMeters(screenWidthInMeters);
-		if (!this->_camera->SetSize(fullScreen, this->_screenWidth, this->_screenHeight))
+		if (!this->_camera->SetSize(fullScreen, screenWidth, screenHeight))
         {
 		    this->LogMessage("Failed to set camera size.");
 		    return false;
@@ -358,8 +355,8 @@ namespace projectfarm::graphics
     {
 	    int dx = 0;
 	    int dy = 0;
-	    int dw = this->_screenWidth;
-	    int dh = this->_screenHeight;
+	    int dw = this->_camera->GetViewport().w;
+	    int dh = this->_camera->GetViewport().h;
 
         int sx = 0;
         int sy = 0;
@@ -387,7 +384,7 @@ namespace projectfarm::graphics
                                 static_cast<float>(sw), static_cast<float>(sh),
 	                            static_cast<float>(dx), static_cast<float>(dy),
 	                            static_cast<float>(dw), static_cast<float>(dh),
-	                            this->_screenWidth, this->_screenHeight,
+                                this->_camera->GetViewport().w, this->_camera->GetViewport().h,
 	                            renderLayerIndex);
     }
 
@@ -397,7 +394,7 @@ namespace projectfarm::graphics
     {
         this->_shapeMesh.AddShapeData(shape,
                                       screenSpace,
-                                      this->_screenWidth, this->_screenHeight,
+                                      this->_camera->GetViewport().w, this->_camera->GetViewport().h,
                                       renderLayerIndex);
     }
 
@@ -417,14 +414,10 @@ namespace projectfarm::graphics
     
     void Graphics::OnWindowResized(uint32_t width, uint32_t height) noexcept
     {
-        this->_screenWidth = width;
-        this->_screenHeight = height;
-        
-        if (!this->_camera->SetSize(this->_camera->GetFullScreen(),
-                                    this->_screenWidth, this->_screenHeight))
+        if (!this->_camera->SetSize(width, height))
         {
-            this->LogMessage("Failed to set window size: " + std::to_string(this->_screenWidth) +
-                             "x" + std::to_string(this->_screenHeight));
+            this->LogMessage("Failed to set window size: " + std::to_string(width) +
+                             "x" + std::to_string(height));
         }
 
         this->GetGame()->ReconfirmPixelSizes();

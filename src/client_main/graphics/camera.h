@@ -23,20 +23,26 @@ namespace projectfarm::graphics
         Camera() = default;
         ~Camera() override = default;
 
-        void SetPosition(int32_t x, int32_t y)
+        void SetPosition(int32_t x, int32_t y) noexcept
         {
             this->_viewport.x = x;
             this->_viewport.y = y;
         }
 
-        void SetPosition(float x, float y)
+        void SetPosition(float x, float y) noexcept
         {
             this->_viewport.x = static_cast<int32_t>(x);
             this->_viewport.y = static_cast<int32_t>(y);
         }
 
         [[nodiscard]]
-        bool SetSize(bool fullScreen, uint32_t width, uint32_t height);
+        bool SetSize(uint32_t width, uint32_t height) noexcept
+        {
+            return this->SetSize(this->GetFullScreen(), width, height);
+        }
+
+        [[nodiscard]]
+        bool SetSize(bool fullScreen, uint32_t width, uint32_t height) noexcept;
 
         [[nodiscard]]
         bool RenderTexture(const std::shared_ptr<Texture>& texture,
