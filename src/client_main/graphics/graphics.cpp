@@ -42,6 +42,9 @@ namespace projectfarm::graphics
                                          SDL_WINDOW_OPENGL | SDL_WINDOW_FULLSCREEN |
                                          SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI |
                                          SDL_WINDOW_BORDERLESS);
+        
+        // mobile devices are always fullscreen
+        fullScreen = true;
 #else
         if (fullScreen)
         {

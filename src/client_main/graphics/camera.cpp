@@ -24,7 +24,7 @@ namespace projectfarm::graphics
 
         // the screen size may not have changed in fullscreen mode (e.g. on iOS),
         // so just go with whatever it ended up as
-        if (fullScreen) // this should check if we are HDPI, not fullscreen
+        if (fullScreen) // TODO: this should check if we are HDPI, not fullscreen
         {
             width = w;
             height = h;
