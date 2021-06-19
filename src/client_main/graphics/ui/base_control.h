@@ -97,6 +97,17 @@ namespace projectfarm::graphics::ui
             return this->_isVisible;
         }
 
+        void SetIsHidden(bool isHidden) noexcept
+        {
+            this->_isHidden = isHidden;
+        }
+
+        [[nodiscard]]
+        bool GetIsHidden() const noexcept
+        {
+            return this->_isHidden;
+        }
+
         void SetIsEnabled(bool isEnabled) noexcept
         {
             this->_isEnabled = isEnabled;
@@ -275,7 +286,18 @@ namespace projectfarm::graphics::ui
 
         std::string _id;
 
+        // Has this control explicitly been set to visible or not by
+        // a user or caller. A control may be not be visible even if the
+        // parent control is visible and this control is in the renderable
+        // portion of the screen
         bool _isVisible {true};
+
+        // Has this control been hidden by the system. The parent control
+        // may not be visible, but this control may still be set to visible.
+        // If so, this control should not be rendered.
+        bool _isHidden {false};
+
+        // Should this control respond to interactions and UI events or not.
         bool _isEnabled {true};
 
         // can this control be focus?

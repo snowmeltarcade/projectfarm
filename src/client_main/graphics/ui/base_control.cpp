@@ -20,7 +20,8 @@ namespace projectfarm::graphics::ui
     {
         for (const auto& child : this->_children)
         {
-            if (!child->GetIsVisible())
+            if (!child->GetIsVisible() ||
+                child->GetIsHidden())
             {
                 continue;
             }
@@ -305,6 +306,7 @@ namespace projectfarm::graphics::ui
     {
         if (!this->_canFocus ||
             !this->GetIsVisible() ||
+            this->GetIsHidden() ||
             !this->GetIsEnabled() ||
             !this->IsPointInControl(x, y))
         {
@@ -490,7 +492,7 @@ namespace projectfarm::graphics::ui
     {
         if (this->IsVisibleInParentControl())
         {
-            this->SetIsVisible(true);
+            this->SetIsHidden(false);
 
             if (!this->UpdateMaskToParentBoundary())
             {
@@ -500,7 +502,7 @@ namespace projectfarm::graphics::ui
         }
         else
         {
-            this->SetIsVisible(false);
+            this->SetIsHidden(true);
         }
 
         for (const auto& child : this->_children)
