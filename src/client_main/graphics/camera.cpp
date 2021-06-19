@@ -146,4 +146,23 @@ namespace projectfarm::graphics
 
         return screenSpace;
     }
+
+    std::optional<ScreenResolution> Camera::GetCurrentResolution() const noexcept
+    {
+        if (!this->_currentScreenResolutionIndex)
+        {
+            auto defaultResolution = std::find_if(this->_screenResolutions.begin(), this->_screenResolutions.end(),
+                                                  [](const auto& res) { return res.Default; });
+
+            if (defaultResolution == this->_screenResolutions.end())
+            {
+                this->LogMessage("Failed to find default resolution.");
+                return {};
+            }
+
+            return *defaultResolution;
+        }
+
+        return {};
+    }
 }

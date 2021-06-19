@@ -1,8 +1,8 @@
 #ifndef PROJECTFARM_CAMERA_H
 #define PROJECTFARM_CAMERA_H
 
-#include <cstdlib>
 #include <string>
+#include <vector>
 
 #include "logging/consume_logger.h"
 #include "graphics/consume_graphics.h"
@@ -11,6 +11,7 @@
 #include "texture.h"
 #include "engine/action_types.h"
 #include "graphics/shapes/shapes.h"
+#include "screen_resolution.h"
 
 namespace projectfarm::graphics
 {
@@ -90,7 +91,22 @@ namespace projectfarm::graphics
                      static_cast<uint32_t>(static_cast<float>(this->_viewport.h) * y) };
         }
 
+        std::optional<ScreenResolution> GetCurrentResolution() const noexcept;
+
     private:
+        std::vector<ScreenResolution> _screenResolutions
+        {
+            { 800, 600, false },
+            { 1024, 768, true },
+            { 1440, 900, false },
+            { 1280, 1020, false },
+            { 1920, 1080, false },
+            { 2560, 1440, false },
+            { 3840, 2160, false },
+        };
+
+        std::optional<uint32_t> _currentScreenResolutionIndex;
+
         SDL_Rect _viewport {};
 
         uint32_t _screenWidthInMeters {10};

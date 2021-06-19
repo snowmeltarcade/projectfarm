@@ -32,22 +32,32 @@ namespace projectfarm::graphics
         
         SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "0");
 
-        const auto windowTitle = "Project Farm";
+        this->_camera->SetLogger(this->_logger);
+        this->_camera->SetGraphics(this->shared_from_this());
+        this->_camera->SetDebugInformation(this->GetDebugInformation());
+        this->_camera->SetScreenWidthInMeters(screenWidthInMeters);
 
-#if defined(USE_OPENGL_ES)
-		this->_window = SDL_CreateWindow(windowTitle,
-                                         SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-                                         0, 0, // width and height are managed by the camera
-                                         SDL_WINDOW_OPENGL | SDL_WINDOW_FULLSCREEN |
-                                         SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI |
-                                         SDL_WINDOW_BORDERLESS);
-#else
-        this->_window = SDL_CreateWindow(windowTitle,
-                                         SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-                                         0, 0, // width and height are managed by the camera
-                                         SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE |
-                                         SDL_WINDOW_ALLOW_HIGHDPI | SDL_WINDOW_SHOWN);
-#endif
+        auto currentResolution = this->_camera->GetCurrentResolution();
+        if (!currentResolution)
+        {
+            this->LogMessage("Failed to get current resolution.");
+            return false;
+        }
+
+        auto windowX = currentResolution->FullScreen ? SDL_WINDOWPOS_CENTERED : SDL_WINDOWPOS_UNDEFINED;
+        auto windowY = currentResolution->FullScreen ? SDL_WINDOWPOS_CENTERED : SDL_WINDOWPOS_UNDEFINED;
+        auto flags = SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE |
+                     SDL_WINDOW_ALLOW_HIGHDPI | SDL_WINDOW_SHOWN;
+
+        if (currentResolution->FullScreen)
+        {
+            flags |= SDL_WINDOW_FULLSCREEN | SDL_WINDOW_BORDERLESS;
+        }
+
+        this->_window = SDL_CreateWindow("Project Farm",
+                                         windowX, windowY,
+                                         currentResolution->Width, currentResolution->Height,
+                                         flags);
 		if (!this->_window)
 		{
 			this->LogMessage("Failed to create window.");
@@ -116,10 +126,6 @@ namespace projectfarm::graphics
 		    return false;
         }
 
-		this->_camera->SetLogger(this->_logger);
-		this->_camera->SetGraphics(this->shared_from_this());
-		this->_camera->SetDebugInformation(this->GetDebugInformation());
-        this->_camera->SetScreenWidthInMeters(screenWidthInMeters);
 		if (!this->_camera->SetSize())
         {
 		    this->LogMessage("Failed to set camera size.");
