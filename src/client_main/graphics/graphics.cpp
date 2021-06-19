@@ -12,8 +12,7 @@
 
 namespace projectfarm::graphics
 {
-	bool Graphics::Initialize(uint32_t screenWidth, uint32_t screenHeight,
-	                          bool fullScreen, uint32_t screenWidthInMeters)
+	bool Graphics::Initialize(uint32_t screenWidthInMeters)
 	{
 		this->LogMessage("Initializing graphics...");
 
@@ -38,31 +37,16 @@ namespace projectfarm::graphics
 #if defined(USE_OPENGL_ES)
 		this->_window = SDL_CreateWindow(windowTitle,
                                          SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-                                         0, 0, // full screen ignores these values
+                                         0, 0, // width and height are managed by the camera
                                          SDL_WINDOW_OPENGL | SDL_WINDOW_FULLSCREEN |
                                          SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI |
                                          SDL_WINDOW_BORDERLESS);
-        
-        // mobile devices are always fullscreen
-        fullScreen = true;
 #else
-        if (fullScreen)
-        {
-            this->_window = SDL_CreateWindow(windowTitle,
-                                             SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-                                             screenWidth, screenHeight,
-                                             SDL_WINDOW_OPENGL | SDL_WINDOW_FULLSCREEN |
-                                             SDL_WINDOW_ALLOW_HIGHDPI | SDL_WINDOW_SHOWN |
-                                             SDL_WINDOW_BORDERLESS);
-        }
-        else
-        {
-            this->_window = SDL_CreateWindow(windowTitle,
-                                             SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-                                             screenWidth, screenHeight,
-                                             SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE |
-                                             SDL_WINDOW_ALLOW_HIGHDPI | SDL_WINDOW_SHOWN);
-        }
+        this->_window = SDL_CreateWindow(windowTitle,
+                                         SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
+                                         0, 0, // width and height are managed by the camera
+                                         SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE |
+                                         SDL_WINDOW_ALLOW_HIGHDPI | SDL_WINDOW_SHOWN);
 #endif
 		if (!this->_window)
 		{
@@ -136,7 +120,7 @@ namespace projectfarm::graphics
 		this->_camera->SetGraphics(this->shared_from_this());
 		this->_camera->SetDebugInformation(this->GetDebugInformation());
         this->_camera->SetScreenWidthInMeters(screenWidthInMeters);
-		if (!this->_camera->SetSize(fullScreen, screenWidth, screenHeight))
+		if (!this->_camera->SetSize())
         {
 		    this->LogMessage("Failed to set camera size.");
 		    return false;

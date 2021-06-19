@@ -27,10 +27,6 @@ namespace projectfarm::engine
         this->_serverUdpPort = jsonFile["serverUdpPort"].get<uint16_t>();
         this->_hostName = jsonFile["hostName"].get<std::string>();
 
-        this->_screenWidth = jsonFile["screenWidth"].get<uint32_t>();
-        this->_screenHeight = jsonFile["screenHeight"].get<uint32_t>();
-        this->_fullScreen = jsonFile["fullScreen"].get<bool>();
-
         this->_screenWidthInMeters = jsonFile["screenWidthInMeters"].get<uint32_t>();
 
         this->LogMessage("Loaded client config.");

@@ -78,10 +78,7 @@ namespace projectfarm::engine
 		this->_graphics->SetDebugInformation(this->GetDebugInformation());
 		this->_graphics->SetDataProvider(this->GetDataProvider());
 		this->_graphics->SetGame(this->shared_from_this());
-		if (!this->_graphics->Initialize(this->_clientConfig.GetScreenWidth(),
-		                                 this->_clientConfig.GetScreenHeight(),
-		                                 this->_clientConfig.GetFullScreen(),
-		                                 this->_clientConfig.GetScreenWidthInMeters()))
+		if (!this->_graphics->Initialize(this->_clientConfig.GetScreenWidthInMeters()))
 		{
 			this->_logger->LogMessage("Failed to initialize graphics.");
 			this->_graphics->Shutdown(); // ensure all created resources are released

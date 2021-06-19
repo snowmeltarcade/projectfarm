@@ -42,7 +42,7 @@ namespace projectfarm::graphics
         }
 
         [[nodiscard]]
-        bool SetSize(bool fullScreen, uint32_t width, uint32_t height) noexcept;
+        bool SetSize(bool fullScreen = false, uint32_t width = 800, uint32_t height = 600) noexcept;
 
         [[nodiscard]]
         bool RenderTexture(const std::shared_ptr<Texture>& texture,
