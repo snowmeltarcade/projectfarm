@@ -37,13 +37,7 @@ namespace projectfarm::graphics
         }
 
         [[nodiscard]]
-        bool SetSize(uint32_t width, uint32_t height) noexcept
-        {
-            return this->SetSize(this->GetFullScreen(), width, height);
-        }
-
-        [[nodiscard]]
-        bool SetSize(bool fullScreen = false, uint32_t width = 800, uint32_t height = 600) noexcept;
+        bool SetResolution(const ScreenResolution& screenResolution) noexcept;
 
         [[nodiscard]]
         bool RenderTexture(const std::shared_ptr<Texture>& texture,
@@ -78,12 +72,6 @@ namespace projectfarm::graphics
         }
 
         [[nodiscard]]
-        bool GetFullScreen() const noexcept
-        {
-            return this->_fullScreen;
-        }
-
-        [[nodiscard]]
         // this assumes x and y are in the range of 0.0f...1.0f
         std::pair<uint32_t, uint32_t> GetPositionAtPercent(float x, float y) const noexcept
         {
@@ -94,7 +82,7 @@ namespace projectfarm::graphics
         std::optional<ScreenResolution> GetCurrentResolution() const noexcept;
 
     private:
-        std::vector<ScreenResolution> _screenResolutions
+        std::vector<ScreenResolution> _defaultScreenResolutions
         {
             { 800, 600, false },
             { 1024, 768, true },
@@ -105,14 +93,12 @@ namespace projectfarm::graphics
             { 3840, 2160, false },
         };
 
-        std::optional<uint32_t> _currentScreenResolutionIndex;
+        std::optional<ScreenResolution> _currentScreenResolution;
 
-        SDL_Rect _viewport {};
+        SDL_Rect _viewport;
 
         uint32_t _screenWidthInMeters {10};
         uint32_t _pixelsPerMeter {1};
-
-        bool _fullScreen {false};
     };
 }
 

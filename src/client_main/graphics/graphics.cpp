@@ -40,7 +40,7 @@ namespace projectfarm::graphics
         auto currentResolution = this->_camera->GetCurrentResolution();
         if (!currentResolution)
         {
-            this->LogMessage("Failed to get current resolution.");
+            this->LogMessage("Failed to get current screen resolution.");
             return false;
         }
 
@@ -126,9 +126,9 @@ namespace projectfarm::graphics
 		    return false;
         }
 
-		if (!this->_camera->SetSize())
+		if (!this->_camera->SetResolution(*currentResolution))
         {
-		    this->LogMessage("Failed to set camera size.");
+		    this->LogMessage("Failed to set camera resolution.");
 		    return false;
         }
 
@@ -407,10 +407,20 @@ namespace projectfarm::graphics
     
     void Graphics::OnWindowResized(uint32_t width, uint32_t height) noexcept
     {
-        if (!this->_camera->SetSize(width, height))
+	    auto currentResolution = this->_camera->GetCurrentResolution();
+	    if (!currentResolution)
         {
-            this->LogMessage("Failed to set window size: " + std::to_string(width) +
-                             "x" + std::to_string(height));
+	        this->LogMessage("Failed to get current screen resolution.");
+	        return;
+        }
+
+	    currentResolution->Width = width;
+        currentResolution->Height = height;
+
+        if (!this->_camera->SetResolution(*currentResolution))
+        {
+            this->LogMessage("Failed to set screen resolution to: " + currentResolution->GetName());
+            return;
         }
 
         this->GetGame()->ReconfirmPixelSizes();

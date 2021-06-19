@@ -6,6 +6,8 @@
 
 #include "platform/platform_id.h"
 
+using namespace std::literals;
+
 namespace projectfarm::graphics
 {
     struct ScreenResolution
@@ -26,7 +28,8 @@ namespace projectfarm::graphics
 
         std::string GetName() const noexcept
         {
-            return std::to_string(this->Width) + "x" + std::to_string(this->Height);
+            return (this->FullScreen ? "Full Screen" : "Windowed") + " "s +
+                   std::to_string(this->Width) + "x" + std::to_string(this->Height);
         }
     };
 }
