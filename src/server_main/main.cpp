@@ -1,7 +1,7 @@
 #include <iostream>
 #include <SDL.h>
 
-#include "server/platform.h"
+#include "platform/platform_id.h"
 #if !defined(IS_IOS)
 #include "version.h"
 #endif

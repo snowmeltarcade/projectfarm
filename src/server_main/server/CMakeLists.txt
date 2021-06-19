@@ -14,5 +14,4 @@ target_sources(
 		server_config.cpp
 		client_connection_manager.cpp
 		client_connection_manager_worker.cpp
-		platform.cpp
 )

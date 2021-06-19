@@ -335,6 +335,14 @@ namespace projectfarm::engine
 
                 break;
             }
+            case SDL_FINGERMOTION:
+            {
+                auto [x, y] = this->GetGraphics()->GetCamera()->GetPositionAtPercent(e.tfinger.x, e.tfinger.y);
+
+                this->_mouseInput->SetPosition(x, y);
+
+                break;
+            }
             case SDL_MOUSEBUTTONDOWN:
             {
                 if (e.button.which == SDL_TOUCH_MOUSEID)
@@ -349,6 +357,16 @@ namespace projectfarm::engine
 
                 break;
             }
+            case SDL_FINGERDOWN:
+            {
+                auto [x, y] = this->GetGraphics()->GetCamera()->GetPositionAtPercent(e.tfinger.x, e.tfinger.y);
+
+                this->_mouseInput->SetPosition(x, y);
+
+                this->_mouseInput->SetButtonState(true);
+
+                break;
+            }
             case SDL_MOUSEBUTTONUP:
             {
                 if (e.button.which == SDL_TOUCH_MOUSEID)
@@ -360,6 +378,16 @@ namespace projectfarm::engine
                 {
                     this->_mouseInput->SetButtonState(false);
                 }
+
+                break;
+            }
+            case SDL_FINGERUP:
+            {
+                auto [x, y] = this->GetGraphics()->GetCamera()->GetPositionAtPercent(e.tfinger.x, e.tfinger.y);
+
+                this->_mouseInput->SetPosition(x, y);
+
+                this->_mouseInput->SetButtonState(false);
 
                 break;
             }

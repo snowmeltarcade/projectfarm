@@ -167,16 +167,19 @@ namespace projectfarm::engine::world
 
     void World::Render() noexcept
     {
-        if (this->_backgroundIsland != nullptr)
+        if (this->_backgroundIsland)
         {
             auto numberOfLayersInBackgroundIsland = 0u;
 
             auto islandWidth = this->_backgroundIsland->GetWidthInPixels();
             auto islandHeight = this->_backgroundIsland->GetHeightInPixels();
 
-            for (auto x = 0u; x < this->GetGraphics()->GetScreenWidth() + islandWidth; x += islandWidth)
+            auto viewportW = this->GetGraphics()->GetCamera()->GetViewport().w;
+            auto viewportH = this->GetGraphics()->GetCamera()->GetViewport().h;
+
+            for (auto x = 0u; x < viewportW + islandWidth; x += islandWidth)
             {
-                for (auto y = 0u; y < this->GetGraphics()->GetScreenHeight() + islandHeight; y += islandHeight)
+                for (auto y = 0u; y < viewportH + islandHeight; y += islandHeight)
                 {
                     // we want to duplicate these islands on the same render layers,
                     // so save and restore the layers respectively

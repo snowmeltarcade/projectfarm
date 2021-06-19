@@ -446,8 +446,11 @@ namespace projectfarm::graphics::ui
         int32_t newY = oy + dy;
 
         // clamp the scrolling
-        newX = std::clamp(newX, -static_cast<int32_t>(this->_backgroundTexture->GetTextureWidth()), 0);
-        newY = std::clamp(newY, -static_cast<int32_t>(this->_backgroundTexture->GetTextureHeight()), 0);
+        if (this->_backgroundTexture)
+        {
+            newX = std::clamp(newX, -static_cast<int32_t>(this->_backgroundTexture->GetTextureWidth()), 0);
+            newY = std::clamp(newY, -static_cast<int32_t>(this->_backgroundTexture->GetTextureHeight()), 0);
+        }
 
         pos.SetOffset(newX, newY);
 

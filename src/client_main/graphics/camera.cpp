@@ -6,9 +6,14 @@
 
 namespace projectfarm::graphics
 {
-    bool Camera::SetSize(uint32_t width, uint32_t height)
+    bool Camera::SetSize(bool fullScreen, uint32_t width, uint32_t height) noexcept
     {
-        SDL_SetWindowSize(this->GetGraphics()->GetWindow(), width, height);
+        this->_fullScreen = fullScreen;
+
+        if (!this->_fullScreen)
+        {
+            SDL_SetWindowSize(this->GetGraphics()->GetWindow(), width, height);
+        }
 
         int w {0};
         int h {0};
@@ -17,10 +22,26 @@ namespace projectfarm::graphics
         glViewport(0, 0, w, h);
         CHECK_OPENGL_ERROR
 
+        // the screen size may not have changed in fullscreen mode (e.g. on iOS),
+        // so just go with whatever it ended up as
+        if (fullScreen) // TODO: this should check if we are HDPI, not fullscreen
+        {
+            width = w;
+            height = h;
+        }
+
         this->_viewport.w = width;
         this->_viewport.h = height;
 
+        this->_logger->LogMessage("Drawable size: " + std::to_string(w) + "x" +
+                                                         std::to_string(h));
+
+        this->_logger->LogMessage("Viewport size: " + std::to_string(this->_viewport.w) + "x" +
+                                  std::to_string(this->_viewport.h));
+
         this->_pixelsPerMeter = this->_viewport.w / this->_screenWidthInMeters;
+
+        this->_logger->LogMessage("Pixels/Meter: " + std::to_string(this->_pixelsPerMeter));
 
         return true;
     }

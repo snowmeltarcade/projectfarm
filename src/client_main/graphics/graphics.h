@@ -38,47 +38,44 @@ namespace projectfarm::graphics
         }
 		~Graphics() override = default;
 
-		[[nodiscard]] bool Initialize(uint32_t screenWidth, uint32_t screenHeight,
-                                      bool fullScreen, uint32_t screenWidthInMeters);
+		[[nodiscard]]
+		bool Initialize(uint32_t screenWidth, uint32_t screenHeight,
+                        bool fullScreen, uint32_t screenWidthInMeters);
 
 		void Shutdown();
 
-		[[nodiscard]] SDL_Renderer* GetRenderer() const noexcept
+		[[nodiscard]]
+		SDL_Renderer* GetRenderer() const noexcept
 		{
 			return this->_renderer;
 		}
 
-		[[nodiscard]] const std::shared_ptr<RenderManager>& GetRenderManager() const noexcept
+		[[nodiscard]]
+		const std::shared_ptr<RenderManager>& GetRenderManager() const noexcept
         {
 		    return this->_renderManager;
         }
 
-        [[nodiscard]] SDL_Window* GetWindow() const noexcept
+        [[nodiscard]]
+        SDL_Window* GetWindow() const noexcept
         {
 		    return this->_window;
         }
-        
-        [[nodiscard]] uint32_t GetScreenWidth() const noexcept
-        {
-            return this->_screenWidth;
-        }
-        
-        [[nodiscard]] uint32_t GetScreenHeight() const noexcept
-        {
-            return this->_screenHeight;
-        }
 
-        [[nodiscard]] const std::shared_ptr<Camera>& GetCamera() const noexcept
+        [[nodiscard]]
+        const std::shared_ptr<Camera>& GetCamera() const noexcept
         {
 		    return this->_camera;
         }
 
-        [[nodiscard]] const std::shared_ptr<TexturePool>& GetTexturePool() const noexcept
+        [[nodiscard]]
+        const std::shared_ptr<TexturePool>& GetTexturePool() const noexcept
         {
 		    return this->_texturePool;
         }
 
-        [[nodiscard]] const std::shared_ptr<TileSetPool>& GetTileSetPool() const noexcept
+        [[nodiscard]]
+        const std::shared_ptr<TileSetPool>& GetTileSetPool() const noexcept
         {
             return this->_tileSetPool;
         }
@@ -97,12 +94,14 @@ namespace projectfarm::graphics
 
         void SceneLoaded();
 
-        [[nodiscard]] uint32_t BumpRenderLayer() noexcept
+        [[nodiscard]]
+        uint32_t BumpRenderLayer() noexcept
         {
             return ++this->_currentRenderLayer;
         }
 
-        [[nodiscard]] uint32_t GetRenderLayer() const noexcept
+        [[nodiscard]]
+        uint32_t GetRenderLayer() const noexcept
         {
             return this->_currentRenderLayer;
         }
@@ -158,9 +157,6 @@ namespace projectfarm::graphics
 		SDL_Window* _window {nullptr};
 		SDL_Renderer* _renderer {nullptr};
 		SDL_GLContext _context {nullptr};
-        
-        uint32_t _screenWidth {0};
-        uint32_t _screenHeight {0};
 
 		std::shared_ptr<Camera> _camera;
 		std::shared_ptr<RenderManager> _renderManager;

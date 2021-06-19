@@ -1,5 +1,6 @@
 #include "data_manager.h"
 #include "entities/character_appearance_details.h"
+#include "platform/platform_id.h"
 
 namespace projectfarm::engine::data
 {
@@ -53,8 +54,15 @@ namespace projectfarm::engine::data
     {
         this->LogMessage("Setting up player database...");
 
+        // iOS does not give write access to the application bundle directory, so we need to leave the
+        // `data` and application directories and go into the `Library` directory
+        // https://developer.apple.com/library/archive/documentation/FileManagement/Conceptual/FileSystemProgrammingGuide/FileSystemOverview/FileSystemOverview.html
+#ifdef IS_IOS
+        auto databasePath = std::getenv("HOME") / std::filesystem::path("Library") / "player.db";
+#else
         auto databasePath = this->_dataProvider->ResolveFileName(shared::DataProviderLocations::ServerDatabases,
                                                                  "player.db");
+#endif
         if (!this->_playerDatabase->Open(databasePath, false))
         {
             this->LogMessage("Failed to open the player database.");

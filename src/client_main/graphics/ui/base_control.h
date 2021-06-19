@@ -250,6 +250,8 @@ namespace projectfarm::graphics::ui
                                 const std::vector<projectfarm::shared::scripting::FunctionParameter>& parameters,
                                 const std::string& functionName) noexcept;
 
+        void SetParentSize(const ControlSize& size) noexcept;
+
     protected:
         [[nodiscard]]
         bool SetCommonValuesFromJson(const nlohmann::json& json) noexcept;

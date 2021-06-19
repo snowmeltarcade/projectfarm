@@ -36,7 +36,7 @@ namespace projectfarm::graphics::ui
 		}
 		~UI() override = default;
 
-		bool Initialize() const noexcept;
+		bool Initialize() noexcept;
 
         [[nodiscard]]
         bool LoadFromFile(const std::string& name) noexcept;
@@ -46,6 +46,8 @@ namespace projectfarm::graphics::ui
 		void Clear() const noexcept;
 
 		void Render() const noexcept;
+
+		void ReconfirmSize() noexcept;
 
 		[[nodiscard]]
         const std::shared_ptr<Canvas>& GetBaseCanvas() const noexcept
@@ -69,37 +71,44 @@ namespace projectfarm::graphics::ui
         void HandleKeyPress() noexcept;
         void HandleKeyPress_Enter() noexcept;
 
-        [[nodiscard]] bool LoadControl(const nlohmann::json& controlJson,
-                                       const std::shared_ptr<BaseControl>& parentControl,
-                                       const std::vector<std::pair<std::string, std::string>>& parameters = {});
+        [[nodiscard]]
+        bool LoadControl(const nlohmann::json& controlJson,
+                         const std::shared_ptr<BaseControl>& parentControl,
+                         const std::vector<std::pair<std::string, std::string>>& parameters = {});
 
-        [[nodiscard]] std::string NormalizeParameter(std::string_view parameter,
-                                                     const std::vector<std::pair<std::string, std::string>>& parameters) const noexcept;
+        [[nodiscard]]
+        std::string NormalizeParameter(std::string_view parameter,
+                                       const std::vector<std::pair<std::string, std::string>>& parameters) const noexcept;
 
-        [[nodiscard]] nlohmann::json NormalizeJson(const nlohmann::json& json,
-                                                   const std::vector<std::pair<std::string, std::string>>& parameters) const noexcept;
+        [[nodiscard]]
+        nlohmann::json NormalizeJson(const nlohmann::json& json,
+                                     const std::vector<std::pair<std::string, std::string>>& parameters) const noexcept;
 
         void EnableSimpleBindingForParameter(const std::shared_ptr<SimpleBindingType>& binding,
                                              const std::string& value) noexcept;
 
         void SetSimpleBinding(const std::string& name, const std::string& value) noexcept;
 
-        [[nodiscard]] std::optional<std::shared_ptr<BaseControl>> FindControlById(const std::string& id) noexcept;
+        [[nodiscard]]
+        std::optional<std::shared_ptr<BaseControl>> FindControlById(const std::string& id) noexcept;
 
         void SendMessage(const std::string& key, const std::vector<std::string>& parameters) const noexcept;
 
 	private:
 
-        [[nodiscard]] std::shared_ptr<BaseControl> CreateControlFromType(const std::string& type) noexcept;
+        [[nodiscard]]
+        std::shared_ptr<BaseControl> CreateControlFromType(const std::string& type) noexcept;
 
-        [[nodiscard]] bool LoadControlScriptsFromJson(const std::shared_ptr<BaseControl>& control,
-                                                      const nlohmann::json& controlJson) noexcept;
+        [[nodiscard]]
+        bool LoadControlScriptsFromJson(const std::shared_ptr<BaseControl>& control,
+                                        const nlohmann::json& controlJson) noexcept;
 
-        [[nodiscard]] bool SetupControlScript(const std::shared_ptr<BaseControl>& control,
-                                              std::string& inlineScript,
-                                              const nlohmann::json& controlJson,
-                                              const std::string& key,
-                                              shared::scripting::FunctionTypes functionType) noexcept;
+        [[nodiscard]]
+        bool SetupControlScript(const std::shared_ptr<BaseControl>& control,
+                                std::string& inlineScript,
+                                const nlohmann::json& controlJson,
+                                const std::string& key,
+                                shared::scripting::FunctionTypes functionType) noexcept;
 
         void UpdateFocusedControlAtPoint(uint32_t x, uint32_t y) noexcept;
 

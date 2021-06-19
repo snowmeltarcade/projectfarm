@@ -47,6 +47,7 @@ namespace projectfarm::scenes::implemented_scenes
 
         void ReconfirmPixelSizes() noexcept override
         {
+            this->_ui->ReconfirmSize();
         }
 
         [[nodiscard]]
