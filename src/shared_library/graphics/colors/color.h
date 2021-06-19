@@ -39,6 +39,7 @@ namespace projectfarm::shared::graphics::colors
         }
     };
 
+    static inline const Color Transparent { 0, 0, 0, 0 };
     static inline const Color Black { 0, 0, 0, 255 };
     static inline const Color White { 255, 255, 255, 255 };
     static inline const Color Red { 255, 0, 0, 255 };
@@ -65,6 +66,7 @@ namespace projectfarm::shared::graphics::colors
         { "red", Red },
         { "blue", Blue },
         { "green", Green },
+        { "transparent", Transparent },
     };
 
     constexpr std::optional<Color> FromHexString(std::string_view s)
