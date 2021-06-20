@@ -340,6 +340,12 @@ namespace projectfarm::graphics::ui
             this->_isVisible = isVisible->get<std::string>() == "true";
         }
 
+        if (auto isEnabled = json.find("isEnabled"); isEnabled != json.end())
+        {
+            // use this as a string to allow for parameters in uesr controls
+            this->_isEnabled = isEnabled->get<std::string>() == "true";
+        }
+
         if (auto canFocus = json.find("canFocus"); canFocus != json.end())
         {
             // use this as a string to allow for parameters in uesr controls
