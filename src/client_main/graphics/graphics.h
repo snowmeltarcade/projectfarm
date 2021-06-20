@@ -39,8 +39,7 @@ namespace projectfarm::graphics
 		~Graphics() override = default;
 
 		[[nodiscard]]
-		bool Initialize(uint32_t screenWidth, uint32_t screenHeight,
-                        bool fullScreen, uint32_t screenWidthInMeters);
+		bool Initialize(uint32_t screenWidthInMeters);
 
 		void Shutdown();
 

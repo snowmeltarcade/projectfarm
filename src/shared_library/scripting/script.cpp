@@ -143,9 +143,13 @@ namespace projectfarm::shared::scripting
             }
             else
             {
-                if (auto a = parameter.GetAsScriptInt(this->_isolate); a)
+                if (auto i = parameter.GetAsScriptInt(this->_isolate); i)
                 {
-                    arg = *a;
+                    arg = *i;
+                }
+                else if (auto b = parameter.GetAsScriptBool(this->_isolate); b)
+                {
+                    arg = *b;
                 }
                 else
                 {

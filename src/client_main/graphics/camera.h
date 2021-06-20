@@ -1,8 +1,8 @@
 #ifndef PROJECTFARM_CAMERA_H
 #define PROJECTFARM_CAMERA_H
 
-#include <cstdlib>
 #include <string>
+#include <vector>
 
 #include "logging/consume_logger.h"
 #include "graphics/consume_graphics.h"
@@ -11,6 +11,7 @@
 #include "texture.h"
 #include "engine/action_types.h"
 #include "graphics/shapes/shapes.h"
+#include "screen_resolution.h"
 
 namespace projectfarm::graphics
 {
@@ -36,13 +37,7 @@ namespace projectfarm::graphics
         }
 
         [[nodiscard]]
-        bool SetSize(uint32_t width, uint32_t height) noexcept
-        {
-            return this->SetSize(this->GetFullScreen(), width, height);
-        }
-
-        [[nodiscard]]
-        bool SetSize(bool fullScreen, uint32_t width, uint32_t height) noexcept;
+        bool SetResolution(const ScreenResolution& screenResolution) noexcept;
 
         [[nodiscard]]
         bool RenderTexture(const std::shared_ptr<Texture>& texture,
@@ -77,12 +72,6 @@ namespace projectfarm::graphics
         }
 
         [[nodiscard]]
-        bool GetFullScreen() const noexcept
-        {
-            return this->_fullScreen;
-        }
-
-        [[nodiscard]]
         // this assumes x and y are in the range of 0.0f...1.0f
         std::pair<uint32_t, uint32_t> GetPositionAtPercent(float x, float y) const noexcept
         {
@@ -90,13 +79,26 @@ namespace projectfarm::graphics
                      static_cast<uint32_t>(static_cast<float>(this->_viewport.h) * y) };
         }
 
+        std::optional<ScreenResolution> GetCurrentResolution() const noexcept;
+
     private:
-        SDL_Rect _viewport {};
+        std::vector<ScreenResolution> _defaultScreenResolutions
+        {
+            { 800, 600, false },
+            { 1024, 768, true },
+            { 1440, 900, false },
+            { 1280, 1020, false },
+            { 1920, 1080, false },
+            { 2560, 1440, false },
+            { 3840, 2160, false },
+        };
+
+        std::optional<ScreenResolution> _currentScreenResolution;
+
+        SDL_Rect _viewport;
 
         uint32_t _screenWidthInMeters {10};
         uint32_t _pixelsPerMeter {1};
-
-        bool _fullScreen {false};
     };
 }
 

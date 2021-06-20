@@ -12,8 +12,7 @@
 
 namespace projectfarm::graphics
 {
-	bool Graphics::Initialize(uint32_t screenWidth, uint32_t screenHeight,
-	                          bool fullScreen, uint32_t screenWidthInMeters)
+	bool Graphics::Initialize(uint32_t screenWidthInMeters)
 	{
 		this->LogMessage("Initializing graphics...");
 
@@ -33,37 +32,32 @@ namespace projectfarm::graphics
         
         SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "0");
 
-        const auto windowTitle = "Project Farm";
+        this->_camera->SetLogger(this->_logger);
+        this->_camera->SetGraphics(this->shared_from_this());
+        this->_camera->SetDebugInformation(this->GetDebugInformation());
+        this->_camera->SetScreenWidthInMeters(screenWidthInMeters);
 
-#if defined(USE_OPENGL_ES)
-		this->_window = SDL_CreateWindow(windowTitle,
-                                         SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-                                         0, 0, // full screen ignores these values
-                                         SDL_WINDOW_OPENGL | SDL_WINDOW_FULLSCREEN |
-                                         SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI |
-                                         SDL_WINDOW_BORDERLESS);
-        
-        // mobile devices are always fullscreen
-        fullScreen = true;
-#else
-        if (fullScreen)
+        auto currentResolution = this->_camera->GetCurrentResolution();
+        if (!currentResolution)
         {
-            this->_window = SDL_CreateWindow(windowTitle,
-                                             SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-                                             screenWidth, screenHeight,
-                                             SDL_WINDOW_OPENGL | SDL_WINDOW_FULLSCREEN |
-                                             SDL_WINDOW_ALLOW_HIGHDPI | SDL_WINDOW_SHOWN |
-                                             SDL_WINDOW_BORDERLESS);
+            this->LogMessage("Failed to get current screen resolution.");
+            return false;
         }
-        else
+
+        auto windowX = currentResolution->FullScreen ? SDL_WINDOWPOS_CENTERED : SDL_WINDOWPOS_UNDEFINED;
+        auto windowY = currentResolution->FullScreen ? SDL_WINDOWPOS_CENTERED : SDL_WINDOWPOS_UNDEFINED;
+        auto flags = SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE |
+                     SDL_WINDOW_ALLOW_HIGHDPI | SDL_WINDOW_SHOWN;
+
+        if (currentResolution->FullScreen)
         {
-            this->_window = SDL_CreateWindow(windowTitle,
-                                             SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-                                             screenWidth, screenHeight,
-                                             SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE |
-                                             SDL_WINDOW_ALLOW_HIGHDPI | SDL_WINDOW_SHOWN);
+            flags |= SDL_WINDOW_FULLSCREEN | SDL_WINDOW_BORDERLESS;
         }
-#endif
+
+        this->_window = SDL_CreateWindow("Project Farm",
+                                         windowX, windowY,
+                                         currentResolution->Width, currentResolution->Height,
+                                         flags);
 		if (!this->_window)
 		{
 			this->LogMessage("Failed to create window.");
@@ -132,13 +126,9 @@ namespace projectfarm::graphics
 		    return false;
         }
 
-		this->_camera->SetLogger(this->_logger);
-		this->_camera->SetGraphics(this->shared_from_this());
-		this->_camera->SetDebugInformation(this->GetDebugInformation());
-        this->_camera->SetScreenWidthInMeters(screenWidthInMeters);
-		if (!this->_camera->SetSize(fullScreen, screenWidth, screenHeight))
+		if (!this->_camera->SetResolution(*currentResolution))
         {
-		    this->LogMessage("Failed to set camera size.");
+		    this->LogMessage("Failed to set camera resolution.");
 		    return false;
         }
 
@@ -417,10 +407,20 @@ namespace projectfarm::graphics
     
     void Graphics::OnWindowResized(uint32_t width, uint32_t height) noexcept
     {
-        if (!this->_camera->SetSize(width, height))
+	    auto currentResolution = this->_camera->GetCurrentResolution();
+	    if (!currentResolution)
         {
-            this->LogMessage("Failed to set window size: " + std::to_string(width) +
-                             "x" + std::to_string(height));
+	        this->LogMessage("Failed to get current screen resolution.");
+	        return;
+        }
+
+	    currentResolution->Width = width;
+        currentResolution->Height = height;
+
+        if (!this->_camera->SetResolution(*currentResolution))
+        {
+            this->LogMessage("Failed to set screen resolution to: " + currentResolution->GetName());
+            return;
         }
 
         this->GetGame()->ReconfirmPixelSizes();

@@ -29,10 +29,16 @@ namespace projectfarm::shared::scripting
         std::optional<v8::Local<v8::Value>> GetAsScriptInt(v8::Isolate* isolate) const noexcept;
 
         [[nodiscard]]
+        std::optional<v8::Local<v8::Value>> GetAsScriptBool(v8::Isolate* isolate) const noexcept;
+
+        [[nodiscard]]
         std::string GetAsString() const noexcept;
 
         [[nodiscard]]
         std::optional<uint32_t> GetAsUInt() const noexcept;
+
+        [[nodiscard]]
+        std::optional<bool> GetAsBool() const noexcept;
 
         [[nodiscard]]
         FunctionParameterTypes GetType() const noexcept

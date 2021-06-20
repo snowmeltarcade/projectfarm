@@ -60,6 +60,7 @@ target_sources(
 		material_types.h
 		material_render_details.h
 		shape_mesh.h
+		screen_resolution.h
 )
 
 add_subdirectory("shapes")
