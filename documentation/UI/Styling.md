@@ -74,17 +74,21 @@ The following attributes can be used to style UI controls. Please note that not 
 * **margin** The amount of space surrounding this UI control. Adjacent UI controls will be rendered outside this space. Please note that adjacent UI controls' margins will also be taken into account when they are rendered  
 * **padding** The amount of space within this UI control. Child controls will not be rendered inside of this space. Please note that child controls' margins will be taken into account when they are rendered
 
+Built in controls and custom controls may define other attributes.
+
+Unknown attributes will be ignored.
+
 ### Default CSS
 You can find the default CSS styles in `./data/client/ui/css/default/`
 
-### Styling UI Controls
+### Creating Styles
 A CSS style will be applied based on its class or type.
 
 You can define a class as follows:
 
 ```css
 .my-class {
-    color-rgb: red;
+    color-rgb: "red";
 }
 ```
 
@@ -97,3 +101,42 @@ button {
 ```
 
 Type names are what you would define in the `type` field, or `name` field for custom controls, in [UI files](UIFiles.md). Please note that custom controls may apply CSS styles however they wish, and may override any global styles applied to their internal controls.
+
+Attributes specified in custom CSS will override the global attributes.
+
+### Styling UI Controls
+You can apply styles to UI controls by using either the `style` or `cssClass` fields in a UI file.
+
+The `style` field allows you to define local styles, for instance:
+
+```json
+{
+  "id": "controlId",
+  "type": "texture",
+  "style": "color: 'red'; texture: 'path/to/texture.png"
+}
+```
+
+The `cssClass` field allows you to assign a number of CSS classes to a UI control. CSS classes specified to the right will override any attributes specified in CSS classes to the left. For instance:
+
+```css
+.my-class-1 {
+  color-rgb: "blue";
+}
+
+.my-class-2 {
+  color-rgb: "red";
+}
+```
+
+```json
+{
+  "id": "controlId",
+  "type": "texture",
+  "cssClass": "my-class-1 my-class-2"
+}
+```
+
+The resulting `color` attribute will be that defined by `my-class-2`.
+
+If you specify both the `style` and `cssClass` fields, the `style` field will override any attributes specified by classes in the `cssClass` field.
