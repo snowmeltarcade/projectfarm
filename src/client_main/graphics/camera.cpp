@@ -24,11 +24,15 @@ namespace projectfarm::graphics
             };
 
             SDL_SetWindowDisplayMode(this->GetGraphics()->GetWindow(), &displayMode);
+
+            SDL_SetWindowFullscreen(this->GetGraphics()->GetWindow(), SDL_WINDOW_FULLSCREEN);
         }
         else
         {
             SDL_SetWindowSize(this->GetGraphics()->GetWindow(),
                               this->_currentScreenResolution->Width, this->_currentScreenResolution->Height);
+
+            SDL_SetWindowFullscreen(this->GetGraphics()->GetWindow(), 0);
         }
 
         int w {0};

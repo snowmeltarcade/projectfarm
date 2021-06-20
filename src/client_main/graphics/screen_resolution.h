@@ -12,6 +12,10 @@ namespace projectfarm::graphics
 {
     struct ScreenResolution
     {
+        ScreenResolution(uint32_t width, uint32_t height)
+                : Width(width), Height(height)
+        {}
+
         ScreenResolution(uint32_t width, uint32_t height, bool isDefault)
             : Width(width), Height(height), Default(isDefault)
         {}

@@ -15,6 +15,7 @@
 #include "engine/action_input_sources/action_input_source_keyboard.h"
 #include "time/clock.h"
 #include "engine/device_capabilities.h"
+#include "graphics/screen_resolution.h"
 
 using namespace std::literals;
 
@@ -501,6 +502,48 @@ namespace projectfarm::scenes::implemented_scenes
 
             auto result = this->ProcessChatboxCommand(command, args);
             return result;
+        }
+        else if (key == "set_screen_resolution")
+        {
+            if (parameters.size() != 3)
+            {
+                this->LogMessage("Invalid number of parameters for `set_screen_resolution` scene message.");
+                return "Invalid number of parameters.";
+            }
+
+            auto width = parameters[0].GetAsUInt();
+            if (!width)
+            {
+                auto error = "Please enter a valid value for `width`.";
+                this->LogMessage(error);
+                return error;
+            }
+
+            auto height = parameters[1].GetAsUInt();
+            if (!height)
+            {
+                auto error = "Please enter a valid value for `height`.";
+                this->LogMessage(error);
+                return error;
+            }
+
+            auto fullScreen = parameters[2].GetAsBool();
+            if (!fullScreen)
+            {
+                auto error = "Please enter a valid value for `fullScreen`.";
+                this->LogMessage(error);
+                return error;
+            }
+
+            graphics::ScreenResolution resolution { *width, *height };
+            resolution.FullScreen = *fullScreen;
+
+            if (!this->GetGraphics()->GetCamera()->SetResolution(resolution))
+            {
+                auto error = "Failed to set screen resolution: " + resolution.GetName();
+                this->LogMessage(error);
+                return error;
+            }
         }
 
         return "";

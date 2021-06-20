@@ -7,6 +7,7 @@ namespace projectfarm::shared::scripting
     {
         String,
         Int,
+        Bool,
     };
 }
 

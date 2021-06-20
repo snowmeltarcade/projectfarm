@@ -20,6 +20,20 @@ namespace projectfarm::shared::scripting
         }
     }
 
+    std::optional<v8::Local<v8::Value>> FunctionParameter::GetAsScriptBool(v8::Isolate* isolate) const noexcept
+    {
+        if (this->_value == "true")
+        {
+            return v8::Boolean::New(isolate, true);
+        }
+        else if (this->_value == "false")
+        {
+            return v8::Boolean::New(isolate, false);
+        }
+
+        return {};
+    }
+
     std::string FunctionParameter::GetAsString() const noexcept
     {
         return this->_value;
@@ -36,5 +50,19 @@ namespace projectfarm::shared::scripting
         {
             return {};
         }
+    }
+
+    std::optional<bool> FunctionParameter::GetAsBool() const noexcept
+    {
+        if (this->_value == "true")
+        {
+            return true;
+        }
+        else if (this->_value == "false")
+        {
+            return false;
+        }
+
+        return {};
     }
 }
