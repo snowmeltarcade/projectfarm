@@ -19,6 +19,8 @@ namespace projectfarm::shared
           _clientFolderName("client"),
           _sharedFolderName("shared"),
           _uiFolderName("ui"),
+          _uiCSSFolderName("css"),
+          _uiCSSDefaultFolderName("default"),
           _fontsFolderName("fonts"),
           _tileSetsFolderName("tilesets"),
           _tileMapsFolderName("tilemaps"),
@@ -161,6 +163,8 @@ namespace projectfarm::shared
         const std::filesystem::path _clientFolderName;
         const std::filesystem::path _sharedFolderName;
         const std::filesystem::path _uiFolderName;
+        const std::filesystem::path _uiCSSFolderName;
+        const std::filesystem::path _uiCSSDefaultFolderName;
         const std::filesystem::path _fontsFolderName;
         const std::filesystem::path _tileSetsFolderName;
         const std::filesystem::path _tileMapsFolderName;
