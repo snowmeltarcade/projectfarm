@@ -79,7 +79,7 @@ Built in controls and custom controls may define other attributes.
 Unknown attributes will be ignored.
 
 ### Default CSS
-You can find the default CSS styles in `./data/client/ui/css/default/`
+You can find the default CSS styles in `/data/client/ui/css/default/`
 
 ### Creating Styles
 A CSS style will be applied based on its class or type.
