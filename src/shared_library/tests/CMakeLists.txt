@@ -49,6 +49,7 @@ add_subdirectory("crypto")
 add_subdirectory("graphics")
 add_subdirectory("time")
 add_subdirectory("markdown")
+add_subdirectory("css")
 add_subdirectory("test_data")
 
 set("TEST_DATA_DIRECTORY" "${CMAKE_CURRENT_LIST_DIR}")

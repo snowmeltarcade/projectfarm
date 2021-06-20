@@ -1,0 +1,9 @@
+target_sources(
+    "${SHARED_LIBRARY_PROJECT_NAME}"
+    PRIVATE
+        css.cpp
+        css_document.cpp
+    PUBLIC
+        css.h
+        css_document.h
+)
