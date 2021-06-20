@@ -1,6 +1,9 @@
 # Project Farm
 A multiplayer farming simulator.
 
+## Documentation
+See [here](./documentation/Documentation.md) for the technical documentation.
+
 ## Build Status
 ### Nighty
 ![Nightly Windows](https://github.com/snowmeltarcade/projectfarm/actions/workflows/build_nightly_windows.yml/badge.svg)
