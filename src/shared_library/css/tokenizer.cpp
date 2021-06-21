@@ -54,6 +54,12 @@ namespace projectfarm::shared::css
             value = "";
         };
 
+        auto saveEndBlock = [&value, &tokens](auto pos)
+        {
+            tokens.push_back( { TokenTypes::EndBlock, pos, "" } );
+            value = "";
+        };
+
         for (auto pos {0u}; pos < css.size(); ++pos)
         {
             auto c {'\0'};
@@ -82,9 +88,9 @@ namespace projectfarm::shared::css
             {
                 if (c == BlockCloseCharacter)
                 {
-                    CurrentParseMode = ParseMode::Selector;
+                    saveEndBlock(pos);
 
-                    value = "";
+                    CurrentParseMode = ParseMode::Selector;
                     continue;
                 }
             }

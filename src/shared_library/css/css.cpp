@@ -58,9 +58,13 @@ namespace projectfarm::shared::css
 
                 currentCSSClass.Selectors.push_back( { type, std::string(selector) } );
             }
-        }
+            else if (token.Type == TokenTypes::EndBlock)
+            {
+                doc.Classes.push_back(currentCSSClass);
 
-        doc.Classes.push_back(currentCSSClass);
+                currentCSSClass = CSSClass();
+            }
+        }
 
         return doc;
     }
