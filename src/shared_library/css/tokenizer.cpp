@@ -60,11 +60,15 @@ namespace projectfarm::shared::css
                 tokens.push_back( { TokenTypes::Selector, pos - static_cast<uint32_t>(value.size()), value } );
 
                 CurrentParseMode = ParseMode::Block;
+
+                value = "";
                 continue;
             }
             else if (c == BlockCloseCharacter)
             {
                 CurrentParseMode = ParseMode::Selector;
+
+                value = "";
                 continue;
             }
 
