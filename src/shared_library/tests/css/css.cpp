@@ -102,6 +102,7 @@ TEST_CASE("LoadFromRaw - valid CSS - does not return error", "[css]")
         auto result = LoadFromRaw(css);
         REQUIRE(result);
 
+        INFO(css);
         REQUIRE(*result == doc);
     }
 }
