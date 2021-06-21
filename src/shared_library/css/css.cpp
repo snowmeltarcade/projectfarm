@@ -22,6 +22,21 @@ namespace projectfarm::shared::css
         return CSSSelectorTypes::Type;
     }
 
+    std::string_view SanitizeSelector(std::string_view selector)
+    {
+        if (selector.size() <= 0)
+        {
+            return selector;
+        }
+
+        if (selector[0] == '.' || selector[0] == '#')
+        {
+            return selector.substr(1);
+        }
+
+        return selector;
+    }
+
     std::optional<CSSDocument> LoadFromRaw(const std::string &css) noexcept
     {
         auto tokens = ParseTokens(css);
@@ -39,8 +54,9 @@ namespace projectfarm::shared::css
             if (token.Type == TokenTypes::Selector)
             {
                 auto type = SelectorTypeFromName(token.Value);
+                auto selector = SanitizeSelector(token.Value);
 
-                currentCSSClass.Selectors.push_back( { type, token.Value } );
+                currentCSSClass.Selectors.push_back( { type, std::string(selector) } );
             }
         }
 

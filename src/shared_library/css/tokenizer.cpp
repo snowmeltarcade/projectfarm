@@ -6,6 +6,7 @@ namespace projectfarm::shared::css
 {
     static const auto BlockOpenCharacter = '{';
     static const auto BlockCloseCharacter = '}';
+    static const auto SelectorSeparatorCharacter = ',';
 
     enum class ParseMode
     {
@@ -47,6 +48,12 @@ namespace projectfarm::shared::css
 
         std::string value;
 
+        auto saveSelector = [&value, &tokens](auto pos)
+        {
+            tokens.push_back( { TokenTypes::Selector, pos - static_cast<uint32_t>(value.size()), value } );
+            value = "";
+        };
+
         for (auto pos {0u}; pos < css.size(); ++pos)
         {
             auto c {'\0'};
@@ -55,21 +62,31 @@ namespace projectfarm::shared::css
                 break;
             }
 
-            if (c == BlockOpenCharacter)
+            if (CurrentParseMode == ParseMode::Selector)
             {
-                tokens.push_back( { TokenTypes::Selector, pos - static_cast<uint32_t>(value.size()), value } );
+                if (c == SelectorSeparatorCharacter)
+                {
+                    saveSelector(pos);
 
-                CurrentParseMode = ParseMode::Block;
+                    continue;
+                }
+                else if (c == BlockOpenCharacter)
+                {
+                    saveSelector(pos);
 
-                value = "";
-                continue;
+                    CurrentParseMode = ParseMode::Block;
+                    continue;
+                }
             }
-            else if (c == BlockCloseCharacter)
+            else if (CurrentParseMode == ParseMode::Block)
             {
-                CurrentParseMode = ParseMode::Selector;
+                if (c == BlockCloseCharacter)
+                {
+                    CurrentParseMode = ParseMode::Selector;
 
-                value = "";
-                continue;
+                    value = "";
+                    continue;
+                }
             }
 
             value += c;
