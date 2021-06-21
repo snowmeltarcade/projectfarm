@@ -12,6 +12,9 @@ namespace projectfarm::shared::css
 
         // a class to assign to a control
         Class,
+
+        // a control id
+        Id,
     };
 }
 
