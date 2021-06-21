@@ -38,7 +38,7 @@ namespace projectfarm::shared::math
     };
 
     // We don't want Vector2D to carry v8 baggage, so use this if you need to
-    // use Vector2D and need free memory allocated for v8 to use it
+    // use Vector2D and need to free memory allocated for v8 to use it
     class ScriptableVector2D : public shared::scripting::GCPersistent
     {
     public:

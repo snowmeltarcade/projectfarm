@@ -2,13 +2,14 @@
 #define PROJECTFARM_CSS_H
 
 #include <string>
+#include <optional>
 
 #include "css_document.h"
 
 namespace projectfarm::shared::css
 {
     [[nodiscard]]
-    bool LoadFromRaw(const std::string &path) noexcept;
+    std::optional<CSSDocument> LoadFromRaw(const std::string &css) noexcept;
 }
 
 #endif
