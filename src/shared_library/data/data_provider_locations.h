@@ -8,6 +8,7 @@ namespace projectfarm::shared
         Client,
         ClientUI,
         ClientUICustomControls,
+        ClientUICSSDefault,
         ClientFonts,
         ClientTileSets,
         ClientTileMaps,
