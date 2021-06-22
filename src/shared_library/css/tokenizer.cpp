@@ -7,6 +7,8 @@ namespace projectfarm::shared::css
     static const auto BlockOpenCharacter = '{';
     static const auto BlockCloseCharacter = '}';
     static const auto SelectorSeparatorCharacter = ',';
+    static const auto AttributeSeparatorCharacter = ':';
+    static const auto AttributeEndingCharacter = ';';
 
     enum class ParseMode
     {
@@ -76,6 +78,61 @@ namespace projectfarm::shared::css
     }
 
     [[nodiscard]]
+    bool ReadAttributes(uint32_t& pos,
+                        std::vector<Token>& tokens,
+                        std::string_view css) noexcept
+    {
+        std::string value;
+
+        auto saveAttributeName = [&value, &tokens](auto pos)
+        {
+            if (!value.empty())
+            {
+                tokens.push_back({ TokenTypes::AttributeName, pos, value });
+                value = "";
+            }
+        };
+
+        auto saveAttributeValue = [&value, &tokens](auto pos)
+        {
+            if (!value.empty())
+            {
+                tokens.push_back({ TokenTypes::AttributeValue, pos, value });
+                value = "";
+            }
+        };
+
+        for (; pos < css.size(); ++pos)
+        {
+            auto c { '\0' };
+            if (!GetNextCharacter(css, pos, c))
+            {
+                return false;
+            }
+
+            if (c == AttributeSeparatorCharacter)
+            {
+                saveAttributeName(pos);
+                continue;
+            }
+            else if (c == AttributeEndingCharacter)
+            {
+                saveAttributeValue(pos);
+                continue;
+            }
+            else if (c == BlockCloseCharacter)
+            {
+                saveAttributeValue(pos);
+                return true;
+            }
+
+            value += c;
+        }
+
+        return false;
+    }
+
+    [[nodiscard]]
     bool ReadBlock(uint32_t& pos,
                    std::vector<Token>& tokens,
                    std::string_view css) noexcept
@@ -87,23 +144,14 @@ namespace projectfarm::shared::css
             tokens.push_back( { TokenTypes::EndBlock, pos, "" } );
         };
 
-        for (; pos < css.size(); ++pos)
+        // a block contains a list of attributes, so
+        // the block ends when all attributes have been read
+        if (ReadAttributes(pos, tokens, css))
         {
-            auto c { '\0' };
-            if (!GetNextCharacter(css, pos, c))
-            {
-                return false;
-            }
+            saveEndBlock(pos);
 
-            if (c == BlockCloseCharacter)
-            {
-                saveEndBlock(pos);
-
-                CurrentParseMode = ParseMode::Selector;
-                return true;
-            }
-
-            value += c;
+            CurrentParseMode = ParseMode::Selector;
+            return true;
         }
 
         return false;

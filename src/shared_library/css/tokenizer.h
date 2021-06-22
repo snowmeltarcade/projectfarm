@@ -12,6 +12,8 @@ namespace projectfarm::shared::css
     {
         Selector,
         EndBlock,
+        AttributeName,
+        AttributeValue,
     };
 
     struct Token

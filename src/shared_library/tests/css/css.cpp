@@ -97,6 +97,56 @@ TEST_CASE("LoadFromRaw - valid CSS - does not return error", "[css]")
 
     validCSS.push_back( { "selector-1,.selector-2,#selector-3{}", cssDocument } );
 
+    ////
+    // single attribute
+    ////
+    cssDocument = CSSDocument();
+    cssClass = CSSClass();
+
+    cssClass.Selectors.push_back( { CSSSelectorTypes::Type, "selector" } );
+    cssClass.Attributes.push_back( { "key", "value" } );
+    cssDocument.Classes.push_back(cssClass);
+
+    validCSS.push_back( { "selector{key:value;}", cssDocument } );
+
+    ////
+    // multiple attributes
+    ////
+    cssDocument = CSSDocument();
+    cssClass = CSSClass();
+
+    cssClass.Selectors.push_back( { CSSSelectorTypes::Type, "selector" } );
+    cssClass.Attributes.push_back( { "key1", "value1" } );
+    cssClass.Attributes.push_back( { "key2", "value2" } );
+    cssClass.Attributes.push_back( { "key3", "value3" } );
+    cssDocument.Classes.push_back(cssClass);
+
+    ////
+    // multiple attributes, multiple classes
+    ////
+    cssDocument = CSSDocument();
+    cssClass = CSSClass();
+
+    cssClass.Selectors.push_back( { CSSSelectorTypes::Type, "selector1" } );
+    cssClass.Attributes.push_back( { "key1", "value1" } );
+    cssClass.Attributes.push_back( { "key2", "value2" } );
+    cssClass.Attributes.push_back( { "key3", "value3" } );
+    cssDocument.Classes.push_back(cssClass);
+
+    cssClass = CSSClass();
+    cssClass.Selectors.push_back( { CSSSelectorTypes::Type, "selector2" } );
+    cssClass.Attributes.push_back( { "key1", "value1" } );
+    cssClass.Attributes.push_back( { "key2", "value2" } );
+    cssDocument.Classes.push_back(cssClass);
+
+    cssClass = CSSClass();
+    cssClass.Selectors.push_back( { CSSSelectorTypes::Type, "selector3" } );
+    cssClass.Selectors.push_back( { CSSSelectorTypes::Id, "id1" } );
+    cssClass.Attributes.push_back( { "key1", "value1" } );
+    cssDocument.Classes.push_back(cssClass);
+
+    validCSS.push_back( { "selector1{key1:value1;key2:value2;key3;value3}selector2{key1:value1;key2:value2;}selector3,#id1{key1:value1;}", cssDocument } );
+
     for (const auto& [css, doc] : validCSS)
     {
         auto result = LoadFromRaw(css);

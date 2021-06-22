@@ -48,6 +48,7 @@ namespace projectfarm::shared::css
         CSSDocument doc;
 
         CSSClass currentCSSClass;
+        CSSAttribute currentCSSAttribute;
 
         for (const auto& token : *tokens)
         {
@@ -63,6 +64,16 @@ namespace projectfarm::shared::css
                 doc.Classes.push_back(currentCSSClass);
 
                 currentCSSClass = CSSClass();
+            }
+            else if (token.Type == TokenTypes::AttributeName)
+            {
+                currentCSSAttribute = CSSAttribute();
+                currentCSSAttribute.Name = token.Value;
+            }
+            else if (token.Type == TokenTypes::AttributeValue)
+            {
+                currentCSSAttribute.Value = token.Value;
+                currentCSSClass.Attributes.push_back(currentCSSAttribute);
             }
         }
 

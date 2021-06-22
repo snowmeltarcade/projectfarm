@@ -7,10 +7,12 @@ target_sources(
         tokenizer.h # this isn't public
         css_class.cpp
         css_selector.cpp
+        css_attribute.cpp
     PUBLIC
         css.h
         css_document.h
         css_class.h
         css_selector.h
         css_selector_types.h
+        css_attribute.h
 )
