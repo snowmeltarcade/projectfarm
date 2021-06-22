@@ -11,6 +11,7 @@ namespace projectfarm::shared::css
     enum class TokenTypes : uint8_t
     {
         Selector,
+        StartBlock,
         EndBlock,
         AttributeName,
         AttributeValue,

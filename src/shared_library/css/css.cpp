@@ -42,8 +42,13 @@ namespace projectfarm::shared::css
         auto tokens = ParseTokens(css);
         if (!tokens)
         {
+            // TODO: Use expected to return an actual error message
             return {};
         }
+
+        // used for token validation
+        auto hasBlockStarted {false};
+        auto hasBlockFinished {false};
 
         CSSDocument doc;
 
@@ -52,6 +57,8 @@ namespace projectfarm::shared::css
 
         for (const auto& token : *tokens)
         {
+            hasBlockFinished = false;
+
             if (token.Type == TokenTypes::Selector)
             {
                 auto type = SelectorTypeFromName(token.Value);
@@ -59,11 +66,24 @@ namespace projectfarm::shared::css
 
                 currentCSSClass.Selectors.push_back( { type, std::string(selector) } );
             }
+            else if (token.Type == TokenTypes::StartBlock)
+            {
+                hasBlockStarted = true;
+            }
             else if (token.Type == TokenTypes::EndBlock)
             {
+                if (!hasBlockStarted)
+                {
+                    return {};
+                }
+
+                hasBlockStarted = false;
+
                 doc.Classes.push_back(currentCSSClass);
 
                 currentCSSClass = CSSClass();
+
+                hasBlockFinished = true;
             }
             else if (token.Type == TokenTypes::AttributeName)
             {
@@ -73,8 +93,22 @@ namespace projectfarm::shared::css
             else if (token.Type == TokenTypes::AttributeValue)
             {
                 currentCSSAttribute.Value = token.Value;
-                currentCSSClass.Attributes.push_back(currentCSSAttribute);
+
+                // ignore invalid attributes
+                if (!currentCSSAttribute.Name.empty() &&
+                    !currentCSSAttribute.Value.empty())
+                {
+                    currentCSSClass.Attributes.push_back(currentCSSAttribute);
+                }
+
+                currentCSSAttribute = CSSAttribute();
             }
+        }
+
+        // looks like a block wasn't finished
+        if (!hasBlockFinished)
+        {
+            return {};
         }
 
         return doc;

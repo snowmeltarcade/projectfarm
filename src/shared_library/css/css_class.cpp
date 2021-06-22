@@ -4,7 +4,8 @@ namespace projectfarm::shared::css
 {
     bool operator==(const CSSClass &lhs, const CSSClass &rhs)
     {
-        if (lhs.Selectors.size() != rhs.Selectors.size())
+        if (lhs.Selectors.size() != rhs.Selectors.size() ||
+            lhs.Attributes.size() != rhs.Attributes.size())
         {
             return false;
         }
@@ -12,6 +13,14 @@ namespace projectfarm::shared::css
         for (auto i {0u}; i < lhs.Selectors.size(); ++i)
         {
             if (lhs.Selectors[i] != rhs.Selectors[i])
+            {
+                return false;
+            }
+        }
+
+        for (auto i {0u}; i < lhs.Attributes.size(); ++i)
+        {
+            if (lhs.Attributes[i] != rhs.Attributes[i])
             {
                 return false;
             }

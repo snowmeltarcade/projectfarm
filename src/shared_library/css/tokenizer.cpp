@@ -50,6 +50,11 @@ namespace projectfarm::shared::css
             value = "";
         };
 
+        auto saveStartBlock = [&tokens](auto pos)
+        {
+            tokens.push_back( { TokenTypes::StartBlock, pos, "" } );
+        };
+
         for (; pos < css.size(); ++pos)
         {
             auto c { '\0' };
@@ -65,7 +70,8 @@ namespace projectfarm::shared::css
             }
             else if (c == BlockOpenCharacter)
             {
-                saveSelector(pos);
+                saveSelector(pos - 1);
+                saveStartBlock(pos);
 
                 CurrentParseMode = ParseMode::Block;
                 return true;
