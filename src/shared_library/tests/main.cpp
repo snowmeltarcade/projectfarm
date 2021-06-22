@@ -7,5 +7,7 @@ int main(int argv, char* args[])
 {
     Catch::Session session;
 
+    CurrentWorkingDirectory = args[0];
+
     return session.run(argv, args);
 }

@@ -5,6 +5,3 @@ foreach (file ${files})
 
     configure_file(${filename} ${filename} COPYONLY)
 endforeach()
-
-add_subdirectory("scripting")
-add_subdirectory("css")

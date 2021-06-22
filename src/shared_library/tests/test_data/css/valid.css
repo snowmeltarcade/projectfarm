@@ -1,0 +1,14 @@
+selector1 {
+    key1: value1;
+    key2: value2;
+    key3: value3
+}
+
+selector2 {
+    key1: value1;
+    key2: value2;
+}
+
+selector3, #id1 {
+    key1: value1;
+}

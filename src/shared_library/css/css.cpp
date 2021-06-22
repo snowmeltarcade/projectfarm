@@ -1,3 +1,6 @@
+#include <fstream>
+#include <sstream>
+
 #include "css.h"
 #include "tokenizer.h"
 
@@ -112,5 +115,26 @@ namespace projectfarm::shared::css
         }
 
         return doc;
+    }
+
+    std::optional<CSSDocument> LoadFromFile(const std::filesystem::path &path) noexcept
+    {
+        if (!std::filesystem::exists(path))
+        {
+            return {};
+        }
+
+        std::ifstream file(path);
+
+        if (!file.is_open())
+        {
+            return {};
+        }
+
+        std::stringstream ss;
+        ss << file.rdbuf();
+
+        auto css = LoadFromRaw(ss.str());
+        return css;
     }
 }

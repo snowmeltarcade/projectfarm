@@ -3,6 +3,7 @@
 #include <tuple>
 
 #include "catch2/catch.hpp"
+#include "test_util.h"
 #include "css/css.h"
 
 using namespace std::literals;
@@ -50,7 +51,7 @@ TEST_CASE("LoadFromRaw - invalid CSS - returns error", "[css]")
     }
 }
 
-TEST_CASE("LoadFromRaw - valid CSS - does not return error", "[css]")
+TEST_CASE("LoadFromRaw - valid CSS - returns valid result", "[css]")
 {
     std::vector<std::pair<std::string, CSSDocument>> validCSS;
 
@@ -204,6 +205,67 @@ TEST_CASE("LoadFromRaw - valid CSS - does not return error", "[css]")
         REQUIRE(result);
 
         INFO(css);
+        REQUIRE(*result == doc);
+    }
+}
+
+/*********************************************
+ * LoadFromFile
+ ********************************************/
+
+TEST_CASE("LoadFromFile - file not exists - returns error", "[css]")
+{
+    std::filesystem::path path = "file does not exist.css";
+
+    auto result = LoadFromFile(path);
+
+    REQUIRE_FALSE(result);
+}
+
+TEST_CASE("LoadFromFile - invalid CSS - returns error", "[css]")
+{
+    std::filesystem::path path = GetCSSFilePath("invalid.css");
+
+    auto result = LoadFromFile(path);
+
+    REQUIRE_FALSE(result);
+}
+
+TEST_CASE("LoadFromFile - valid CSS - returns valid result", "[css]")
+{
+    std::vector<std::pair<std::string, CSSDocument>> validCSS;
+
+    CSSDocument cssDocument;
+    CSSClass cssClass;
+
+    cssClass.Selectors.push_back( { CSSSelectorTypes::Type, "selector1" } );
+    cssClass.Attributes.push_back( { "key1", "value1" } );
+    cssClass.Attributes.push_back( { "key2", "value2" } );
+    cssClass.Attributes.push_back( { "key3", "value3" } );
+    cssDocument.Classes.push_back(cssClass);
+
+    cssClass = CSSClass();
+    cssClass.Selectors.push_back( { CSSSelectorTypes::Type, "selector2" } );
+    cssClass.Attributes.push_back( { "key1", "value1" } );
+    cssClass.Attributes.push_back( { "key2", "value2" } );
+    cssDocument.Classes.push_back(cssClass);
+
+    cssClass = CSSClass();
+    cssClass.Selectors.push_back( { CSSSelectorTypes::Type, "selector3" } );
+    cssClass.Selectors.push_back( { CSSSelectorTypes::Id, "id1" } );
+    cssClass.Attributes.push_back( { "key1", "value1" } );
+    cssDocument.Classes.push_back(cssClass);
+
+    validCSS.push_back( { "valid.css", cssDocument } );
+
+    for (const auto& [filename, doc] : validCSS)
+    {
+        auto path = GetCSSFilePath(filename);
+
+        auto result = LoadFromFile(path);
+        REQUIRE(result);
+
+        INFO(filename);
         REQUIRE(*result == doc);
     }
 }
