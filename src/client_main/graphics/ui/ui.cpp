@@ -21,6 +21,15 @@ namespace projectfarm::graphics::ui
 
 		this->ReconfirmSize();
 
+		this->_styles = std::make_shared<Styles>();
+		this->_styles->SetDataProvider(this->_dataProvider);
+		this->_styles->SetLogger(this->_logger);
+		if (!this->_styles->Initialize())
+        {
+		    this->LogMessage("Failed to initialize styles.");
+		    return false;
+        }
+
 		this->LogMessage("Initialized UI.");
 
 		return true;

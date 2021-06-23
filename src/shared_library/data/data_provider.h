@@ -108,6 +108,12 @@ namespace projectfarm::shared
             return this->_graphicsShadersLocations[name];
         }
 
+        [[nodiscard]]
+        const std::unordered_map<std::string, std::filesystem::path>& GetDefaultCSSLocations() const noexcept
+        {
+            return this->_defaultCSSLocations;
+        }
+
         void SetDataFolderPath(const std::filesystem::path& basePath)
         {
             auto base = basePath;
@@ -200,6 +206,7 @@ namespace projectfarm::shared
         std::unordered_map<std::string, std::filesystem::path> _uiCustomControlsLocations;
         std::unordered_map<std::string, std::filesystem::path> _graphicsMaterialsLocations;
         std::unordered_map<std::string, std::filesystem::path> _graphicsShadersLocations;
+        std::unordered_map<std::string, std::filesystem::path> _defaultCSSLocations;
     };
 }
 

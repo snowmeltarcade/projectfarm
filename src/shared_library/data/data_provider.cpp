@@ -65,6 +65,14 @@ namespace projectfarm::shared
             return false;
         }
 
+        if (!this->LoadLocations(DataProviderLocations::ClientUICSSDefault,
+                                 "DefaultCSS.json", "defaultCSS",
+                                 this->_defaultCSSLocations))
+        {
+            this->LogMessage("Failed to load graphics shaders locations");
+            return false;
+        }
+
         return true;
     }
 
