@@ -95,6 +95,12 @@ namespace projectfarm::graphics::ui
 
         void SendMessage(const std::string& key, const std::vector<std::string>& parameters) const noexcept;
 
+        [[nodiscard]]
+        const std::shared_ptr<Styles>& GetStyles() const noexcept
+        {
+            return this->_styles;
+        }
+
 	private:
         [[nodiscard]]
         std::shared_ptr<BaseControl> CreateControlFromType(const std::string& type) noexcept;

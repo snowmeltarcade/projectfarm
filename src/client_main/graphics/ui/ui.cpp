@@ -278,6 +278,12 @@ namespace projectfarm::graphics::ui
             }
         }
 
+        if (!control->RefreshStyles())
+        {
+            this->LogMessage("Failed to refresh styles for control: " + controlJson.dump());
+            return false;
+        }
+
         return true;
     }
 

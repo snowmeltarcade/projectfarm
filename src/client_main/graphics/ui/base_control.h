@@ -250,6 +250,9 @@ namespace projectfarm::graphics::ui
             return this->_doesSupportJavascript;
         }
 
+        [[nodiscard]]
+        bool RefreshStyles() noexcept;
+
     private:
         // no [[nodiscard]]
         bool CallScriptFunction(const std::shared_ptr<shared::scripting::Script>& script,
@@ -309,6 +312,8 @@ namespace projectfarm::graphics::ui
         // Javascript events are forwarded to the internal
         // controls
         bool _doesSupportJavascript {true};
+
+        std::string _cssClass;
 
         std::shared_ptr<graphics::Texture> _maskTexture;
         std::shared_ptr<SDLFreeableSurface> _maskSurface;

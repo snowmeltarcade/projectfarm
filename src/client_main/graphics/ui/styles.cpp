@@ -25,4 +25,9 @@ namespace projectfarm::graphics::ui
     {
         this->_defaultStyles.clear();
     }
+
+    std::optional<shared::css::CSSDocument> Styles::GetBySelector(std::string_view selector) const noexcept
+    {
+        return {};
+    }
 }

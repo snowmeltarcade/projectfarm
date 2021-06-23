@@ -256,6 +256,23 @@ namespace projectfarm::graphics::ui
         return rect;
     }
 
+    bool BaseControl::RefreshStyles() noexcept
+    {
+        if (this->_cssClass.empty())
+        {
+            return true;
+        }
+
+        auto doc = this->_ui->GetStyles()->GetBySelector(this->_cssClass);
+        if (!doc)
+        {
+            this->LogMessage("Failed to find css class with selector: " + this->_cssClass);
+            return false;
+        }
+
+        return true;
+    }
+
     bool BaseControl::CallScriptFunction(const std::shared_ptr<shared::scripting::Script>& script,
                                          const std::vector<projectfarm::shared::scripting::FunctionParameter>& parameters,
                                          shared::scripting::FunctionTypes functionType) noexcept
@@ -344,6 +361,11 @@ namespace projectfarm::graphics::ui
         {
             // use this as a string to allow for parameters in uesr controls
             this->_canFocus = canFocus->get<std::string>() == "true";
+        }
+
+        if (auto cssClass = json.find("cssClass"); cssClass != json.end())
+        {
+            this->_cssClass = cssClass->get<std::string>();
         }
 
         if (auto fitType = json.find("fitType"); fitType != json.end())
