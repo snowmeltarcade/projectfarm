@@ -263,8 +263,8 @@ namespace projectfarm::graphics::ui
             return true;
         }
 
-        auto doc = this->_ui->GetStyles()->GetBySelector(this->_cssClass);
-        if (!doc)
+        auto cssClass = this->_ui->GetStyles()->GetBySelector(this->_cssClass);
+        if (!cssClass)
         {
             this->LogMessage("Failed to find css class with selector: " + this->_cssClass);
             return false;
