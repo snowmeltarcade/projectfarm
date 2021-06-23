@@ -117,7 +117,7 @@ Set the CMake settings as follows:
 
 > CMake -> Toolchain -> *Set to the toolchain with Ninja as the make tool*
 
-> CMake -> CMake options -> -GNinja -DCMAKE_CXX_COMPILER=/*{project_root}*/libraries/clang-12/darwin/bin/clang++ -DCMAKE_C_COMPILER=/*{project_root}*/libraries/clang-12/darwin/bin/clang
+> CMake -> CMake options -> -GNinja -DCMAKE_CXX_COMPILER=/*{project_root}*/libraries/clang/darwin/bin/clang++ -DCMAKE_C_COMPILER=/*{project_root}*/libraries/clang/darwin/bin/clang
 
 **Tip**: Add a `projectfarm_client` build configuration with the `-startserver` flag as a program argument. This will start the server each time the client is started, and close the server each time the client is closed.
 
