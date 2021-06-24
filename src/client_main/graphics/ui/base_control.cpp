@@ -270,6 +270,8 @@ namespace projectfarm::graphics::ui
             return false;
         }
 
+        this->ApplyStyle(*cssClass);
+
         return true;
     }
 

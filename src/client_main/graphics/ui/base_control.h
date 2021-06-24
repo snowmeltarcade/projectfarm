@@ -19,6 +19,7 @@
 #include "graphics/texture.h"
 #include "fit_types.h"
 #include "control_types.h"
+#include "css/css.h"
 
 namespace projectfarm::graphics::ui
 {
@@ -252,6 +253,10 @@ namespace projectfarm::graphics::ui
 
         [[nodiscard]]
         bool RefreshStyles() noexcept;
+
+        virtual void ApplyStyle(const shared::css::CSSClass& cssClass) noexcept
+        {
+        }
 
     private:
         // no [[nodiscard]]
