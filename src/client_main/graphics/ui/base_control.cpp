@@ -258,19 +258,42 @@ namespace projectfarm::graphics::ui
 
     bool BaseControl::RefreshStyles() noexcept
     {
-        if (this->_cssClass.empty())
+        std::optional<shared::css::CSSClass> cssClass;
+
+        auto type = this->GetControlType();
+        auto typeName = ControlTypesToString(type);
+
+        // check the control type, then id then css class in this order
+        // and allow the latter to override the former
+        if (auto css = this->_ui->GetStyles()->GetBySelectorAndType(typeName,
+                                                                    shared::css::CSSSelectorTypes::Type);
+            css)
         {
-            return true;
+            cssClass = css;
         }
 
-        auto cssClass = this->_ui->GetStyles()->GetBySelector(this->_cssClass);
-        if (!cssClass)
+        if (auto css = this->_ui->GetStyles()->GetBySelectorAndType(this->_id,
+                                                                    shared::css::CSSSelectorTypes::Id);
+            css)
         {
-            this->LogMessage("Failed to find css class with selector: " + this->_cssClass);
-            return false;
+            cssClass = css;
         }
 
-        this->ApplyStyle(*cssClass);
+        if (!this->_cssClass.empty())
+        {
+            cssClass = this->_ui->GetStyles()->GetBySelectorAndType(this->_cssClass,
+                                                                    shared::css::CSSSelectorTypes::Class);
+            if (!cssClass)
+            {
+                this->LogMessage("Failed to find css class with selector: " + this->_cssClass);
+                return false;
+            }
+        }
+
+        if (cssClass)
+        {
+            this->ApplyStyle(*cssClass);
+        }
 
         return true;
     }

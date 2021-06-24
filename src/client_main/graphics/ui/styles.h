@@ -22,7 +22,8 @@ namespace projectfarm::graphics::ui
         void Shutdown();
 
         [[nodiscard]]
-        std::optional<shared::css::CSSClass> GetBySelector(std::string_view selector) const noexcept;
+        std::optional<shared::css::CSSClass> GetBySelectorAndType(std::string_view selector,
+                                                                  shared::css::CSSSelectorTypes type) const noexcept;
 
     private:
         std::vector<shared::css::CSSDocument> _defaultStyles;

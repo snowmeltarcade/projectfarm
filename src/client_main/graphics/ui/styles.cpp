@@ -28,7 +28,8 @@ namespace projectfarm::graphics::ui
         this->_defaultStyles.clear();
     }
 
-    std::optional<CSSClass> Styles::GetBySelector(std::string_view selector) const noexcept
+    std::optional<CSSClass> Styles::GetBySelectorAndType(std::string_view selector,
+                                                         shared::css::CSSSelectorTypes type) const noexcept
     {
         if (selector.empty())
         {
@@ -49,11 +50,12 @@ namespace projectfarm::graphics::ui
             }
         }
 
-        auto findMatchedClasses = [selector](const auto& c)
+        auto findMatchedClasses = [selector, type](const auto& c)
         {
             const auto& selectors = c.get().Selectors;
             auto found = std::find_if(selectors.begin(), selectors.end(),
-                                      [selector](const auto& s){ return s.Name == selector; });
+                                      [selector, type](const auto& s){ return s.Name == selector &&
+                                                                              s.Type == type; });
             return found != selectors.end();
         };
 
