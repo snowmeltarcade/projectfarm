@@ -85,12 +85,15 @@ TEST_CASE("FromHexString - valid hex strings - returns correct color", "[graphic
         { "#00000000", { 0, 0, 0, 0 } },
         { "#12345678", { 18, 52, 86, 120 } },
         { "#78563412", { 120, 86, 52, 18 } },
+        { "#FFFFFF", { 255, 255, 255, 255 } },
+        { "#FF0000", { 255, 0, 0, 255 } },
     };
 
     for (const auto& [hex, expected] : values)
     {
         auto res = FromHexString(hex);
 
+        INFO(hex);
         REQUIRE(res.has_value());
         REQUIRE(res->r == expected.r);
         REQUIRE(res->g == expected.g);
@@ -142,6 +145,8 @@ TEST_CASE("FromString - valid hex strings - returns correct color", "[graphics/c
         { "#00000000", { 0, 0, 0, 0 } },
         { "#12345678", { 18, 52, 86, 120 } },
         { "#78563412", { 120, 86, 52, 18 } },
+        { "#FFFFFF", { 255, 255, 255, 255 } },
+        { "#FF0000", { 255, 0, 0, 255 } },
     };
 
     for (const auto& [hex, expected] : values)

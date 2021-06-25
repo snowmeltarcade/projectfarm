@@ -71,8 +71,20 @@ namespace projectfarm::shared::graphics::colors
 
     constexpr std::optional<Color> FromHexString(std::string_view s)
     {
+        auto componentCount = 0u;
+
+        // 7 == #aabbcc
         // 9 == #aabbccdd
-        if (s.length() != 9)
+        if (s.length() == 9)
+        {
+            componentCount = 4;
+        }
+        else if (s.length() == 7)
+        {
+            componentCount = 3;
+        }
+
+        if (componentCount == 0)
         {
             return {};
         }
@@ -80,7 +92,7 @@ namespace projectfarm::shared::graphics::colors
         auto rPart = s.substr(1, 2);
         auto gPart = s.substr(3, 2);
         auto bPart = s.substr(5, 2);
-        auto aPart = s.substr(7, 2);
+        auto aPart = componentCount < 4 ? "FF" : s.substr(7, 2);
 
         auto r = math::HexToDec<uint8_t>(rPart);
         auto g = math::HexToDec<uint8_t>(gPart);
