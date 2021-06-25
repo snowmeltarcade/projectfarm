@@ -256,6 +256,48 @@ namespace projectfarm::graphics::ui
         return rect;
     }
 
+    bool BaseControl::RefreshStyles() noexcept
+    {
+        std::optional<shared::css::CSSClass> cssClass;
+
+        auto type = this->GetControlType();
+        auto typeName = ControlTypesToString(type);
+
+        // check the control type, then id then css class in this order
+        // and allow the latter to override the former
+        if (auto css = this->_ui->GetStyles()->GetBySelectorAndType(typeName,
+                                                                    shared::css::CSSSelectorTypes::Type);
+            css)
+        {
+            cssClass = css;
+        }
+
+        if (auto css = this->_ui->GetStyles()->GetBySelectorAndType(this->_id,
+                                                                    shared::css::CSSSelectorTypes::Id);
+            css)
+        {
+            cssClass = css;
+        }
+
+        if (!this->_cssClass.empty())
+        {
+            cssClass = this->_ui->GetStyles()->GetBySelectorAndType(this->_cssClass,
+                                                                    shared::css::CSSSelectorTypes::Class);
+            if (!cssClass)
+            {
+                this->LogMessage("Failed to find css class with selector: " + this->_cssClass);
+                return false;
+            }
+        }
+
+        if (cssClass)
+        {
+            this->ApplyStyle(*cssClass);
+        }
+
+        return true;
+    }
+
     bool BaseControl::CallScriptFunction(const std::shared_ptr<shared::scripting::Script>& script,
                                          const std::vector<projectfarm::shared::scripting::FunctionParameter>& parameters,
                                          shared::scripting::FunctionTypes functionType) noexcept
@@ -344,6 +386,11 @@ namespace projectfarm::graphics::ui
         {
             // use this as a string to allow for parameters in uesr controls
             this->_canFocus = canFocus->get<std::string>() == "true";
+        }
+
+        if (auto cssClass = json.find("cssClass"); cssClass != json.end())
+        {
+            this->_cssClass = cssClass->get<std::string>();
         }
 
         if (auto fitType = json.find("fitType"); fitType != json.end())

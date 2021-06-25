@@ -29,9 +29,12 @@ namespace projectfarm::graphics::ui
 
         void Render() override;
 
-        [[nodiscard]] bool SetupFromJson(const nlohmann::json& controlJson,
-                                         const std::shared_ptr<UI>& ui,
-                                         const std::vector<std::pair<std::string, std::string>>& parameters) override;
+        [[nodiscard]]
+        bool SetupFromJson(const nlohmann::json& controlJson,
+                           const std::shared_ptr<UI>& ui,
+                           const std::vector<std::pair<std::string, std::string>>& parameters) override;
+
+        void ApplyStyle(const shared::css::CSSClass& cssClass) noexcept override;
 
     private:
         void OnDrag(uint32_t, uint32_t, uint32_t dx, uint32_t dy) noexcept override;

@@ -11,6 +11,8 @@ target_sources(
 		mouse_cursor.cpp
 		custom.cpp
 		fit_types.cpp
+		styles.cpp
+		control_types.cpp
 	PUBLIC
 		ui.h
 		canvas.h
@@ -23,5 +25,6 @@ target_sources(
 		custom.h
 		consume_ui.h
 		fit_types.h
+		styles.h
 		control_types.h
 )
