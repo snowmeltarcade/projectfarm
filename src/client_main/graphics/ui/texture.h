@@ -36,12 +36,18 @@ namespace projectfarm::graphics::ui
 
         void ApplyStyle(const shared::css::CSSClass& cssClass) noexcept override;
 
+        void SetColor(const shared::graphics::colors::Color& color) noexcept
+        {
+            if (this->_backgroundTexture)
+            {
+                this->_backgroundTexture->SetColor(color);
+            }
+        }
+
     private:
         void OnDrag(uint32_t, uint32_t, uint32_t dx, uint32_t dy) noexcept override;
 
         std::shared_ptr<graphics::Texture> _backgroundTexture;
-
-        shared::graphics::colors::Color _color {shared::graphics::colors::White};
     };
 }
 

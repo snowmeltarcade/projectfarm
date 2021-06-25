@@ -38,7 +38,8 @@ namespace projectfarm::graphics::ui
         }
 
         this->_backgroundTexture->AddMaterialTexture(this->_maskTexture);
-        this->_backgroundTexture->SetColor(this->_color);
+
+        this->SetColor(shared::graphics::colors::White);
 
         return true;
     }
@@ -100,7 +101,7 @@ namespace projectfarm::graphics::ui
             {
                 if (auto color = shared::graphics::colors::FromString(colorName); color)
                 {
-                    this->_color = *color;
+                    this->SetColor(*color);
                 }
             }
         }
@@ -135,7 +136,7 @@ namespace projectfarm::graphics::ui
         {
             if (auto color = shared::graphics::colors::FromString(*colorName); color)
             {
-                this->_color = *color;
+                this->SetColor(*color);
             }
         }
     }
