@@ -82,8 +82,6 @@ namespace projectfarm::graphics::ui
         shared::math::Vector2D Script_GetCustomPropertyVector2D(std::string_view name,
                                                                 std::string_view parameter) noexcept override;
 
-        void ApplyStyle(const shared::css::CSSClass& cssClass) noexcept override;
-
     private:
         std::shared_ptr<graphics::Texture> _backgroundTexture;
 

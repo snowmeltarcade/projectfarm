@@ -130,17 +130,6 @@ namespace projectfarm::graphics::ui
         return true;
     }
 
-    void Texture::ApplyStyle(const shared::css::CSSClass& cssClass) noexcept
-    {
-        if (auto colorName = cssClass.GetAttributeValueByName("color"); colorName)
-        {
-            if (auto color = shared::graphics::colors::FromString(*colorName); color)
-            {
-                this->SetColor(*color);
-            }
-        }
-    }
-
     void Texture::OnDrag(uint32_t, uint32_t, uint32_t dx, uint32_t dy) noexcept
     {
         auto pos = this->GetPosition();

@@ -461,27 +461,4 @@ namespace projectfarm::graphics::ui
 
         this->SetPosition(pos);
     }
-
-    void Label::ApplyStyle(const shared::css::CSSClass& cssClass) noexcept
-    {
-        auto updateText {false};
-
-        if (auto colorName = cssClass.GetAttributeValueByName("color"); colorName)
-        {
-            if (auto color = shared::graphics::colors::FromString(*colorName); color)
-            {
-                this->_color = *color;
-
-                updateText = true;
-            }
-        }
-
-        if (updateText)
-        {
-            if (!this->SetText(this->_text, this->_fontName, this->_color, true))
-            {
-                this->LogMessage("Failed to set text after applying styles.");
-            }
-        }
-    }
 }

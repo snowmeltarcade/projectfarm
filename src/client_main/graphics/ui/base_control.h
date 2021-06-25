@@ -254,9 +254,7 @@ namespace projectfarm::graphics::ui
         [[nodiscard]]
         bool RefreshStyles() noexcept;
 
-        virtual void ApplyStyle(const shared::css::CSSClass& cssClass) noexcept
-        {
-        }
+        void ApplyStyle(const shared::css::CSSClass& cssClass) noexcept;
 
     private:
         // no [[nodiscard]]

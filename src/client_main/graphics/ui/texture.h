@@ -34,8 +34,6 @@ namespace projectfarm::graphics::ui
                            const std::shared_ptr<UI>& ui,
                            const std::vector<std::pair<std::string, std::string>>& parameters) override;
 
-        void ApplyStyle(const shared::css::CSSClass& cssClass) noexcept override;
-
         void SetColor(const shared::graphics::colors::Color& color) noexcept
         {
             if (this->_backgroundTexture)

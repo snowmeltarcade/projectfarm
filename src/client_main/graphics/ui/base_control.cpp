@@ -298,6 +298,11 @@ namespace projectfarm::graphics::ui
         return true;
     }
 
+    void BaseControll::ApplyStyle(const shared::css::CSSClass& cssClass) noexcept
+    {
+
+    }
+
     bool BaseControl::CallScriptFunction(const std::shared_ptr<shared::scripting::Script>& script,
                                          const std::vector<projectfarm::shared::scripting::FunctionParameter>& parameters,
                                          shared::scripting::FunctionTypes functionType) noexcept
