@@ -9,9 +9,10 @@ namespace projectfarm::graphics::ui
 {
     bool Label::SetText(std::string_view text,
                         std::string_view fontName,
-                        const shared::graphics::colors::Color& color) noexcept
+                        const shared::graphics::colors::Color& color,
+                        bool forceUpdate) noexcept
     {
-        if (text == this->_text)
+        if (!forceUpdate && text == this->_text)
         {
             return true;
         }
@@ -169,13 +170,17 @@ namespace projectfarm::graphics::ui
 
         auto text = normalizedJson["text"].get<std::string>();
         auto font = normalizedJson["font"].get<std::string>();
-        auto colorName = normalizedJson["color"].get<std::string>();
 
-        auto color = shared::graphics::colors::FromString(colorName);
-        if (!color)
+        if (auto colorName = normalizedJson.find("color"); colorName != normalizedJson.end())
         {
-            this->LogMessage("Invalid color: " + color->ToString());
-            return false;
+            auto color = shared::graphics::colors::FromString(colorName->get<std::string>());
+            if (!color)
+            {
+                this->LogMessage("Invalid color: " + color->ToString());
+                return false;
+            }
+
+            this->_color = *color;
         }
 
         // set this here because the default text is empty, so the font name and
@@ -183,7 +188,6 @@ namespace projectfarm::graphics::ui
         if (text.empty())
         {
             this->_fontName = font;
-            this->_color = *color;
         }
 
         if (auto characterOverride = normalizedJson.find("characterOverride"); characterOverride != normalizedJson.end())
@@ -219,9 +223,10 @@ namespace projectfarm::graphics::ui
 
         // we want copies of these values (other than `this`) as they will long be out of scope
         // by the time this is invoked
+        auto color = this->_color;
         auto binding = [this, font, color](const auto& s)
         {
-          if (!this->SetText(s, font, *color))
+          if (!this->SetText(s, font, color))
           {
               this->LogMessage("Failed to set text from binding with text: " + s);
           }
@@ -229,7 +234,7 @@ namespace projectfarm::graphics::ui
         ui->EnableSimpleBindingForParameter(std::make_shared<UI::SimpleBindingType>(binding),
                                             text);
 
-        if (!this->SetText(text, font, *color))
+        if (!this->SetText(text, font, this->_color))
         {
             this->LogMessage("Failed to set text with json: " + controlJson.dump());
             return false;
@@ -455,5 +460,28 @@ namespace projectfarm::graphics::ui
         pos.SetOffset(newX, newY);
 
         this->SetPosition(pos);
+    }
+
+    void Label::ApplyStyle(const shared::css::CSSClass& cssClass) noexcept
+    {
+        auto updateText {false};
+
+        if (auto colorName = cssClass.GetAttributeValueByName("color"); colorName)
+        {
+            if (auto color = shared::graphics::colors::FromString(*colorName); color)
+            {
+                this->_color = *color;
+
+                updateText = true;
+            }
+        }
+
+        if (updateText)
+        {
+            if (!this->SetText(this->_text, this->_fontName, this->_color, true))
+            {
+                this->LogMessage("Failed to set text after applying styles.");
+            }
+        }
     }
 }
