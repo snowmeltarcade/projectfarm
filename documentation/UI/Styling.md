@@ -38,13 +38,13 @@ The following attributes can be used to style UI controls. Please note that not 
 * **color-rgba**
   Defines the color in RGBA. If `color-hsv` is also set, `color-rgba` will override this value. Please see the [colors](../Graphics/Colors.md) documentation for valid color values
 * **color-hsv**
-  Defines the color in HSV. If `color-rgb` is also set, that will override this value. Please see the [colors](../Graphics/Colors.md) documentation for valid color values
+  Defines the color in HSV. If `color-rgba` is also set, that will override this value. Please see the [colors](../Graphics/Colors.md) documentation for valid color values
 * **hue**
-  Defines the hue of the set color. This will override the `h` value in `color-hsv` or will modify the color set in `color-rgb`. This value must be in the `0..1` range
+  Defines the hue of the set color. This will override the `h` value in `color-hsv` or will modify the color set in `color-rgba`. This value must be in the `0..1` range
 * **saturation**
-  Defines the saturation of the set color. This will override the `s` value in `color-hsv` or will modify the color set in `color-rgb`. This value must be in the `0..1` range
+  Defines the saturation of the set color. This will override the `s` value in `color-hsv` or will modify the color set in `color-rgba`. This value must be in the `0..1` range
 * **brightness**
-  Defines the brightness of the set color. This will override the `v` value in `color-hsv` or will modify the color set in `color-rgb`. This value must be in the `0..1` range
+  Defines the brightness of the set color. This will override the `v` value in `color-hsv` or will modify the color set in `color-rgba`. This value must be in the `0..1` range
 * **red**
   Sets the red channel of the set color. This will override the `r` value in `color-rgba`, or will modify the color set in `color-hsv`. This value must be in the `0..255` range
 * **green**
@@ -54,23 +54,25 @@ The following attributes can be used to style UI controls. Please note that not 
 * **alpha**
   Sets the alpha channel of the set color. This will override the `a` value in `color-rgba`. This value must be in the `0..255` range
 * **border-color**
-  Defines the color of the border in RGB. An alias for `border-color-rgb`. Please see the [colors](../Graphics/Colors.md) documentation for valid color values
-* **border-color-rgb**
-  Defines the color of the border in RGB. If `border-color-hsv` is also set, `border-color-rgb` will override this value. Please see the [colors](../Graphics/Colors.md) documentation for valid color values
+  Defines the color of the border in RGBA. An alias for `border-color-rgba`. Please see the [colors](../Graphics/Colors.md) documentation for valid color values
+* **border-color-rgba**
+  Defines the color of the border in RGBA. If `border-color-hsv` is also set, `border-color-rgba` will override this value. Please see the [colors](../Graphics/Colors.md) documentation for valid color values
 * **border-color-hsv**
-  Defines the color of the border in HSV. If `border-color-rgb` is also set, that will override this value. Please see the [colors](../Graphics/Colors.md) documentation for valid color values
+  Defines the color of the border in HSV. If `border-color-rgba` is also set, that will override this value. Please see the [colors](../Graphics/Colors.md) documentation for valid color values
 * **border-hue**
-  Defines the hue of the set border color. This will override the `h` value in `border-color-hsv` or will modify the color set in `border-color-rgb`. This value must be in the `0..1` range
+  Defines the hue of the set border color. This will override the `h` value in `border-color-hsv` or will modify the color set in `border-color-rgba`. This value must be in the `0..1` range
 * **border-saturation**
-  Defines the saturation of the set border color. This will override the `s` value in `border-color-hsv` or will modify the color set in `border-color-rgb`. This value must be in the `0..1` range
+  Defines the saturation of the set border color. This will override the `s` value in `border-color-hsv` or will modify the color set in `border-color-rgba`. This value must be in the `0..1` range
 * **border-brightness**
-  Defines the brightness of the set border color. This will override the `v` value in `border-color-hsv` or will modify the color set in `border-color-rgb`. This value must be in the `0..1` range
+  Defines the brightness of the set border color. This will override the `v` value in `border-color-hsv` or will modify the color set in `border-color-rgba`. This value must be in the `0..1` range
 * **border-red**
-  Sets the red channel of the set border color. This will override the `r` value in `border-color-rgb`, or will modify the color set in `border-color-hsv`. This value must be in the `0..255` range
+  Sets the red channel of the set border color. This will override the `r` value in `border-color-rgba`, or will modify the color set in `border-color-hsv`. This value must be in the `0..255` range
 * **border-green**
-  Sets the green channel of the set border color. This will override the `g` value in `border-color-rgb`, or will modify the color set in `border-color-hsv`. This value must be in the `0..255` range
+  Sets the green channel of the set border color. This will override the `g` value in `border-color-rgba`, or will modify the color set in `border-color-hsv`. This value must be in the `0..255` range
 * **border-blue**
-  Sets the blue channel of the set border color. This will override the `b` value in `border-color-rgb`, or will modify the color set in `border-color-hsv`. This value must be in the `0..255` range
+  Sets the blue channel of the set border color. This will override the `b` value in `border-color-rgba`, or will modify the color set in `border-color-hsv`. This value must be in the `0..255` range
+* **border-alpha**
+  Sets the alpha channel of the set border color. This will override the `a` value in `border-color-rgba`. This value must be in the `0..255` range
 * **texture** The texture to be used. This is an alias for `texture[0]`
 * **texture[n]** The texture to be used at the index `n`. Some materials allow for multiple textures. If a material does not support the texture index, this value will be ignored
 * **margin** The amount of space surrounding this UI control. Adjacent UI controls will be rendered outside this space. Please note that adjacent UI controls' margins will also be taken into account when they are rendered  
