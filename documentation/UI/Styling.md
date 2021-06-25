@@ -34,9 +34,9 @@ We will adhere closely to the CSS syntax defined here: https://developer.mozilla
 The following attributes can be used to style UI controls. Please note that not all controls may use each of these styles.
 
 * **color**
-  Defines the color in RGB. An alias for `color-rgb`. Please see the [colors](../Graphics/Colors.md) documentation for valid color values
-* **color-rgb**
-  Defines the color in RGB. If `color-hsv` is also set, `color-rgb` will override this value. Please see the [colors](../Graphics/Colors.md) documentation for valid color values
+  Defines the color in RGBA. An alias for `color-rgba`. Please see the [colors](../Graphics/Colors.md) documentation for valid color values
+* **color-rgba**
+  Defines the color in RGBA. If `color-hsv` is also set, `color-rgba` will override this value. Please see the [colors](../Graphics/Colors.md) documentation for valid color values
 * **color-hsv**
   Defines the color in HSV. If `color-rgb` is also set, that will override this value. Please see the [colors](../Graphics/Colors.md) documentation for valid color values
 * **hue**
@@ -46,11 +46,13 @@ The following attributes can be used to style UI controls. Please note that not 
 * **brightness**
   Defines the brightness of the set color. This will override the `v` value in `color-hsv` or will modify the color set in `color-rgb`. This value must be in the `0..1` range
 * **red**
-  Sets the red channel of the set color. This will override the `r` value in `color-rgb`, or will modify the color set in `color-hsv`. This value must be in the `0..255` range
+  Sets the red channel of the set color. This will override the `r` value in `color-rgba`, or will modify the color set in `color-hsv`. This value must be in the `0..255` range
 * **green**
-  Sets the green channel of the set color. This will override the `g` value in `color-rgb`, or will modify the color set in `color-hsv`. This value must be in the `0..255` range
+  Sets the green channel of the set color. This will override the `g` value in `color-rgba`, or will modify the color set in `color-hsv`. This value must be in the `0..255` range
 * **blue**
-  Sets the blue channel of the set color. This will override the `b` value in `color-rgb`, or will modify the color set in `color-hsv`. This value must be in the `0..255` range
+  Sets the blue channel of the set color. This will override the `b` value in `color-rgba`, or will modify the color set in `color-hsv`. This value must be in the `0..255` range
+* **alpha**
+  Sets the alpha channel of the set color. This will override the `a` value in `color-rgba`. This value must be in the `0..255` range
 * **border-color**
   Defines the color of the border in RGB. An alias for `border-color-rgb`. Please see the [colors](../Graphics/Colors.md) documentation for valid color values
 * **border-color-rgb**
