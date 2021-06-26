@@ -304,6 +304,8 @@ namespace projectfarm::graphics::ui
     {
         auto color = this->GetColorFromStyle(cssClass);
         auto borderColor = this->GetColorFromStyle(cssClass, "border-");
+
+        auto textures = this->GetTexturesFromStyle(cssClass);
     }
 
     std::optional<shared::graphics::colors::Color> BaseControl::GetColorFromStyle(
@@ -363,6 +365,45 @@ namespace projectfarm::graphics::ui
         auto resultingColor = shared::graphics::colors::Mix(rgba, hsv);
 
         return resultingColor;
+    }
+
+    std::vector<std::string> BaseControl::GetTexturesFromStyle(const shared::css::CSSClass& cssClass) const noexcept
+    {
+        std::vector<std::string> textures;
+
+        constexpr auto maxTextures = 16u;
+
+        // `texture` is an alias for `texture0`
+        auto firstTextureName = ""s;
+        if (auto name = cssClass.GetAttributeValueByName("texture"); name)
+        {
+            firstTextureName = *name;
+        }
+
+        for (auto i {0u}; i < maxTextures; ++i)
+        {
+            auto name = "texture" + std::to_string(i);
+
+            if (auto n = cssClass.GetAttributeValueByName(name); n)
+            {
+                if (i == 0)
+                {
+                    // we'll add this later on
+                    firstTextureName = *n;
+                    continue;
+                }
+
+                textures.push_back(std::string(*n));
+            }
+        }
+
+        // add in the alias if it exists
+        if (!firstTextureName.empty())
+        {
+            textures.insert(textures.begin(), firstTextureName);
+        }
+
+        return textures;
     }
 
     std::optional<shared::graphics::colors::Color> BaseControl::GetColorFromStylePropertiesRGBA(

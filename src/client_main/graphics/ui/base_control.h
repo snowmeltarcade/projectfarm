@@ -264,6 +264,9 @@ namespace projectfarm::graphics::ui
                               const std::string& keyPrefix = "") const noexcept;
 
         [[nodiscard]]
+        std::vector<std::string> GetTexturesFromStyle(const shared::css::CSSClass& cssClass) const noexcept;
+
+        [[nodiscard]]
         std::optional<shared::graphics::colors::Color> GetColorFromStylePropertiesRGBA(
             std::optional<std::string_view> color_rgba,
             std::optional<std::string_view> red,
