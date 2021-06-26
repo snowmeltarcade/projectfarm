@@ -270,6 +270,13 @@ namespace projectfarm::graphics::ui
             std::optional<std::string_view> blue,
             std::optional<std::string_view> alpha) const noexcept;
 
+        [[nodiscard]]
+        std::optional<shared::graphics::colors::Color> GetColorFromStylePropertiesHSV(
+            std::optional<std::string_view> color_hsv,
+            std::optional<std::string_view> hue,
+            std::optional<std::string_view> saturation,
+            std::optional<std::string_view> brightness) const noexcept;
+
         // no [[nodiscard]]
         bool CallScriptFunction(const std::shared_ptr<shared::scripting::Script>& script,
                                 const std::vector<projectfarm::shared::scripting::FunctionParameter>& parameters,

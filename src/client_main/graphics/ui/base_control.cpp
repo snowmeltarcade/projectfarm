@@ -335,7 +335,17 @@ namespace projectfarm::graphics::ui
         }
         else
         {
-            this->LogMessage("Failed to get color style.");
+            this->LogMessage("Failed to get color RGBA style.");
+            return {};
+        }
+
+        if (auto c = this->GetColorFromStylePropertiesHSV(color_hsv, hue, saturation, brightness); c)
+        {
+            //resultingColor = *c;
+        }
+        else
+        {
+            this->LogMessage("Failed to get color HSV style.");
             return {};
         }
 
@@ -421,6 +431,15 @@ namespace projectfarm::graphics::ui
         }
 
         return color;
+    }
+
+    std::optional<shared::graphics::colors::Color> BaseControl::GetColorFromStylePropertiesHSV(
+        std::optional<std::string_view> color_hsv,
+        std::optional<std::string_view> hue,
+        std::optional<std::string_view> saturation,
+        std::optional<std::string_view> brightness) const noexcept
+    {
+        return {};
     }
 
     bool BaseControl::CallScriptFunction(const std::shared_ptr<shared::scripting::Script>& script,
