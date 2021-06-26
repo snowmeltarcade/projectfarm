@@ -20,6 +20,7 @@
 #include "fit_types.h"
 #include "control_types.h"
 #include "css/css.h"
+#include "graphics/colors/color_hsv.h"
 
 namespace projectfarm::graphics::ui
 {
@@ -271,7 +272,7 @@ namespace projectfarm::graphics::ui
             std::optional<std::string_view> alpha) const noexcept;
 
         [[nodiscard]]
-        std::optional<shared::graphics::colors::Color> GetColorFromStylePropertiesHSV(
+        std::optional<shared::graphics::colors::ColorHSV> GetColorFromStylePropertiesHSV(
             std::optional<std::string_view> color_hsv,
             std::optional<std::string_view> hue,
             std::optional<std::string_view> saturation,

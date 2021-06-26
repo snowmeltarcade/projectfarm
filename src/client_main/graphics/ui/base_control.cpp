@@ -339,9 +339,11 @@ namespace projectfarm::graphics::ui
             return {};
         }
 
+        shared::graphics::colors::ColorHSV hsv;
+
         if (auto c = this->GetColorFromStylePropertiesHSV(color_hsv, hue, saturation, brightness); c)
         {
-            //resultingColor = *c;
+            hsv = *c;
         }
         else
         {
@@ -433,13 +435,72 @@ namespace projectfarm::graphics::ui
         return color;
     }
 
-    std::optional<shared::graphics::colors::Color> BaseControl::GetColorFromStylePropertiesHSV(
+    std::optional<shared::graphics::colors::ColorHSV> BaseControl::GetColorFromStylePropertiesHSV(
         std::optional<std::string_view> color_hsv,
         std::optional<std::string_view> hue,
         std::optional<std::string_view> saturation,
         std::optional<std::string_view> brightness) const noexcept
     {
-        return {};
+        shared::graphics::colors::ColorHSV color;
+
+        if (color_hsv)
+        {
+            if (auto c = shared::graphics::colors::FromStringHSV(*color_hsv); c)
+            {
+                color = *c;
+            }
+            else
+            {
+                this->LogMessage("Invalid color: "s + std::string(*color_hsv));
+                return {};
+            }
+        }
+
+        try
+        {
+            if (hue)
+            {
+                auto value = std::stof(std::string(*hue));
+                if (value < 0.0f || value > 1.0f)
+                {
+                    this->LogMessage("Hue value is invalid: " + std::to_string(value));
+                    return {};
+                }
+
+                color.h = value;
+            }
+
+            if (saturation)
+            {
+                auto value = std::stof(std::string(*saturation));
+                if (value < 0.0f || value > 1.0f)
+                {
+                    this->LogMessage("Saturation value is invalid: " + std::to_string(value));
+                    return {};
+                }
+
+                color.s = value;
+            }
+
+            if (brightness)
+            {
+                auto value = std::stof(std::string(*brightness));
+                if (value < 0.0f || value > 1.0f)
+                {
+                    this->LogMessage("Brightness value is invalid: " + std::to_string(value));
+                    return {};
+                }
+
+                color.v = value;
+            }
+        }
+        catch (const std::exception& ex)
+        {
+            this->LogMessage("Failed to get color with error: "s + ex.what());
+            return {};
+        }
+
+        return color;
     }
 
     bool BaseControl::CallScriptFunction(const std::shared_ptr<shared::scripting::Script>& script,
