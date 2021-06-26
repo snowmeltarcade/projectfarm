@@ -74,7 +74,7 @@ The following attributes can be used to style UI controls. Please note that not 
 * **border-alpha**
   Sets the alpha channel of the set border color. This will override the `a` value in `border-color-rgba`. This value must be in the `0..255` range
 * **texture** The texture to be used. This is an alias for `texture0`
-* **texture_n_** The texture to be used at the index `n`. Some materials allow for multiple textures. If a material does not support the texture index, this value will be ignored. A maximum of 16 (0..15) textures are supported.
+* **texture*****n*** The texture to be used at the index `n`. Some materials allow for multiple textures. If a material does not support the texture index, this value will be ignored. A maximum of 16 (0..15) textures are supported.
 * **margin** The amount of space surrounding this UI control. Adjacent UI controls will be rendered outside this space. Please note that adjacent UI controls' margins will also be taken into account when they are rendered  
 * **padding** The amount of space within this UI control. Child controls will not be rendered inside of this space. Please note that child controls' margins will be taken into account when they are rendered
 
