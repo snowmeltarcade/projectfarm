@@ -327,16 +327,24 @@ namespace projectfarm::graphics::ui
             color_rgba = color;
         }
 
-        shared::graphics::colors::Color resultingColor = shared::graphics::colors::White;
+        shared::graphics::colors::Color rgba = shared::graphics::colors::White;
 
         if (auto c = this->GetColorFromStylePropertiesRGBA(color_rgba, red, green, blue, alpha); c)
         {
-            resultingColor = *c;
+            rgba = *c;
         }
         else
         {
             this->LogMessage("Failed to get color RGBA style.");
             return {};
+        }
+
+        // `color_rgba` overrides `color_hsv`
+        // any components of hsv (hue, saturation, brightness) that were defines
+        // will still be used
+        if (color_rgba)
+        {
+            color_hsv = {};
         }
 
         shared::graphics::colors::ColorHSV hsv;
@@ -350,6 +358,9 @@ namespace projectfarm::graphics::ui
             this->LogMessage("Failed to get color HSV style.");
             return {};
         }
+
+        // apply hsv components if used
+        auto resultingColor = shared::graphics::colors::Mix(rgba, hsv);
 
         return resultingColor;
     }

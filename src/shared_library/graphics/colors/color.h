@@ -46,7 +46,7 @@ namespace projectfarm::shared::graphics::colors
     static inline const Color Green { 0, 255, 0, 255 };
     static inline const Color Blue { 0, 0, 255, 255 };
 
-    constexpr bool operator == (const Color& lhs, const Color& rhs)
+    constexpr bool operator == (const Color& lhs, const Color& rhs) noexcept
     {
         return lhs.r == rhs.r &&
                lhs.g == rhs.g &&
@@ -54,7 +54,7 @@ namespace projectfarm::shared::graphics::colors
                lhs.a == rhs.a;
     }
 
-    constexpr bool operator != (const Color& lhs, const Color& rhs)
+    constexpr bool operator != (const Color& lhs, const Color& rhs) noexcept
     {
         return !(lhs == rhs);
     }
@@ -69,7 +69,7 @@ namespace projectfarm::shared::graphics::colors
         { "transparent", Transparent },
     };
 
-    constexpr std::optional<Color> FromHexString(std::string_view s)
+    constexpr std::optional<Color> FromHexString(std::string_view s) noexcept
     {
         auto componentCount = 0u;
 
@@ -102,7 +102,9 @@ namespace projectfarm::shared::graphics::colors
         return {{ *r, *g, *b, *a } };
     }
 
-    std::optional<Color> FromString(std::string_view s);
+    std::optional<Color> FromString(std::string_view s) noexcept;
+
+    Color Mix(Color rgba, struct ColorHSV hsv) noexcept;
 }
 
 #endif
