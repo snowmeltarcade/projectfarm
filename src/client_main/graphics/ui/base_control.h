@@ -257,6 +257,19 @@ namespace projectfarm::graphics::ui
         void ApplyStyle(const shared::css::CSSClass& cssClass) noexcept;
 
     private:
+        [[nodiscard]]
+        std::optional<shared::graphics::colors::Color>
+            GetColorFromStyle(const shared::css::CSSClass& cssClass,
+                              const std::string& keyPrefix = "") const noexcept;
+
+        [[nodiscard]]
+        std::optional<shared::graphics::colors::Color> GetColorFromStylePropertiesRGBA(
+            std::optional<std::string_view> color_rgba,
+            std::optional<std::string_view> red,
+            std::optional<std::string_view> green,
+            std::optional<std::string_view> blue,
+            std::optional<std::string_view> alpha) const noexcept;
+
         // no [[nodiscard]]
         bool CallScriptFunction(const std::shared_ptr<shared::scripting::Script>& script,
                                 const std::vector<projectfarm::shared::scripting::FunctionParameter>& parameters,
