@@ -4,6 +4,7 @@
 #include <optional>
 #include <vector>
 #include <string>
+#include <cstdint>
 
 #include "logging/consume_logger.h"
 #include "css/css.h"
@@ -25,16 +26,28 @@ namespace projectfarm::graphics::ui
         }
         ~ControlStyle() = default;
 
+        shared::graphics::colors::Color Color {shared::graphics::colors::White};
+        shared::graphics::colors::Color BorderColor {shared::graphics::colors::Transparent};
+
+        std::vector<std::string> Textures;
+
+        float Margin {0.0f};
+        float Padding {0.0f};
+
     private:
         void ApplyStyle(const shared::css::CSSClass& cssClass) noexcept;
 
         [[nodiscard]]
         std::optional<shared::graphics::colors::Color>
-        GetColorFromStyle(const shared::css::CSSClass& cssClass,
-                          const std::string& keyPrefix = "") const noexcept;
+            GetColorFromStyle(const shared::css::CSSClass& cssClass,
+                              const std::string& keyPrefix = "") const noexcept;
 
         [[nodiscard]]
         std::vector<std::string> GetTexturesFromStyle(const shared::css::CSSClass& cssClass) const noexcept;
+
+        [[nodiscard]]
+        std::optional<float> GetFloatFromStyle(const shared::css::CSSClass& cssClass,
+                                               const std::string& name) const noexcept;
 
         [[nodiscard]]
         std::optional<shared::graphics::colors::Color> GetColorFromStylePropertiesRGBA(
@@ -50,6 +63,9 @@ namespace projectfarm::graphics::ui
             std::optional<std::string_view> hue,
             std::optional<std::string_view> saturation,
             std::optional<std::string_view> brightness) const noexcept;
+
+        std::optional<uint32_t> GetUInt(std::optional<std::string_view> s) const noexcept;
+        std::optional<float> GetFloat(std::optional<std::string_view> s) const noexcept;
     };
 }
 

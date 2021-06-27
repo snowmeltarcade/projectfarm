@@ -4,13 +4,27 @@ namespace projectfarm::graphics::ui
 {
     void ControlStyle::ApplyStyle(const shared::css::CSSClass& cssClass) noexcept
     {
-        auto color = this->GetColorFromStyle(cssClass);
-        auto borderColor = this->GetColorFromStyle(cssClass, "border-");
+        if (auto c = this->GetColorFromStyle(cssClass); c)
+        {
+            this->Color = *c;
+        }
 
-        auto textures = this->GetTexturesFromStyle(cssClass);
+        if (auto c = this->GetColorFromStyle(cssClass, "border-"); c)
+        {
+            this->BorderColor = *c;
+        }
 
-        // get margin and padding. they are floats...
-        // perhaps put in a `layout` struct or something?
+        this->Textures = this->GetTexturesFromStyle(cssClass);
+
+        if (auto v = this->GetFloatFromStyle(cssClass, "padding"); v)
+        {
+            this->Padding = *v;
+        }
+
+        if (auto v = this->GetFloatFromStyle(cssClass, "margin"); v)
+        {
+            this->Margin = *v;
+        }
     }
 
     std::optional<shared::graphics::colors::Color> ControlStyle::GetColorFromStyle(
@@ -111,6 +125,23 @@ namespace projectfarm::graphics::ui
         return textures;
     }
 
+    std::optional<float> ControlStyle::GetFloatFromStyle(const shared::css::CSSClass& cssClass,
+                                                         const std::string& name) const noexcept
+    {
+        auto attributeValue = cssClass.GetAttributeValueByName(name);
+        if (!attributeValue)
+        {
+            return {};
+        }
+
+        if (auto value = this->GetFloat(attributeValue); value)
+        {
+            return *value;
+        }
+
+        return {};
+    }
+
     std::optional<shared::graphics::colors::Color> ControlStyle::GetColorFromStylePropertiesRGBA(
         std::optional<std::string_view> color_rgba,
         std::optional<std::string_view> red,
@@ -133,60 +164,48 @@ namespace projectfarm::graphics::ui
             }
         }
 
-        try
+        if (auto value = this->GetUInt(red); value)
         {
-            if (red)
+            if (*value < 0 || *value > 255)
             {
-                auto value = std::stoi(std::string(*red));
-                if (value < 0 || value > 255)
-                {
-                    this->LogMessage("Red value is invalid: " + std::to_string(value));
-                    return {};
-                }
-
-                color.r = value;
+                this->LogMessage("Red value is invalid: " + std::to_string(*value));
+                return {};
             }
 
-            if (green)
-            {
-                auto value = std::stoi(std::string(*green));
-                if (value < 0 || value > 255)
-                {
-                    this->LogMessage("Green value is invalid: " + std::to_string(value));
-                    return {};
-                }
-
-                color.g = value;
-            }
-
-            if (blue)
-            {
-                auto value = std::stoi(std::string(*blue));
-                if (value < 0 || value > 255)
-                {
-                    this->LogMessage("Blue value is invalid: " + std::to_string(value));
-                    return {};
-                }
-
-                color.b = value;
-            }
-
-            if (alpha)
-            {
-                auto value = std::stoi(std::string(*alpha));
-                if (value < 0 || value > 255)
-                {
-                    this->LogMessage("Alpha value is invalid: " + std::to_string(value));
-                    return {};
-                }
-
-                color.a = value;
-            }
+            color.r = *value;
         }
-        catch (const std::exception& ex)
+
+        if (auto value = this->GetUInt(green); value)
         {
-            this->LogMessage("Failed to get color with error: "s + ex.what());
-            return {};
+            if (*value < 0 || *value > 255)
+            {
+                this->LogMessage("Green value is invalid: " + std::to_string(*value));
+                return {};
+            }
+
+            color.g = *value;
+        }
+
+        if (auto value = this->GetUInt(blue); value)
+        {
+            if (*value < 0 || *value > 255)
+            {
+                this->LogMessage("Blue value is invalid: " + std::to_string(*value));
+                return {};
+            }
+
+            color.b = *value;
+        }
+
+        if (auto value = this->GetUInt(alpha); value)
+        {
+            if (*value < 0 || *value > 255)
+            {
+                this->LogMessage("Alpha value is invalid: " + std::to_string(*value));
+                return {};
+            }
+
+            color.a = *value;
         }
 
         return color;
@@ -213,50 +232,75 @@ namespace projectfarm::graphics::ui
             }
         }
 
-        try
+        if (auto value = this->GetFloat(hue); value)
         {
-            if (hue)
+            if (*value < 0.0f || *value > 1.0f)
             {
-                auto value = std::stof(std::string(*hue));
-                if (value < 0.0f || value > 1.0f)
-                {
-                    this->LogMessage("Hue value is invalid: " + std::to_string(value));
-                    return {};
-                }
-
-                color.h = value;
+                this->LogMessage("Hue value is invalid: " + std::to_string(*value));
+                return {};
             }
 
-            if (saturation)
-            {
-                auto value = std::stof(std::string(*saturation));
-                if (value < 0.0f || value > 1.0f)
-                {
-                    this->LogMessage("Saturation value is invalid: " + std::to_string(value));
-                    return {};
-                }
-
-                color.s = value;
-            }
-
-            if (brightness)
-            {
-                auto value = std::stof(std::string(*brightness));
-                if (value < 0.0f || value > 1.0f)
-                {
-                    this->LogMessage("Brightness value is invalid: " + std::to_string(value));
-                    return {};
-                }
-
-                color.v = value;
-            }
+            color.h = *value;
         }
-        catch (const std::exception& ex)
+
+        if (auto value = this->GetFloat(saturation); value)
         {
-            this->LogMessage("Failed to get color with error: "s + ex.what());
-            return {};
+            if (*value < 0.0f || *value > 1.0f)
+            {
+                this->LogMessage("Saturation value is invalid: " + std::to_string(*value));
+                return {};
+            }
+
+            color.s = *value;
+        }
+
+        if (auto value = this->GetFloat(brightness); value)
+        {
+            if (*value < 0.0f || *value > 1.0f)
+            {
+                this->LogMessage("Brightness value is invalid: " + std::to_string(*value));
+                return {};
+            }
+
+            color.v = *value;
         }
 
         return color;
+    }
+
+    std::optional<uint32_t> ControlStyle::GetUInt(std::optional<std::string_view> s) const noexcept
+    {
+        if (!s)
+        {
+            return {};
+        }
+
+        try
+        {
+            auto value = std::stoi(std::string(*s));
+            return value;
+        }
+        catch (const std::exception& ex)
+        {
+            return {};
+        }
+    }
+
+    std::optional<float> ControlStyle::GetFloat(std::optional<std::string_view> s) const noexcept
+    {
+        if (!s)
+        {
+            return {};
+        }
+
+        try
+        {
+            auto value = std::stof(std::string(*s));
+            return value;
+        }
+        catch (const std::exception& ex)
+        {
+            return {};
+        }
     }
 }
