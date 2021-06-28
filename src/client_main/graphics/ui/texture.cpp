@@ -4,7 +4,7 @@
 
 namespace projectfarm::graphics::ui
 {
-    bool Texture::Load(const std::filesystem::path& texturePath) noexcept
+    bool Texture::Load() noexcept
     {
         this->_backgroundTexture = std::make_shared<projectfarm::graphics::Texture>();
         this->_backgroundTexture->SetLogger(this->_logger);
@@ -12,7 +12,7 @@ namespace projectfarm::graphics::ui
 
         this->_backgroundTexture->SetRenderToWorldSpace(false);
 
-        if (texturePath.empty())
+        if (this->_style->Textures.empty())
         {
             this->_backgroundTexture->SetMaterialName("solid_color_with_tex_coords_with_mask");
 
@@ -22,9 +22,10 @@ namespace projectfarm::graphics::ui
         }
         else
         {
+            auto texturePath = this->_style->Textures[0];
             if (!this->_backgroundTexture->Load(texturePath))
             {
-                this->LogMessage("Failed to load texture: " + texturePath.string());
+                this->LogMessage("Failed to load texture: " + texturePath.u8string());
                 return false;
             }
 
@@ -39,7 +40,7 @@ namespace projectfarm::graphics::ui
 
         this->_backgroundTexture->AddMaterialTexture(this->_maskTexture);
 
-        this->SetColor(shared::graphics::colors::White);
+        this->SetColor(this->_style->Color);
 
         return true;
     }
@@ -92,42 +93,18 @@ namespace projectfarm::graphics::ui
             return false;
         }
 
-        // if neither color of texture path is defined, this texture will default to white
-        auto colorNameIter = normalizedJson.find("color");
-        if (colorNameIter != normalizedJson.end())
+        if (!this->Load())
         {
-            auto colorName = colorNameIter->get<std::string>();
-            if (!colorName.empty())
-            {
-                if (auto color = shared::graphics::colors::FromString(colorName); color)
-                {
-                    this->SetColor(*color);
-                }
-            }
-        }
-
-        std::filesystem::path path;
-
-        auto texturePathIter = normalizedJson.find("texturePath");
-        if (texturePathIter != normalizedJson.end())
-        {
-            auto texturePath = texturePathIter->get<std::string>();
-            if (texturePath.empty())
-            {
-                return true;
-            }
-
-            path = this->_dataProvider->NormalizePath(texturePath);
-        }
-
-        // if the path is empty, the texture will just have a color
-        if (!this->Load(path))
-        {
-            this->LogMessage("Failed to load texture from path: " + path.u8string());
+            this->LogMessage("Failed to load texture.");
             return false;
         }
 
         return true;
+    }
+
+    void Texture::ApplyStyle() noexcept
+    {
+
     }
 
     void Texture::OnDrag(uint32_t, uint32_t, uint32_t dx, uint32_t dy) noexcept

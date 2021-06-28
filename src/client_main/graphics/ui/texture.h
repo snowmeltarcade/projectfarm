@@ -18,7 +18,7 @@ namespace projectfarm::graphics::ui
         ~Texture() override = default;
 
         [[nodiscard]]
-        bool Load(const std::filesystem::path& texturePath) noexcept;
+        bool Load() noexcept;
 
         ControlTypes GetControlType() const noexcept override
         {
@@ -41,6 +41,9 @@ namespace projectfarm::graphics::ui
                 this->_backgroundTexture->SetColor(color);
             }
         }
+
+    protected:
+        void ApplyStyle() noexcept override;
 
     private:
         void OnDrag(uint32_t, uint32_t, uint32_t dx, uint32_t dy) noexcept override;

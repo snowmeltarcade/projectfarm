@@ -1,3 +1,5 @@
+#include <algorithm>
+
 #include "control_style.h"
 
 namespace projectfarm::graphics::ui
@@ -86,9 +88,10 @@ namespace projectfarm::graphics::ui
         return resultingColor;
     }
 
-    std::vector<std::string> ControlStyle::GetTexturesFromStyle(const shared::css::CSSClass& cssClass) const noexcept
+    std::vector<std::filesystem::path>
+        ControlStyle::GetTexturesFromStyle(const shared::css::CSSClass& cssClass) const noexcept
     {
-        std::vector<std::string> textures;
+        std::vector<std::filesystem::path> textures;
 
         constexpr auto maxTextures = 16u;
 
@@ -121,6 +124,10 @@ namespace projectfarm::graphics::ui
         {
             textures.insert(textures.begin(), firstTextureName);
         }
+
+        std::transform(textures.begin(), textures.end(),
+                       textures.begin(),
+                       [this](const auto& t){ return this->_dataProvider->NormalizePath(t); });
 
         return textures;
     }

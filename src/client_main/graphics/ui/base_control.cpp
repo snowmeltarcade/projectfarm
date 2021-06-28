@@ -292,18 +292,18 @@ namespace projectfarm::graphics::ui
             }
         }
 
-        if (cssClass)
+        if (!cssClass)
         {
-            this->ApplyStyle(*cssClass);
+            // we want something, so default to using the default values
+            cssClass = shared::css::CSSClass();
         }
 
-        return true;
-    }
-
-    void BaseControl::ApplyStyle(const shared::css::CSSClass& cssClass) noexcept
-    {
         // override any previous styles
-        this->_style = std::make_shared<ControlStyle>(cssClass, this->_logger);
+        this->_style = std::make_shared<ControlStyle>(*cssClass, this->_logger, this->_dataProvider);
+
+        this->ApplyStyle();
+
+        return true;
     }
 
     bool BaseControl::CallScriptFunction(const std::shared_ptr<shared::scripting::Script>& script,

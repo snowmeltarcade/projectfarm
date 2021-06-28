@@ -256,8 +256,6 @@ namespace projectfarm::graphics::ui
         [[nodiscard]]
         bool RefreshStyles() noexcept;
 
-        void ApplyStyle(const shared::css::CSSClass& cssClass) noexcept;
-
     private:
         // no [[nodiscard]]
         bool CallScriptFunction(const std::shared_ptr<shared::scripting::Script>& script,
@@ -272,6 +270,10 @@ namespace projectfarm::graphics::ui
         void SetParentSize(const ControlSize& size) noexcept;
 
     protected:
+        virtual void ApplyStyle() noexcept
+        {
+        }
+
         [[nodiscard]]
         bool SetCommonValuesFromJson(const nlohmann::json& json) noexcept;
 

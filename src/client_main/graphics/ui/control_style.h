@@ -5,23 +5,29 @@
 #include <vector>
 #include <string>
 #include <cstdint>
+#include <filesystem>
 
 #include "logging/consume_logger.h"
 #include "css/css.h"
 #include "graphics/colors/color.h"
 #include "graphics/colors/color_hsv.h"
+#include "data/consume_data_provider.h"
 
 using namespace std::literals;
 
 namespace projectfarm::graphics::ui
 {
-    class ControlStyle final : public shared::ConsumeLogger
+    class ControlStyle final : public shared::ConsumeLogger,
+                               public shared::ConsumeDataProvider
     {
     public:
         ControlStyle(shared::css::CSSClass cssClass,
-                     std::shared_ptr<shared::Logger> logger) noexcept
+                     std::shared_ptr<shared::Logger> logger,
+                     std::shared_ptr<shared::DataProvider> dataProvider) noexcept
         {
             this->SetLogger(logger);
+            this->SetDataProvider(dataProvider);
+
             this->ApplyStyle(std::move(cssClass));
         }
         ~ControlStyle() = default;
@@ -29,7 +35,7 @@ namespace projectfarm::graphics::ui
         shared::graphics::colors::Color Color {shared::graphics::colors::White};
         shared::graphics::colors::Color BorderColor {shared::graphics::colors::Transparent};
 
-        std::vector<std::string> Textures;
+        std::vector<std::filesystem::path> Textures;
 
         float Margin {0.0f};
         float Padding {0.0f};
@@ -43,7 +49,8 @@ namespace projectfarm::graphics::ui
                               const std::string& keyPrefix = "") const noexcept;
 
         [[nodiscard]]
-        std::vector<std::string> GetTexturesFromStyle(const shared::css::CSSClass& cssClass) const noexcept;
+        std::vector<std::filesystem::path>
+            GetTexturesFromStyle(const shared::css::CSSClass& cssClass) const noexcept;
 
         [[nodiscard]]
         std::optional<float> GetFloatFromStyle(const shared::css::CSSClass& cssClass,
