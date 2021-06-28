@@ -9,7 +9,6 @@ namespace projectfarm::graphics::ui
 {
     bool Label::SetText(std::string_view text,
                         std::string_view fontName,
-                        const shared::graphics::colors::Color& color,
                         bool forceUpdate) noexcept
     {
         if (!forceUpdate && text == this->_text)
@@ -32,7 +31,11 @@ namespace projectfarm::graphics::ui
                 return false;
             }
 
-            SDL_Color sdlColor {color.r, color.g, color.b, color.a};
+            SDL_Color sdlColor { this->_style->Color.r,
+                                 this->_style->Color.g,
+                                 this->_style->Color.b,
+                                 this->_style->Color.a };
+
             auto [surface, renderDetails] = font->RenderToSurface(text,
                                                                   sdlColor,
                                                                   this->_size.GetWidth(),
@@ -103,7 +106,6 @@ namespace projectfarm::graphics::ui
 
         this->_text = text;
         this->_fontName = fontName;
-        this->_color = color;
 
         return true;
     }
@@ -171,18 +173,6 @@ namespace projectfarm::graphics::ui
         auto text = normalizedJson["text"].get<std::string>();
         auto font = normalizedJson["font"].get<std::string>();
 
-        if (auto colorName = normalizedJson.find("color"); colorName != normalizedJson.end())
-        {
-            auto color = shared::graphics::colors::FromString(colorName->get<std::string>());
-            if (!color)
-            {
-                this->LogMessage("Invalid color: " + color->ToString());
-                return false;
-            }
-
-            this->_color = *color;
-        }
-
         // set this here because the default text is empty, so the font name and
         // color won't be set in `SetText`
         if (text.empty())
@@ -223,10 +213,9 @@ namespace projectfarm::graphics::ui
 
         // we want copies of these values (other than `this`) as they will long be out of scope
         // by the time this is invoked
-        auto color = this->_color;
-        auto binding = [this, font, color](const auto& s)
+        auto binding = [this, font](const auto& s)
         {
-          if (!this->SetText(s, font, color))
+          if (!this->SetText(s, font))
           {
               this->LogMessage("Failed to set text from binding with text: " + s);
           }
@@ -234,7 +223,7 @@ namespace projectfarm::graphics::ui
         ui->EnableSimpleBindingForParameter(std::make_shared<UI::SimpleBindingType>(binding),
                                             text);
 
-        if (!this->SetText(text, font, this->_color))
+        if (!this->SetText(text, font))
         {
             this->LogMessage("Failed to set text with json: " + controlJson.dump());
             return false;
@@ -286,6 +275,11 @@ namespace projectfarm::graphics::ui
         }
 
         return {};
+    }
+
+    void Label::ApplyStyle() noexcept
+    {
+
     }
 
     uint32_t Label::Script_GetCustomPropertyInt_font_line_height() noexcept

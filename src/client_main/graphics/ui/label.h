@@ -30,13 +30,12 @@ namespace projectfarm::graphics::ui
         [[nodiscard]]
         bool SetText(std::string_view text) noexcept
         {
-            return this->SetText(text, this->_fontName, this->_color);
+            return this->SetText(text, this->_fontName);
         }
 
         [[nodiscard]]
         bool SetText(std::string_view text,
                      std::string_view fontName,
-                     const shared::graphics::colors::Color& color,
                      bool forceUpdate = false) noexcept;
 
         [[nodiscard]]
@@ -82,12 +81,14 @@ namespace projectfarm::graphics::ui
         shared::math::Vector2D Script_GetCustomPropertyVector2D(std::string_view name,
                                                                 std::string_view parameter) noexcept override;
 
+    protected:
+        void ApplyStyle() noexcept override;
+
     private:
         std::shared_ptr<graphics::Texture> _backgroundTexture;
 
         std::string _text;
         std::string _fontName;
-        shared::graphics::colors::Color _color;
         Font::RenderDetails _renderDetails;
 
         std::string _characterOverride;
