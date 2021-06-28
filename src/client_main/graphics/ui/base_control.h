@@ -254,7 +254,7 @@ namespace projectfarm::graphics::ui
         }
 
         [[nodiscard]]
-        bool RefreshStyles() noexcept;
+        bool RefreshStyles(bool isLoading) noexcept;
 
     private:
         // no [[nodiscard]]
@@ -270,7 +270,7 @@ namespace projectfarm::graphics::ui
         void SetParentSize(const ControlSize& size) noexcept;
 
     protected:
-        virtual void ApplyStyle() noexcept
+        virtual void ApplyStyle(bool isLoading) noexcept
         {
         }
 

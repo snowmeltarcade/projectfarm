@@ -258,9 +258,9 @@ namespace projectfarm::graphics::ui
         return rect;
     }
 
-    bool BaseControl::RefreshStyles() noexcept
+    bool BaseControl::RefreshStyles(bool isLoading) noexcept
     {
-        std::optional<shared::css::CSSClass> cssClass;
+        shared::css::CSSClass cssClass;
 
         auto type = this->GetControlType();
         auto typeName = ControlTypesToString(type);
@@ -271,37 +271,35 @@ namespace projectfarm::graphics::ui
                                                                     shared::css::CSSSelectorTypes::Type);
             css)
         {
-            cssClass = css;
+            cssClass = *css;
         }
 
         if (auto css = this->_ui->GetStyles()->GetBySelectorAndType(this->_id,
                                                                     shared::css::CSSSelectorTypes::Id);
             css)
         {
-            cssClass = css;
+            cssClass = *css;
         }
 
         if (!this->_cssClass.empty())
         {
-            cssClass = this->_ui->GetStyles()->GetBySelectorAndType(this->_cssClass,
-                                                                    shared::css::CSSSelectorTypes::Class);
-            if (!cssClass)
+            if (auto css = this->_ui->GetStyles()->GetBySelectorAndType(this->_cssClass,
+                                                                        shared::css::CSSSelectorTypes::Class);
+                css)
+            {
+                cssClass = *css;
+            }
+            else
             {
                 this->LogMessage("Failed to find css class with selector: " + this->_cssClass);
                 return false;
             }
         }
 
-        if (!cssClass)
-        {
-            // we want something, so default to using the default values
-            cssClass = shared::css::CSSClass();
-        }
-
         // override any previous styles
-        this->_style = std::make_shared<ControlStyle>(*cssClass, this->_logger, this->_dataProvider);
+        this->_style = std::make_shared<ControlStyle>(cssClass, this->_logger, this->_dataProvider);
 
-        this->ApplyStyle();
+        this->ApplyStyle(isLoading);
 
         return true;
     }

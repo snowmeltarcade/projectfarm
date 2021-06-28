@@ -259,7 +259,7 @@ namespace projectfarm::graphics::ui
         position.SetPositionPercent(x, y);
         control->SetPosition(position);
 
-        if (!control->RefreshStyles())
+        if (!control->RefreshStyles(true))
         {
             this->LogMessage("Failed to refresh styles for control: " + controlJson.dump());
             return false;

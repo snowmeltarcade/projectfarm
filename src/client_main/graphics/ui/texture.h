@@ -43,7 +43,7 @@ namespace projectfarm::graphics::ui
         }
 
     protected:
-        void ApplyStyle() noexcept override;
+        void ApplyStyle(bool isLoading) noexcept override;
 
     private:
         void OnDrag(uint32_t, uint32_t, uint32_t dx, uint32_t dy) noexcept override;

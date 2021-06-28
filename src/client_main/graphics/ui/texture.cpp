@@ -102,9 +102,24 @@ namespace projectfarm::graphics::ui
         return true;
     }
 
-    void Texture::ApplyStyle() noexcept
+    void Texture::ApplyStyle(bool isLoading) noexcept
     {
+        // the texture is set when loading
+        if (isLoading)
+        {
+            return;
+        }
 
+        this->_backgroundTexture->Destroy();
+        this->_backgroundTexture = {};
+
+        this->_maskTexture->Destroy();
+        this->_maskTexture = {};
+
+        if (!this->Load())
+        {
+            this->LogMessage("Failed to reload texture when applying style.");
+        }
     }
 
     void Texture::OnDrag(uint32_t, uint32_t, uint32_t dx, uint32_t dy) noexcept

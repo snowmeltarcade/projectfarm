@@ -82,7 +82,7 @@ namespace projectfarm::graphics::ui
                                                                 std::string_view parameter) noexcept override;
 
     protected:
-        void ApplyStyle() noexcept override;
+        void ApplyStyle(bool isLoading) noexcept override;
 
     private:
         std::shared_ptr<graphics::Texture> _backgroundTexture;

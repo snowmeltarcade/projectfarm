@@ -277,9 +277,16 @@ namespace projectfarm::graphics::ui
         return {};
     }
 
-    void Label::ApplyStyle() noexcept
+    void Label::ApplyStyle(bool isLoading) noexcept
     {
-
+        // the text is already set when loading
+        if (!isLoading)
+        {
+            if (!this->SetText(this->_text, this->_fontName, true))
+            {
+                this->LogMessage("Failed to set text when applying style.");
+            }
+        }
     }
 
     uint32_t Label::Script_GetCustomPropertyInt_font_line_height() noexcept
