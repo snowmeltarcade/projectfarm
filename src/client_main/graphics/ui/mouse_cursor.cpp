@@ -6,12 +6,19 @@
 
 namespace projectfarm::graphics::ui
 {
-    bool MouseCursor::Create(const std::filesystem::path& path) noexcept
+    bool MouseCursor::Create() noexcept
     {
+        if (this->_style->Textures.empty())
+        {
+            // just use the system cursor
+            return true;
+        }
+
         this->_texture = std::make_shared<Texture>();
         this->_texture->SetLogger(this->_logger);
         this->_texture->SetGraphics(this->GetGraphics());
 
+        auto path = this->_style->Textures[0];
         if (!this->_texture->Load(path))
         {
             this->LogMessage("Failed to load mouse cursor texture: " + path.u8string());
@@ -59,6 +66,11 @@ namespace projectfarm::graphics::ui
 
     void MouseCursor::Shutdown() noexcept
     {
+        if (!this->_texture)
+        {
+            return;
+        }
+
         this->_texture->Destroy();
 
         if (SDL_ShowCursor(SDL_ENABLE) < 0)
@@ -80,21 +92,26 @@ namespace projectfarm::graphics::ui
             return false;
         }
 
-        auto texturePath = normalizedJson["texturePath"].get<std::string>();
-        if (texturePath.empty())
+        if (!this->Create())
         {
-            this->LogMessage("No texture path provided for mouse cursor control.");
-            return false;
-        }
-
-        auto path = this->_dataProvider->NormalizePath(texturePath);
-
-        if (!this->Create(path))
-        {
-            this->LogMessage("Failed to create mouse cursor with texture from path: " + path.u8string());
+            this->LogMessage("Failed to create mouse cursor.");
             return false;
         }
 
         return true;
+    }
+
+    void MouseCursor::ApplyStyle(bool isLoading) noexcept
+    {
+        // the texture is set when loading
+        if (isLoading)
+        {
+            return;
+        }
+
+        if (!this->Create())
+        {
+            this->LogMessage("Failed to reload mouse cursor when applying style.");
+        }
     }
 }
