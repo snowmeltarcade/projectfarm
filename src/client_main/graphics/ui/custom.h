@@ -66,6 +66,10 @@ namespace projectfarm::graphics::ui
 
         void ProcessMeta(const nlohmann::json& json) noexcept;
 
+        [[nodiscard]]
+        std::string TransformParameterValueFromStyle(const std::string& value) const noexcept;
+
+        // the control that handles `GetText` and `SetText` type commands
         std::shared_ptr<BaseControl> _textControl;
 
         std::string _type;

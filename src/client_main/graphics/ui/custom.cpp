@@ -4,6 +4,7 @@
 
 #include "custom.h"
 #include "graphics/graphics.h"
+#include "utils/util.h"
 
 namespace projectfarm::graphics::ui
 {
@@ -133,6 +134,8 @@ namespace projectfarm::graphics::ui
                         }
                     }
 
+                    value = this->TransformParameterValueFromStyle(value);
+
                     parameters.push_back({ key, value });
                 }
             }
@@ -173,5 +176,27 @@ namespace projectfarm::graphics::ui
         {
             this->_type = type->get<std::string>();
         }
+    }
+
+    std::string Custom::TransformParameterValueFromStyle(const std::string& value) const noexcept
+    {
+        auto cssKey = "css:"s;
+        if (!shared::utils::startsWith(value, cssKey))
+        {
+            return value;
+        }
+
+        auto cssValue = value.substr(cssKey.size());
+
+        if (cssValue == "texture" && !this->_style->Textures.empty())
+        {
+            return this->_style->Textures[0];
+        }
+        else if (cssValue == "color")
+        {
+            //return this->_style->Color.ToHexString();
+        }
+
+        return value;
     }
 }
