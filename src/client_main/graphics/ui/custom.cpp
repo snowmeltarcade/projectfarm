@@ -18,6 +18,15 @@ namespace projectfarm::graphics::ui
         this->RenderChildren();
     }
 
+    void Custom::ReadIdFromJson(const nlohmann::json& controlJson,
+                                const std::shared_ptr<UI>& ui,
+                                const std::vector<std::pair<std::string, std::string>>& parentParameters)
+    {
+        auto normalizedJson = ui->NormalizeJson(controlJson, parentParameters);
+
+        this->_name = normalizedJson["name"].get<std::string>();
+    }
+
     bool Custom::SetupFromJson(const nlohmann::json& controlJson,
                                const std::shared_ptr<UI>& ui,
                                const std::vector<std::pair<std::string, std::string>>& parentParameters)
@@ -30,12 +39,10 @@ namespace projectfarm::graphics::ui
             return false;
         }
 
-        auto name = normalizedJson["name"].get<std::string>();
-
         // nlohmann::json can throw exceptions
         try
         {
-            auto filePath = this->_dataProvider->GetUICustomControlLocationFromName(name);
+            auto filePath = this->_dataProvider->GetUICustomControlLocationFromName(this->_name);
 
             std::ifstream file(filePath);
 
@@ -57,15 +64,15 @@ namespace projectfarm::graphics::ui
 
             const auto& controls = jsonFile["controls"];
 
+            std::optional<ControlStyle> style;
+
+            if (this->_style)
+            {
+                style = *this->_style;
+            }
+
             for (const auto& control : controls)
             {
-                std::optional<ControlStyle> style;
-
-                if (this->_style)
-                {
-                    style = *this->_style;
-                }
-
                 if (!ui->LoadControl(control, this->shared_from_this(),
                                      *parameters, style))
                 {
@@ -78,7 +85,7 @@ namespace projectfarm::graphics::ui
         }
         catch (const std::exception& ex)
         {
-            this->LogMessage("Failed to load custom control file: " + name +
+            this->LogMessage("Failed to load custom control file: " + this->_name +
                              " with exception: " + ex.what());
 
             return false;

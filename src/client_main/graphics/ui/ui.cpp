@@ -260,6 +260,8 @@ namespace projectfarm::graphics::ui
         position.SetPositionPercent(x, y);
         control->SetPosition(position);
 
+        control->ReadIdFromJson(controlJson, this->shared_from_this(), parameters);
+
         if (!control->RefreshStyles(true, parentStyle))
         {
             this->LogMessage("Failed to refresh styles for control: " + controlJson.dump());

@@ -3,6 +3,7 @@
 #include "base_control.h"
 #include "graphics/graphics.h"
 #include "scripting/function_types.h"
+#include "custom.h"
 
 using namespace std::literals;
 
@@ -263,7 +264,12 @@ namespace projectfarm::graphics::ui
         shared::css::CSSClass cssClass;
 
         auto type = this->GetControlType();
-        auto typeName = ControlTypesToString(type);
+
+        // the control type of a custom control is just `custom`. We
+        // want the actual type of control
+        auto typeName = type == ControlTypes::Custom ?
+            static_cast<const Custom*>(this)->GetName() :
+            ControlTypesToString(type);
 
         // check the control type, then id then css class in this order
         // and allow the latter to override the former

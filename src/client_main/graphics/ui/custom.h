@@ -30,9 +30,18 @@ namespace projectfarm::graphics::ui
             return ControlTypes::Custom;
         }
 
+        const std::string& GetName() const noexcept
+        {
+            return this->_name;
+        }
+
         void Clear() override;
 
         void Render() override;
+
+        void ReadIdFromJson(const nlohmann::json& controlJson,
+                            const std::shared_ptr<UI>& ui,
+                            const std::vector<std::pair<std::string, std::string>>& parameters) override;
 
         [[nodiscard]]
         bool SetupFromJson(const nlohmann::json& controlJson,
@@ -73,6 +82,9 @@ namespace projectfarm::graphics::ui
         std::shared_ptr<BaseControl> _textControl;
 
         std::string _type;
+
+        // the name (or the `type`) of this custom control
+        std::string _name;
     };
 }
 

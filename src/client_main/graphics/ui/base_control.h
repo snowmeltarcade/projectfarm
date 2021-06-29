@@ -51,6 +51,14 @@ namespace projectfarm::graphics::ui
 
         void RenderChildren() const noexcept;
 
+        // this is used to read any needed data that `RefreshStyles` needs
+        // it is primarily used for the `custom` control
+        virtual void ReadIdFromJson(const nlohmann::json& controlJson,
+                                    const std::shared_ptr<UI>& ui,
+                                    const std::vector<std::pair<std::string, std::string>>& parameters)
+        {
+        }
+
         [[nodiscard]]
         virtual bool SetupFromJson(const nlohmann::json& controlJson,
                                    const std::shared_ptr<UI>& ui,
