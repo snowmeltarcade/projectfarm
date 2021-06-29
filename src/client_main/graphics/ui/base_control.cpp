@@ -258,7 +258,7 @@ namespace projectfarm::graphics::ui
         return rect;
     }
 
-    bool BaseControl::RefreshStyles(bool isLoading) noexcept
+    bool BaseControl::RefreshStyles(bool isLoading, const std::optional<ControlStyle>& parentStyle) noexcept
     {
         shared::css::CSSClass cssClass;
 
@@ -296,8 +296,17 @@ namespace projectfarm::graphics::ui
             }
         }
 
-        // override any previous styles
-        this->_style = std::make_shared<ControlStyle>(cssClass, this->_logger, this->_dataProvider);
+        if (isLoading && parentStyle)
+        {
+            // take on the parent style if loading, as this child control
+            // likely wants to ignore type styles from default.css etc...
+            this->_style = std::make_shared<ControlStyle>(*parentStyle);
+        }
+        else
+        {
+            // override any previous styles
+            this->_style = std::make_shared<ControlStyle>(cssClass, this->_logger, this->_dataProvider);
+        }
 
         this->ApplyStyle(isLoading);
 

@@ -59,7 +59,15 @@ namespace projectfarm::graphics::ui
 
             for (const auto& control : controls)
             {
-                if (!ui->LoadControl(control, this->shared_from_this(), *parameters))
+                std::optional<ControlStyle> style;
+
+                if (this->_style)
+                {
+                    style = *this->_style;
+                }
+
+                if (!ui->LoadControl(control, this->shared_from_this(),
+                                     *parameters, style))
                 {
                     this->LogMessage("Failed to load control: " + control.dump());
                     return false;

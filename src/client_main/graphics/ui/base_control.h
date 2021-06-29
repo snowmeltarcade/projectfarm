@@ -254,7 +254,7 @@ namespace projectfarm::graphics::ui
         }
 
         [[nodiscard]]
-        bool RefreshStyles(bool isLoading) noexcept;
+        bool RefreshStyles(bool isLoading, const std::optional<ControlStyle>& parentStyle) noexcept;
 
     private:
         // no [[nodiscard]]
