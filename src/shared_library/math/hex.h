@@ -56,6 +56,9 @@ namespace projectfarm::shared::math
 
         return res;
     }
+
+    // TODO: In C++20 set this to `constexpr`
+    /*constexpr*/ std::string DecToHex(uint8_t c);
 }
 
 #endif

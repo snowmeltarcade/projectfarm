@@ -1,6 +1,7 @@
 target_sources(
     "${SHARED_LIBRARY_PROJECT_NAME}"
     PRIVATE
+        hex.cpp
     PUBLIC
         lerper.h
         random_engine.h
