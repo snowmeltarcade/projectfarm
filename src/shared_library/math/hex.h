@@ -5,6 +5,7 @@
 #include <cstdint>
 #include <optional>
 #include <string>
+#include <sstream>
 
 namespace projectfarm::shared::math
 {
@@ -59,14 +60,7 @@ namespace projectfarm::shared::math
 
     // TODO: In C++20 set this to `constexpr`
     template <typename T>
-    /*constexpr*/ std::string DecToHex(T v)
-    {
-        return "";
-    }
-
-    // TODO: In C++20 set this to `constexpr`
-    template <>
-    /*constexpr*/ std::string DecToHex(uint8_t c)
+    /*constexpr*/ std::string DecToHex(T dec)
     {
         constexpr auto digitToHex = [](uint8_t d) -> char
         {
@@ -78,12 +72,31 @@ namespace projectfarm::shared::math
             return d - 10 + 'A';
         };
 
-        auto part1 = c % 16;
-        auto part2 = (c / 16) % 16;
+        std::stringstream ss;
 
-        std::string res;
-        res += digitToHex(part2);
-        res += digitToHex(part1);
+        uint8_t c {0};
+
+        while ((c = (dec >>= 1)) != 0)
+        {
+            auto part1 = c % 16;
+            auto part2 = (c / 16) % 16;
+
+            ss << digitToHex(part2);
+            ss << digitToHex(part1);
+        }
+
+        constexpr auto size = sizeof(T);
+
+        auto res = ss.str();
+
+        // pad with 0's
+        auto diff = size - res.size();
+        if (diff > 0)
+        {
+            // there are two hex characters per byte
+            std::string zeros("0", diff * 2);
+            res = zeros + res;
+        }
 
         return res;
     }
