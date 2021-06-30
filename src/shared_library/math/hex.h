@@ -58,7 +58,35 @@ namespace projectfarm::shared::math
     }
 
     // TODO: In C++20 set this to `constexpr`
-    /*constexpr*/ std::string DecToHex(uint8_t c);
+    template <typename T>
+    /*constexpr*/ std::string DecToHex(T v)
+    {
+        return "";
+    }
+
+    // TODO: In C++20 set this to `constexpr`
+    template <>
+    /*constexpr*/ std::string DecToHex(uint8_t c)
+    {
+        constexpr auto digitToHex = [](uint8_t d) -> char
+        {
+            if (d <= 9)
+            {
+                return d + '0';
+            }
+
+            return d - 10 + 'A';
+        };
+
+        auto part1 = c % 16;
+        auto part2 = (c / 16) % 16;
+
+        std::string res;
+        res += digitToHex(part2);
+        res += digitToHex(part1);
+
+        return res;
+    }
 }
 
 #endif

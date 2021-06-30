@@ -97,10 +97,36 @@ TEST_CASE("DecToHex uint8_t - valid input - returns valid hex", "[math]")
     std::vector<std::pair<uint8_t, std::string>> values
     {
         { 0u,   "00" },
+        { 1u,   "01" },
         { 15u,  "0F" },
+        { 16u,  "10" },
         { 100u, "64" },
         { 255u, "FF" },
     };
+
+    for (const auto& [dec, expected] : values)
+    {
+        auto result = DecToHex(dec);
+
+        REQUIRE(result == expected);
+    }
+}
+
+/*********************************************
+ * DecToHex - T
+ ********************************************/
+
+TEST_CASE("DecToHex T - valid input - returns valid hex", "[math]")
+{
+    std::vector<std::pair<uint32_t, std::string>> values
+        {
+            { 0u,   "00" },
+            { 1u,   "01" },
+            { 15u,  "0F" },
+            { 16u,  "10" },
+            { 100u, "64" },
+            { 255u, "FF" },
+        };
 
     for (const auto& [dec, expected] : values)
     {
