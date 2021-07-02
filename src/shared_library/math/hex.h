@@ -62,39 +62,19 @@ namespace projectfarm::shared::math
     template <typename T>
     /*constexpr*/ std::string DecToHex(T dec)
     {
-        constexpr auto digitToHex = [](uint8_t d) -> char
-        {
-            if (d <= 9)
-            {
-                return d + '0';
-            }
-
-            return d - 10 + 'A';
-        };
-
         std::stringstream ss;
-
-        uint8_t c {0};
-
-        while ((c = (dec >>= 1)) != 0)
-        {
-            auto part1 = c % 16;
-            auto part2 = (c / 16) % 16;
-
-            ss << digitToHex(part2);
-            ss << digitToHex(part1);
-        }
-
-        constexpr auto size = sizeof(T);
+        ss << std::hex << std::uppercase << static_cast<uint32_t>(dec);
 
         auto res = ss.str();
 
-        // pad with 0's
-        auto diff = size - res.size();
+        // pad the value with zeros
+        // there are two characters per byte
+        constexpr auto size = sizeof(T) * 2;
+
+        auto diff = size - res.length();
         if (diff > 0)
         {
-            // there are two hex characters per byte
-            std::string zeros("0", diff * 2);
+            std::string zeros(diff, '0');
             res = zeros + res;
         }
 
