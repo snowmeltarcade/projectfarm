@@ -196,6 +196,35 @@ TEST_CASE("ToInt - returns valid int", "[graphics/colors]")
 }
 
 /*********************************************
+ * ToHexString
+ ********************************************/
+
+TEST_CASE("ToHexString - returns correct hex string", "[graphics/colors]")
+{
+    std::vector<std::pair<Color, std::string>> values
+    {
+        { { 255, 255, 255, 255 }, "#FFFFFFFF" },
+        { { 255, 0, 0, 0 }, "#FF000000" },
+        { { 0, 255, 0, 0 }, "#00FF0000" },
+        { { 0, 0, 255, 0 }, "#0000FF00" },
+        { { 0, 0, 0, 255 }, "#000000FF" },
+        { { 0, 0, 0, 0 }, "#00000000" },
+        { { 18, 52, 86, 120 }, "#12345678" },
+        { { 120, 86, 52, 18 }, "#78563412" },
+        { { 255, 255, 255, 255 }, "#FFFFFFFF" },
+        { { 255, 0, 0, 255 }, "#FF0000FF" },
+    };
+
+    for (const auto& [color, expected] : values)
+    {
+        auto res = color.ToHexString();
+
+        INFO(color.ToString());
+        REQUIRE(res == expected);
+    }
+}
+
+/*********************************************
  * FromInt
  ********************************************/
 

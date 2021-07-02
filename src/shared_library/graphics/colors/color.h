@@ -30,6 +30,15 @@ namespace projectfarm::shared::graphics::colors
             return this->r << 24 | this->g << 16 | this->b << 8 | this->a;
         }
 
+        std::string ToHexString() const noexcept
+        {
+            return "#" +
+                   math::DecToHex(this->r) +
+                   math::DecToHex(this->g) +
+                   math::DecToHex(this->b) +
+                   math::DecToHex(this->a);
+        }
+
         void FromInt(uint32_t i) noexcept
         {
             this->r = static_cast<uint8_t>((i & 0xFF000000) >> 24);

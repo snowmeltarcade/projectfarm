@@ -209,7 +209,7 @@ namespace projectfarm::graphics::ui
         }
         else if (cssValue == "color")
         {
-            //return this->_style->Color.ToHexString();
+            return this->_style->Color.ToHexString();
         }
 
         return value;
