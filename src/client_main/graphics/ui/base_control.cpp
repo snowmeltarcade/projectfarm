@@ -409,11 +409,6 @@ namespace projectfarm::graphics::ui
             this->_canFocus = canFocus->get<std::string>() == "true";
         }
 
-        if (auto cssClass = json.find("cssClass"); cssClass != json.end())
-        {
-            this->_cssClass = cssClass->get<std::string>();
-        }
-
         if (auto fitType = json.find("fitType"); fitType != json.end())
         {
             auto name = fitType->get<std::string>();

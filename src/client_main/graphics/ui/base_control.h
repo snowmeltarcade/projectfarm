@@ -53,11 +53,9 @@ namespace projectfarm::graphics::ui
 
         // this is used to read any needed data that `RefreshStyles` needs
         // it is primarily used for the `custom` control
-        virtual void ReadIdFromJson(const nlohmann::json& controlJson,
-                                    const std::shared_ptr<UI>& ui,
-                                    const std::vector<std::pair<std::string, std::string>>& parameters)
-        {
-        }
+        virtual void ReadStylesDataFromJson(const nlohmann::json& controlJson,
+                                            const std::shared_ptr<UI>& ui,
+                                            const std::vector<std::pair<std::string, std::string>>& parameters) = 0;
 
         [[nodiscard]]
         virtual bool SetupFromJson(const nlohmann::json& controlJson,

@@ -260,7 +260,7 @@ namespace projectfarm::graphics::ui
         position.SetPositionPercent(x, y);
         control->SetPosition(position);
 
-        control->ReadIdFromJson(controlJson, this->shared_from_this(), parameters);
+        control->ReadStylesDataFromJson(controlJson, this->shared_from_this(), parameters);
 
         if (!control->RefreshStyles(true, parentStyle))
         {

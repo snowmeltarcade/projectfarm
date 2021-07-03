@@ -18,13 +18,18 @@ namespace projectfarm::graphics::ui
         this->RenderChildren();
     }
 
-    void Custom::ReadIdFromJson(const nlohmann::json& controlJson,
-                                const std::shared_ptr<UI>& ui,
-                                const std::vector<std::pair<std::string, std::string>>& parentParameters)
+    void Custom::ReadStylesDataFromJson(const nlohmann::json& controlJson,
+                                        const std::shared_ptr<UI>& ui,
+                                        const std::vector<std::pair<std::string, std::string>>& parentParameters)
     {
         auto normalizedJson = ui->NormalizeJson(controlJson, parentParameters);
 
         this->_name = normalizedJson["name"].get<std::string>();
+
+        if (auto cssClass = normalizedJson.find("cssClass"); cssClass != normalizedJson.end())
+        {
+            this->_cssClass = cssClass->get<std::string>();
+        }
     }
 
     bool Custom::SetupFromJson(const nlohmann::json& controlJson,

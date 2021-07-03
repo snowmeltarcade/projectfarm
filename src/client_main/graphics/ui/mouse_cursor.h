@@ -36,9 +36,14 @@ namespace projectfarm::graphics::ui
 
         void Shutdown() noexcept;
 
-        [[nodiscard]] bool SetupFromJson(const nlohmann::json& controlJson,
-                                         const std::shared_ptr<UI>& ui,
-                                         const std::vector<std::pair<std::string, std::string>>& parameters) override;
+        void ReadStylesDataFromJson(const nlohmann::json& controlJson,
+                                    const std::shared_ptr<UI>& ui,
+                                    const std::vector<std::pair<std::string, std::string>>& parameters) override;
+
+        [[nodiscard]]
+        bool SetupFromJson(const nlohmann::json& controlJson,
+                           const std::shared_ptr<UI>& ui,
+                           const std::vector<std::pair<std::string, std::string>>& parameters) override;
 
     protected:
         void ApplyStyle(bool isLoading) noexcept override;
