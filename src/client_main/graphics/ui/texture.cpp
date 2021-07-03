@@ -12,7 +12,7 @@ namespace projectfarm::graphics::ui
 
         this->_backgroundTexture->SetRenderToWorldSpace(false);
 
-        if (this->_style->Textures.empty())
+        if (this->_style->Textures.size() < this->_textureIndex)
         {
             this->_backgroundTexture->SetMaterialName("solid_color_with_tex_coords_with_mask");
 
@@ -22,7 +22,7 @@ namespace projectfarm::graphics::ui
         }
         else
         {
-            auto texturePath = this->_style->Textures[0];
+            auto texturePath = this->_style->Textures[this->_textureIndex];
             if (!this->_backgroundTexture->Load(texturePath))
             {
                 this->LogMessage("Failed to load texture: " + texturePath.u8string());
@@ -103,6 +103,11 @@ namespace projectfarm::graphics::ui
         {
             this->LogMessage("Failed to set common values.");
             return false;
+        }
+
+        if (auto textureIndex = normalizedJson.find("textureIndex"); textureIndex != normalizedJson.end())
+        {
+            this->_textureIndex = textureIndex->get<uint32_t>();
         }
 
         if (!this->Load())

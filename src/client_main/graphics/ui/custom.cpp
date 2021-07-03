@@ -208,9 +208,15 @@ namespace projectfarm::graphics::ui
 
         auto cssValue = value.substr(cssKey.size());
 
+        // TODO: These first two if statements should be combined...
+        // they are currently used for the textbox and the cursor
         if (cssValue == "texture" && !this->_style->Textures.empty())
         {
             return this->_style->Textures[0];
+        }
+        else if (cssValue == "texture1" && this->_style->Textures.size() > 0)
+        {
+            return this->_style->Textures[1];
         }
         else if (cssValue == "color")
         {

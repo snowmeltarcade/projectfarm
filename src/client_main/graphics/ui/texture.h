@@ -53,6 +53,10 @@ namespace projectfarm::graphics::ui
         void OnDrag(uint32_t, uint32_t, uint32_t dx, uint32_t dy) noexcept override;
 
         std::shared_ptr<graphics::Texture> _backgroundTexture;
+
+        // this describes the texture in the assigned style to use,
+        // for instance, texture0, texture1, texture2 etc...
+        uint8_t _textureIndex {0u};
     };
 }
 
