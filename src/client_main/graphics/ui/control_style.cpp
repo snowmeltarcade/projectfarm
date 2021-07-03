@@ -27,6 +27,11 @@ namespace projectfarm::graphics::ui
         {
             this->Margin = *v;
         }
+
+        if (auto v = this->GetStringFromStyle(cssClass, "font"); v)
+        {
+            this->Font = *v;
+        }
     }
 
     std::optional<shared::graphics::colors::Color> ControlStyle::GetColorFromStyle(
@@ -142,6 +147,23 @@ namespace projectfarm::graphics::ui
         }
 
         if (auto value = this->GetFloat(attributeValue); value)
+        {
+            return *value;
+        }
+
+        return {};
+    }
+
+    std::optional<std::string> ControlStyle::GetStringFromStyle(const shared::css::CSSClass& cssClass,
+                                                                const std::string& name) const noexcept
+    {
+        auto attributeValue = cssClass.GetAttributeValueByName(name);
+        if (!attributeValue)
+        {
+            return {};
+        }
+
+        if (auto value = this->GetString(attributeValue); value)
         {
             return *value;
         }
@@ -309,5 +331,15 @@ namespace projectfarm::graphics::ui
         {
             return {};
         }
+    }
+
+    std::optional<std::string> ControlStyle::GetString(std::optional<std::string_view> s) const noexcept
+    {
+        if (!s)
+        {
+            return {};
+        }
+
+        return std::string(*s);
     }
 }

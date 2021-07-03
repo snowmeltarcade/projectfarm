@@ -6,6 +6,7 @@
 #include <string>
 #include <cstdint>
 #include <filesystem>
+#include <unordered_map>
 
 #include "logging/consume_logger.h"
 #include "css/css.h"
@@ -40,6 +41,8 @@ namespace projectfarm::graphics::ui
         float Margin {0.0f};
         float Padding {0.0f};
 
+        std::string Font;
+
     private:
         void ApplyStyle(const shared::css::CSSClass& cssClass) noexcept;
 
@@ -55,6 +58,10 @@ namespace projectfarm::graphics::ui
         [[nodiscard]]
         std::optional<float> GetFloatFromStyle(const shared::css::CSSClass& cssClass,
                                                const std::string& name) const noexcept;
+
+        [[nodiscard]]
+        std::optional<std::string> GetStringFromStyle(const shared::css::CSSClass& cssClass,
+                                                      const std::string& name) const noexcept;
 
         [[nodiscard]]
         std::optional<shared::graphics::colors::Color> GetColorFromStylePropertiesRGBA(
@@ -73,6 +80,7 @@ namespace projectfarm::graphics::ui
 
         std::optional<uint32_t> GetUInt(std::optional<std::string_view> s) const noexcept;
         std::optional<float> GetFloat(std::optional<std::string_view> s) const noexcept;
+        std::optional<std::string> GetString(std::optional<std::string_view> s) const noexcept;
     };
 }
 

@@ -28,14 +28,7 @@ namespace projectfarm::graphics::ui
         }
 
         [[nodiscard]]
-        bool SetText(std::string_view text) noexcept
-        {
-            return this->SetText(text, this->_fontName);
-        }
-
-        [[nodiscard]]
         bool SetText(std::string_view text,
-                     std::string_view fontName,
                      bool forceUpdate = false) noexcept;
 
         [[nodiscard]]
@@ -92,7 +85,6 @@ namespace projectfarm::graphics::ui
         std::shared_ptr<graphics::Texture> _backgroundTexture;
 
         std::string _text;
-        std::string _fontName;
         Font::RenderDetails _renderDetails;
 
         std::string _characterOverride;
