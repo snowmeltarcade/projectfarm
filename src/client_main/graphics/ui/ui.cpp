@@ -279,7 +279,7 @@ namespace projectfarm::graphics::ui
         {
             for (const auto& childControl : *controls)
             {
-                if (!this->LoadControl(childControl, control, parameters))
+                if (!this->LoadControl(childControl, control, parameters, parentStyle))
                 {
                     this->LogMessage("Failed to load control: " + childControl.dump());
                     return false;
