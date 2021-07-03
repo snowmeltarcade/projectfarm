@@ -30,10 +30,10 @@ namespace projectfarm::graphics::ui
                 return false;
             }
 
-            SDL_Color sdlColor { this->_style->Color.r,
-                                 this->_style->Color.g,
-                                 this->_style->Color.b,
-                                 this->_style->Color.a };
+            SDL_Color sdlColor { this->_style->TextColor.r,
+                                 this->_style->TextColor.g,
+                                 this->_style->TextColor.b,
+                                 this->_style->TextColor.a };
 
             auto [surface, renderDetails] = font->RenderToSurface(text,
                                                                   sdlColor,
@@ -181,13 +181,10 @@ namespace projectfarm::graphics::ui
         }
 
         auto text = normalizedJson["text"].get<std::string>();
-        auto font = normalizedJson["font"].get<std::string>();
 
-        // set this here because the default text is empty, so the font name and
-        // color won't be set in `SetText`
-        if (text.empty())
+        if (auto font = normalizedJson.find("font"); font != normalizedJson.end())
         {
-            this->_style->Font = font;
+            this->_style->Font = font->get<std::string>();
         }
 
         if (auto characterOverride = normalizedJson.find("characterOverride"); characterOverride != normalizedJson.end())

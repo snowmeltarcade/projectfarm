@@ -216,6 +216,14 @@ namespace projectfarm::graphics::ui
         {
             return this->_style->Color.ToHexString();
         }
+        else if (cssValue == "text-color")
+        {
+            return this->_style->TextColor.ToHexString();
+        }
+        else if (cssValue == "font")
+        {
+            return this->_style->Font;
+        }
 
         return value;
     }

@@ -11,6 +11,11 @@ namespace projectfarm::graphics::ui
             this->Color = *c;
         }
 
+        if (auto c = this->GetColorFromStyle(cssClass, "text-"); c)
+        {
+            this->TextColor = *c;
+        }
+
         if (auto c = this->GetColorFromStyle(cssClass, "border-"); c)
         {
             this->BorderColor = *c;

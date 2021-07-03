@@ -34,6 +34,7 @@ namespace projectfarm::graphics::ui
         ~ControlStyle() = default;
 
         shared::graphics::colors::Color Color {shared::graphics::colors::White};
+        shared::graphics::colors::Color TextColor {shared::graphics::colors::White};
         shared::graphics::colors::Color BorderColor {shared::graphics::colors::Transparent};
 
         std::vector<std::filesystem::path> Textures;
