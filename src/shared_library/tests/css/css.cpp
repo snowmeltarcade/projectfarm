@@ -70,6 +70,17 @@ TEST_CASE("LoadFromRaw - valid CSS - returns valid result", "[css]")
     validCSS.push_back( { "selector{}", cssDocument } );
 
     ////
+    // empty block, single selector with UI event name
+    ////
+    cssDocument = CSSDocument();
+    cssClass = CSSClass();
+
+    cssClass.Selectors.push_back( { CSSSelectorTypes::Type, "selector@event-name" } );
+    cssDocument.Classes.push_back(cssClass);
+
+    validCSS.push_back( { "selector@event-name{}", cssDocument } );
+
+    ////
     cssDocument = CSSDocument();
     cssClass = CSSClass();
 
