@@ -9,7 +9,7 @@ Each UI control state has its own CSS class. The UI control uses the CSS class a
 The UI control states that have associated CSS classes are:
 
 * **Normal**
-  When no other states are active. This is the default Ui state.
+  When no other states are active. This is the default UI state.
 * **Disabled**
   When the internal `_isEnabled` flag is `false`
 * **Mouse Over**
