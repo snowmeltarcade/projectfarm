@@ -16,6 +16,7 @@
 #include "scripting/consume_script_system.h"
 #include "scenes/consume_scene.h"
 #include "canvas.h"
+#include "styles.h"
 
 namespace projectfarm::graphics::ui
 {
@@ -74,7 +75,8 @@ namespace projectfarm::graphics::ui
         [[nodiscard]]
         bool LoadControl(const nlohmann::json& controlJson,
                          const std::shared_ptr<BaseControl>& parentControl,
-                         const std::vector<std::pair<std::string, std::string>>& parameters = {});
+                         const std::vector<std::pair<std::string, std::string>>& parameters = {},
+                         const std::optional<ControlStyle>& parentStyle = {});
 
         [[nodiscard]]
         std::string NormalizeParameter(std::string_view parameter,
@@ -94,8 +96,13 @@ namespace projectfarm::graphics::ui
 
         void SendMessage(const std::string& key, const std::vector<std::string>& parameters) const noexcept;
 
-	private:
+        [[nodiscard]]
+        const std::shared_ptr<Styles>& GetStyles() const noexcept
+        {
+            return this->_styles;
+        }
 
+	private:
         [[nodiscard]]
         std::shared_ptr<BaseControl> CreateControlFromType(const std::string& type) noexcept;
 
@@ -113,6 +120,8 @@ namespace projectfarm::graphics::ui
         void UpdateFocusedControlAtPoint(uint32_t x, uint32_t y) noexcept;
 
 		std::shared_ptr<Canvas> _baseCanvas;
+
+		std::shared_ptr<Styles> _styles;
 
         std::unordered_map<std::string, std::shared_ptr<SimpleBindingType>> _simpleBindings;
 

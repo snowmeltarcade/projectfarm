@@ -8,10 +8,9 @@ using namespace std::literals;
 namespace projectfarm::graphics::ui
 {
     bool Label::SetText(std::string_view text,
-                        std::string_view fontName,
-                        const shared::graphics::colors::Color& color) noexcept
+                        bool forceUpdate) noexcept
     {
-        if (text == this->_text)
+        if (!forceUpdate && text == this->_text)
         {
             return true;
         }
@@ -24,14 +23,18 @@ namespace projectfarm::graphics::ui
         }
         else
         {
-            auto font = this->_fontManager->GetFont(fontName);
+            auto font = this->_fontManager->GetFont(this->_style->Font);
             if (!font)
             {
-                this->LogMessage("Failed to get font: " + std::string(fontName));
+                this->LogMessage("Failed to get font: " + this->_style->Font);
                 return false;
             }
 
-            SDL_Color sdlColor {color.r, color.g, color.b, color.a};
+            SDL_Color sdlColor { this->_style->TextColor.r,
+                                 this->_style->TextColor.g,
+                                 this->_style->TextColor.b,
+                                 this->_style->TextColor.a };
+
             auto [surface, renderDetails] = font->RenderToSurface(text,
                                                                   sdlColor,
                                                                   this->_size.GetWidth(),
@@ -101,8 +104,6 @@ namespace projectfarm::graphics::ui
         }
 
         this->_text = text;
-        this->_fontName = fontName;
-        this->_color = color;
 
         return true;
     }
@@ -155,6 +156,18 @@ namespace projectfarm::graphics::ui
         }
     }
 
+    void Label::ReadStylesDataFromJson(const nlohmann::json& controlJson,
+                                       const std::shared_ptr<UI>& ui,
+                                       const std::vector<std::pair<std::string, std::string>>& parentParameters)
+    {
+        auto normalizedJson = ui->NormalizeJson(controlJson, parentParameters);
+
+        if (auto cssClass = normalizedJson.find("cssClass"); cssClass != normalizedJson.end())
+        {
+            this->_cssClass = cssClass->get<std::string>();
+        }
+    }
+
     bool Label::SetupFromJson(const nlohmann::json& controlJson,
                               const std::shared_ptr<UI>& ui,
                               const std::vector<std::pair<std::string, std::string>>& parameters)
@@ -168,22 +181,10 @@ namespace projectfarm::graphics::ui
         }
 
         auto text = normalizedJson["text"].get<std::string>();
-        auto font = normalizedJson["font"].get<std::string>();
-        auto colorName = normalizedJson["color"].get<std::string>();
 
-        auto color = shared::graphics::colors::FromString(colorName);
-        if (!color)
+        if (auto font = normalizedJson.find("font"); font != normalizedJson.end())
         {
-            this->LogMessage("Invalid color: " + color->ToString());
-            return false;
-        }
-
-        // set this here because the default text is empty, so the font name and
-        // color won't be set in `SetText`
-        if (text.empty())
-        {
-            this->_fontName = font;
-            this->_color = *color;
+            this->_style->Font = font->get<std::string>();
         }
 
         if (auto characterOverride = normalizedJson.find("characterOverride"); characterOverride != normalizedJson.end())
@@ -219,9 +220,9 @@ namespace projectfarm::graphics::ui
 
         // we want copies of these values (other than `this`) as they will long be out of scope
         // by the time this is invoked
-        auto binding = [this, font, color](const auto& s)
+        auto binding = [this](const auto& s)
         {
-          if (!this->SetText(s, font, *color))
+          if (!this->SetText(s))
           {
               this->LogMessage("Failed to set text from binding with text: " + s);
           }
@@ -229,7 +230,7 @@ namespace projectfarm::graphics::ui
         ui->EnableSimpleBindingForParameter(std::make_shared<UI::SimpleBindingType>(binding),
                                             text);
 
-        if (!this->SetText(text, font, *color))
+        if (!this->SetText(text))
         {
             this->LogMessage("Failed to set text with json: " + controlJson.dump());
             return false;
@@ -283,12 +284,24 @@ namespace projectfarm::graphics::ui
         return {};
     }
 
+    void Label::ApplyStyle(bool isLoading) noexcept
+    {
+        // the text is already set when loading
+        if (!isLoading)
+        {
+            if (!this->SetText(this->_text,true))
+            {
+                this->LogMessage("Failed to set text when applying style.");
+            }
+        }
+    }
+
     uint32_t Label::Script_GetCustomPropertyInt_font_line_height() noexcept
     {
-        auto font = this->_fontManager->GetFont(this->_fontName);
+        auto font = this->_fontManager->GetFont(this->_style->Font);
         if (!font)
         {
-            this->LogMessage("Failed to find font with name: " + this->_fontName);
+            this->LogMessage("Failed to find font with name: " + this->_style->Font);
             return 0;
         }
 
@@ -317,10 +330,10 @@ namespace projectfarm::graphics::ui
             return v;
         }
 
-        auto font = this->_fontManager->GetFont(this->_fontName);
+        auto font = this->_fontManager->GetFont(this->_style->Font);
         if (!font)
         {
-            this->LogMessage("Failed to find font with name: " + this->_fontName);
+            this->LogMessage("Failed to find font with name: " + this->_style->Font);
             return v;
         }
 
@@ -419,10 +432,10 @@ namespace projectfarm::graphics::ui
             return 0;
         }
 
-        auto font = this->_fontManager->GetFont(this->_fontName);
+        auto font = this->_fontManager->GetFont(this->_style->Font);
         if (!font)
         {
-            this->LogMessage("Failed to find font with name: " + this->_fontName);
+            this->LogMessage("Failed to find font with name: " + this->_style->Font);
             return 0;
         }
 

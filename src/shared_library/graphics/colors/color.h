@@ -30,6 +30,15 @@ namespace projectfarm::shared::graphics::colors
             return this->r << 24 | this->g << 16 | this->b << 8 | this->a;
         }
 
+        std::string ToHexString() const noexcept
+        {
+            return "#" +
+                   math::DecToHex(this->r) +
+                   math::DecToHex(this->g) +
+                   math::DecToHex(this->b) +
+                   math::DecToHex(this->a);
+        }
+
         void FromInt(uint32_t i) noexcept
         {
             this->r = static_cast<uint8_t>((i & 0xFF000000) >> 24);
@@ -46,7 +55,7 @@ namespace projectfarm::shared::graphics::colors
     static inline const Color Green { 0, 255, 0, 255 };
     static inline const Color Blue { 0, 0, 255, 255 };
 
-    constexpr bool operator == (const Color& lhs, const Color& rhs)
+    constexpr bool operator == (const Color& lhs, const Color& rhs) noexcept
     {
         return lhs.r == rhs.r &&
                lhs.g == rhs.g &&
@@ -54,7 +63,7 @@ namespace projectfarm::shared::graphics::colors
                lhs.a == rhs.a;
     }
 
-    constexpr bool operator != (const Color& lhs, const Color& rhs)
+    constexpr bool operator != (const Color& lhs, const Color& rhs) noexcept
     {
         return !(lhs == rhs);
     }
@@ -69,10 +78,22 @@ namespace projectfarm::shared::graphics::colors
         { "transparent", Transparent },
     };
 
-    constexpr std::optional<Color> FromHexString(std::string_view s)
+    constexpr std::optional<Color> FromHexString(std::string_view s) noexcept
     {
+        auto componentCount = 0u;
+
+        // 7 == #aabbcc
         // 9 == #aabbccdd
-        if (s.length() != 9)
+        if (s.length() == 9)
+        {
+            componentCount = 4;
+        }
+        else if (s.length() == 7)
+        {
+            componentCount = 3;
+        }
+
+        if (componentCount == 0)
         {
             return {};
         }
@@ -80,7 +101,7 @@ namespace projectfarm::shared::graphics::colors
         auto rPart = s.substr(1, 2);
         auto gPart = s.substr(3, 2);
         auto bPart = s.substr(5, 2);
-        auto aPart = s.substr(7, 2);
+        auto aPart = componentCount < 4 ? "FF" : s.substr(7, 2);
 
         auto r = math::HexToDec<uint8_t>(rPart);
         auto g = math::HexToDec<uint8_t>(gPart);
@@ -90,7 +111,9 @@ namespace projectfarm::shared::graphics::colors
         return {{ *r, *g, *b, *a } };
     }
 
-    std::optional<Color> FromString(std::string_view s);
+    std::optional<Color> FromString(std::string_view s) noexcept;
+
+    Color Mix(Color rgba, struct ColorHSV hsv) noexcept;
 }
 
 #endif

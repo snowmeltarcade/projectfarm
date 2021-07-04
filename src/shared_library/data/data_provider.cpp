@@ -65,6 +65,14 @@ namespace projectfarm::shared
             return false;
         }
 
+        if (!this->LoadLocations(DataProviderLocations::ClientUICSSDefault,
+                                 "DefaultCSS.json", "defaultCSS",
+                                 this->_defaultCSSLocations))
+        {
+            this->LogMessage("Failed to load graphics shaders locations");
+            return false;
+        }
+
         return true;
     }
 
@@ -151,6 +159,10 @@ namespace projectfarm::shared
         {
             resolvedPath = this->GetClientDirectoryPath() / this->_uiFolderName / this->_uiCustomControlsFolderName / fileName;
         }
+        else if (location == projectfarm::shared::DataProviderLocations::ClientUICSSDefault)
+        {
+            resolvedPath = this->GetClientDirectoryPath() / this->_uiFolderName / this->_uiCSSFolderName / this->_uiCSSDefaultFolderName / fileName;
+        }
         else if (location == projectfarm::shared::DataProviderLocations::ClientFonts)
         {
             resolvedPath = this->GetClientDirectoryPath() / this->_fontsFolderName / fileName;
@@ -222,6 +234,7 @@ namespace projectfarm::shared
         this->NormalizePathForLocation(s, projectfarm::shared::DataProviderLocations::Client);
         this->NormalizePathForLocation(s, projectfarm::shared::DataProviderLocations::ClientUI);
         this->NormalizePathForLocation(s, projectfarm::shared::DataProviderLocations::ClientUICustomControls);
+        this->NormalizePathForLocation(s, projectfarm::shared::DataProviderLocations::ClientUICSSDefault);
         this->NormalizePathForLocation(s, projectfarm::shared::DataProviderLocations::ClientFonts);
         this->NormalizePathForLocation(s, projectfarm::shared::DataProviderLocations::ClientTileSets);
         this->NormalizePathForLocation(s, projectfarm::shared::DataProviderLocations::ClientTileMaps);
@@ -255,6 +268,10 @@ namespace projectfarm::shared
         else if (location == projectfarm::shared::DataProviderLocations::ClientUICustomControls)
         {
             key += "ClientUICustomControls";
+        }
+        else if (location == projectfarm::shared::DataProviderLocations::ClientUICSSDefault)
+        {
+            key += "ClientUICSSDefault";
         }
         else if (location == projectfarm::shared::DataProviderLocations::ClientFonts)
         {

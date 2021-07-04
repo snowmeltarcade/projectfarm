@@ -2,6 +2,8 @@ target_sources(
     "${SHARED_LIBRARY_PROJECT_NAME}"
     PRIVATE
         color.cpp
+        color_hsv.cpp
     PUBLIC
         color.h
+        color_hsv.h
 )

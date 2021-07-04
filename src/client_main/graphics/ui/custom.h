@@ -30,9 +30,18 @@ namespace projectfarm::graphics::ui
             return ControlTypes::Custom;
         }
 
+        const std::string& GetName() const noexcept
+        {
+            return this->_name;
+        }
+
         void Clear() override;
 
         void Render() override;
+
+        void ReadStylesDataFromJson(const nlohmann::json& controlJson,
+                                    const std::shared_ptr<UI>& ui,
+                                    const std::vector<std::pair<std::string, std::string>>& parameters) override;
 
         [[nodiscard]]
         bool SetupFromJson(const nlohmann::json& controlJson,
@@ -66,9 +75,16 @@ namespace projectfarm::graphics::ui
 
         void ProcessMeta(const nlohmann::json& json) noexcept;
 
+        [[nodiscard]]
+        std::string TransformParameterValueFromStyle(const std::string& value) const noexcept;
+
+        // the control that handles `GetText` and `SetText` type commands
         std::shared_ptr<BaseControl> _textControl;
 
         std::string _type;
+
+        // the name (or the `type`) of this custom control
+        std::string _name;
     };
 }
 

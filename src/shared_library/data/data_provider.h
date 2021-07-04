@@ -19,6 +19,8 @@ namespace projectfarm::shared
           _clientFolderName("client"),
           _sharedFolderName("shared"),
           _uiFolderName("ui"),
+          _uiCSSFolderName("css"),
+          _uiCSSDefaultFolderName("default"),
           _fontsFolderName("fonts"),
           _tileSetsFolderName("tilesets"),
           _tileMapsFolderName("tilemaps"),
@@ -106,6 +108,12 @@ namespace projectfarm::shared
             return this->_graphicsShadersLocations[name];
         }
 
+        [[nodiscard]]
+        const std::unordered_map<std::string, std::filesystem::path>& GetDefaultCSSLocations() const noexcept
+        {
+            return this->_defaultCSSLocations;
+        }
+
         void SetDataFolderPath(const std::filesystem::path& basePath)
         {
             auto base = basePath;
@@ -161,6 +169,8 @@ namespace projectfarm::shared
         const std::filesystem::path _clientFolderName;
         const std::filesystem::path _sharedFolderName;
         const std::filesystem::path _uiFolderName;
+        const std::filesystem::path _uiCSSFolderName;
+        const std::filesystem::path _uiCSSDefaultFolderName;
         const std::filesystem::path _fontsFolderName;
         const std::filesystem::path _tileSetsFolderName;
         const std::filesystem::path _tileMapsFolderName;
@@ -196,6 +206,7 @@ namespace projectfarm::shared
         std::unordered_map<std::string, std::filesystem::path> _uiCustomControlsLocations;
         std::unordered_map<std::string, std::filesystem::path> _graphicsMaterialsLocations;
         std::unordered_map<std::string, std::filesystem::path> _graphicsShadersLocations;
+        std::unordered_map<std::string, std::filesystem::path> _defaultCSSLocations;
     };
 }
 

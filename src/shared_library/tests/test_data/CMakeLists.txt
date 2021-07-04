@@ -7,3 +7,4 @@ foreach (file ${files})
 endforeach()
 
 add_subdirectory("scripting")
+add_subdirectory("css")

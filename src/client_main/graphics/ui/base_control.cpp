@@ -3,6 +3,9 @@
 #include "base_control.h"
 #include "graphics/graphics.h"
 #include "scripting/function_types.h"
+#include "custom.h"
+
+using namespace std::literals;
 
 namespace projectfarm::graphics::ui
 {
@@ -254,6 +257,69 @@ namespace projectfarm::graphics::ui
         };
 
         return rect;
+    }
+
+    bool BaseControl::RefreshStyles(bool isLoading, const std::optional<ControlStyle>& parentStyle) noexcept
+    {
+        std::optional<shared::css::CSSClass> cssClass;
+
+        auto type = this->GetControlType();
+
+        // the control type of a custom control is just `custom`. We
+        // want the actual type of control
+        auto typeName = type == ControlTypes::Custom ?
+            static_cast<const Custom*>(this)->GetName() :
+            ControlTypesToString(type);
+
+        // check the control type, then id then css class in this order
+        // and allow the latter to override the former
+        if (auto css = this->_ui->GetStyles()->GetBySelectorAndType(typeName,
+                                                                    shared::css::CSSSelectorTypes::Type);
+            css)
+        {
+            cssClass = css;
+        }
+
+        if (auto css = this->_ui->GetStyles()->GetBySelectorAndType(this->_id,
+                                                                    shared::css::CSSSelectorTypes::Id);
+            css)
+        {
+            cssClass = css;
+        }
+
+        if (!this->_cssClass.empty())
+        {
+            if (auto css = this->_ui->GetStyles()->GetBySelectorAndType(this->_cssClass,
+                                                                        shared::css::CSSSelectorTypes::Class);
+                css)
+            {
+                cssClass = css;
+            }
+            else
+            {
+                this->LogMessage("Failed to find css class with selector: " + this->_cssClass);
+                return false;
+            }
+        }
+
+        if (isLoading && parentStyle)
+        {
+            // take on the parent style if loading, as this child control
+            // likely wants to ignore type styles from default.css etc...
+            this->_style = std::make_shared<ControlStyle>(*parentStyle);
+        }
+        else
+        {
+            // override any previous styles
+            if (cssClass)
+            {
+                this->_style = std::make_shared<ControlStyle>(*cssClass, this->_logger, this->_dataProvider);
+            }
+        }
+
+        this->ApplyStyle(isLoading);
+
+        return true;
     }
 
     bool BaseControl::CallScriptFunction(const std::shared_ptr<shared::scripting::Script>& script,

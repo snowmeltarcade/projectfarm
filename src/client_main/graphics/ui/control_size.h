@@ -45,8 +45,8 @@ namespace projectfarm::graphics::ui
             this->_width = width;
             this->_height = height;
 
-            this->_widthPercent = ((float)this->_parentWidth / 100.0f) * (float)this->_width;
-            this->_heightPercent = ((float)this->_parentHeight / 100.0f) * (float)this->_height;
+            this->_widthPercent = (100.0f / (float)this->_parentWidth) * (float)this->_width;
+            this->_heightPercent = (100.0f / (float)this->_parentHeight) * (float)this->_height;
         }
 
         [[nodiscard]]

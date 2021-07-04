@@ -85,12 +85,15 @@ TEST_CASE("FromHexString - valid hex strings - returns correct color", "[graphic
         { "#00000000", { 0, 0, 0, 0 } },
         { "#12345678", { 18, 52, 86, 120 } },
         { "#78563412", { 120, 86, 52, 18 } },
+        { "#FFFFFF", { 255, 255, 255, 255 } },
+        { "#FF0000", { 255, 0, 0, 255 } },
     };
 
     for (const auto& [hex, expected] : values)
     {
         auto res = FromHexString(hex);
 
+        INFO(hex);
         REQUIRE(res.has_value());
         REQUIRE(res->r == expected.r);
         REQUIRE(res->g == expected.g);
@@ -142,6 +145,8 @@ TEST_CASE("FromString - valid hex strings - returns correct color", "[graphics/c
         { "#00000000", { 0, 0, 0, 0 } },
         { "#12345678", { 18, 52, 86, 120 } },
         { "#78563412", { 120, 86, 52, 18 } },
+        { "#FFFFFF", { 255, 255, 255, 255 } },
+        { "#FF0000", { 255, 0, 0, 255 } },
     };
 
     for (const auto& [hex, expected] : values)
@@ -186,6 +191,35 @@ TEST_CASE("ToInt - returns valid int", "[graphics/colors]")
     {
         auto res = color.ToInt();
 
+        REQUIRE(res == expected);
+    }
+}
+
+/*********************************************
+ * ToHexString
+ ********************************************/
+
+TEST_CASE("ToHexString - returns correct hex string", "[graphics/colors]")
+{
+    std::vector<std::pair<Color, std::string>> values
+    {
+        { { 255, 255, 255, 255 }, "#FFFFFFFF" },
+        { { 255, 0, 0, 0 }, "#FF000000" },
+        { { 0, 255, 0, 0 }, "#00FF0000" },
+        { { 0, 0, 255, 0 }, "#0000FF00" },
+        { { 0, 0, 0, 255 }, "#000000FF" },
+        { { 0, 0, 0, 0 }, "#00000000" },
+        { { 18, 52, 86, 120 }, "#12345678" },
+        { { 120, 86, 52, 18 }, "#78563412" },
+        { { 255, 255, 255, 255 }, "#FFFFFFFF" },
+        { { 255, 0, 0, 255 }, "#FF0000FF" },
+    };
+
+    for (const auto& [color, expected] : values)
+    {
+        auto res = color.ToHexString();
+
+        INFO(color.ToString());
         REQUIRE(res == expected);
     }
 }
