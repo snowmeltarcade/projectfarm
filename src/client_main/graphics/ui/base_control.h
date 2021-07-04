@@ -20,6 +20,8 @@
 #include "fit_types.h"
 #include "control_types.h"
 #include "css/css.h"
+#include "graphics/colors/color_hsv.h"
+#include "control_style.h"
 
 namespace projectfarm::graphics::ui
 {
@@ -48,6 +50,12 @@ namespace projectfarm::graphics::ui
         virtual void Render() = 0;
 
         void RenderChildren() const noexcept;
+
+        // this is used to read any needed data that `RefreshStyles` needs
+        // it is primarily used for the `custom` control
+        virtual void ReadStylesDataFromJson(const nlohmann::json& controlJson,
+                                            const std::shared_ptr<UI>& ui,
+                                            const std::vector<std::pair<std::string, std::string>>& parameters) = 0;
 
         [[nodiscard]]
         virtual bool SetupFromJson(const nlohmann::json& controlJson,
@@ -252,11 +260,7 @@ namespace projectfarm::graphics::ui
         }
 
         [[nodiscard]]
-        bool RefreshStyles() noexcept;
-
-        virtual void ApplyStyle(const shared::css::CSSClass& cssClass) noexcept
-        {
-        }
+        bool RefreshStyles(bool isLoading, const std::optional<ControlStyle>& parentStyle) noexcept;
 
     private:
         // no [[nodiscard]]
@@ -272,6 +276,10 @@ namespace projectfarm::graphics::ui
         void SetParentSize(const ControlSize& size) noexcept;
 
     protected:
+        virtual void ApplyStyle(bool isLoading) noexcept
+        {
+        }
+
         [[nodiscard]]
         bool SetCommonValuesFromJson(const nlohmann::json& json) noexcept;
 
@@ -319,6 +327,8 @@ namespace projectfarm::graphics::ui
         bool _doesSupportJavascript {true};
 
         std::string _cssClass;
+
+        std::shared_ptr<ControlStyle> _style;
 
         std::shared_ptr<graphics::Texture> _maskTexture;
         std::shared_ptr<SDLFreeableSurface> _maskSurface;

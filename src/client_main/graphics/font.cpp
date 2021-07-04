@@ -478,6 +478,7 @@ namespace projectfarm::graphics
         {
             TextRenderPart part;
             part._text = text;
+            part._color = defaultColor;
             parts.emplace_back(std::move(part));
             return parts;
         }

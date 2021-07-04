@@ -33,7 +33,8 @@ namespace projectfarm::graphics::ui
     {
         if (selector.empty())
         {
-            this->LogMessage("Empty selector passed.");
+            // don't log as this will be called by all UI elements even if they are
+            // not expecting a result
             return {};
         }
 
@@ -64,7 +65,8 @@ namespace projectfarm::graphics::ui
 
         if (matchedClasses == allClasses.end())
         {
-            this->LogMessage("Failed to find styles with selector: " + std::string(selector));
+            // don't log as this will be called by all UI elements checking for their ids,
+            // even if they are not expecting a result
             return {};
         }
 

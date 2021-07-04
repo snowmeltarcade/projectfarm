@@ -3,6 +3,9 @@
 #include "base_control.h"
 #include "graphics/graphics.h"
 #include "scripting/function_types.h"
+#include "custom.h"
+
+using namespace std::literals;
 
 namespace projectfarm::graphics::ui
 {
@@ -256,12 +259,17 @@ namespace projectfarm::graphics::ui
         return rect;
     }
 
-    bool BaseControl::RefreshStyles() noexcept
+    bool BaseControl::RefreshStyles(bool isLoading, const std::optional<ControlStyle>& parentStyle) noexcept
     {
         std::optional<shared::css::CSSClass> cssClass;
 
         auto type = this->GetControlType();
-        auto typeName = ControlTypesToString(type);
+
+        // the control type of a custom control is just `custom`. We
+        // want the actual type of control
+        auto typeName = type == ControlTypes::Custom ?
+            static_cast<const Custom*>(this)->GetName() :
+            ControlTypesToString(type);
 
         // check the control type, then id then css class in this order
         // and allow the latter to override the former
@@ -281,19 +289,35 @@ namespace projectfarm::graphics::ui
 
         if (!this->_cssClass.empty())
         {
-            cssClass = this->_ui->GetStyles()->GetBySelectorAndType(this->_cssClass,
-                                                                    shared::css::CSSSelectorTypes::Class);
-            if (!cssClass)
+            if (auto css = this->_ui->GetStyles()->GetBySelectorAndType(this->_cssClass,
+                                                                        shared::css::CSSSelectorTypes::Class);
+                css)
+            {
+                cssClass = css;
+            }
+            else
             {
                 this->LogMessage("Failed to find css class with selector: " + this->_cssClass);
                 return false;
             }
         }
 
-        if (cssClass)
+        if (isLoading && parentStyle)
         {
-            this->ApplyStyle(*cssClass);
+            // take on the parent style if loading, as this child control
+            // likely wants to ignore type styles from default.css etc...
+            this->_style = std::make_shared<ControlStyle>(*parentStyle);
         }
+        else
+        {
+            // override any previous styles
+            if (cssClass)
+            {
+                this->_style = std::make_shared<ControlStyle>(*cssClass, this->_logger, this->_dataProvider);
+            }
+        }
+
+        this->ApplyStyle(isLoading);
 
         return true;
     }
@@ -386,11 +410,6 @@ namespace projectfarm::graphics::ui
         {
             // use this as a string to allow for parameters in uesr controls
             this->_canFocus = canFocus->get<std::string>() == "true";
-        }
-
-        if (auto cssClass = json.find("cssClass"); cssClass != json.end())
-        {
-            this->_cssClass = cssClass->get<std::string>();
         }
 
         if (auto fitType = json.find("fitType"); fitType != json.end())

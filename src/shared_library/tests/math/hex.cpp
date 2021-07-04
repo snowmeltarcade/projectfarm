@@ -87,3 +87,51 @@ TEST_CASE("HexToDec std::string_view - Valid hex - returns correct value", "[mat
         REQUIRE(*res == expected);
     }
 }
+
+/*********************************************
+ * DecToHex - uint8_t
+ ********************************************/
+
+TEST_CASE("DecToHex uint8_t - valid input - returns valid hex", "[math]")
+{
+    std::vector<std::pair<uint8_t, std::string>> values
+    {
+        { 0u,   "00" },
+        { 1u,   "01" },
+        { 15u,  "0F" },
+        { 16u,  "10" },
+        { 100u, "64" },
+        { 255u, "FF" },
+    };
+
+    for (const auto& [dec, expected] : values)
+    {
+        auto result = DecToHex(dec);
+
+        REQUIRE(result == expected);
+    }
+}
+
+/*********************************************
+ * DecToHex - uint32_t
+ ********************************************/
+
+TEST_CASE("DecToHex uint32_t - valid input - returns valid hex", "[math]")
+{
+    std::vector<std::pair<uint32_t, std::string>> values
+    {
+        { 0u,   "00000000" },
+        { 1u,   "00000001" },
+        { 15u,  "0000000F" },
+        { 65535u,  "0000FFFF" },
+        { 1010101010u, "3C34EB12" },
+        { 4294967295u, "FFFFFFFF" },
+    };
+
+    for (const auto& [dec, expected] : values)
+    {
+        auto result = DecToHex(dec);
+
+        REQUIRE(result == expected);
+    }
+}

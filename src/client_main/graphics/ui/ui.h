@@ -75,7 +75,8 @@ namespace projectfarm::graphics::ui
         [[nodiscard]]
         bool LoadControl(const nlohmann::json& controlJson,
                          const std::shared_ptr<BaseControl>& parentControl,
-                         const std::vector<std::pair<std::string, std::string>>& parameters = {});
+                         const std::vector<std::pair<std::string, std::string>>& parameters = {},
+                         const std::optional<ControlStyle>& parentStyle = {});
 
         [[nodiscard]]
         std::string NormalizeParameter(std::string_view parameter,

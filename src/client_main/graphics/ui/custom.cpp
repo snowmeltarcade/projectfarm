@@ -4,6 +4,7 @@
 
 #include "custom.h"
 #include "graphics/graphics.h"
+#include "utils/util.h"
 
 namespace projectfarm::graphics::ui
 {
@@ -15,6 +16,20 @@ namespace projectfarm::graphics::ui
     void Custom::Render()
     {
         this->RenderChildren();
+    }
+
+    void Custom::ReadStylesDataFromJson(const nlohmann::json& controlJson,
+                                        const std::shared_ptr<UI>& ui,
+                                        const std::vector<std::pair<std::string, std::string>>& parentParameters)
+    {
+        auto normalizedJson = ui->NormalizeJson(controlJson, parentParameters);
+
+        this->_name = normalizedJson["name"].get<std::string>();
+
+        if (auto cssClass = normalizedJson.find("cssClass"); cssClass != normalizedJson.end())
+        {
+            this->_cssClass = cssClass->get<std::string>();
+        }
     }
 
     bool Custom::SetupFromJson(const nlohmann::json& controlJson,
@@ -29,12 +44,10 @@ namespace projectfarm::graphics::ui
             return false;
         }
 
-        auto name = normalizedJson["name"].get<std::string>();
-
         // nlohmann::json can throw exceptions
         try
         {
-            auto filePath = this->_dataProvider->GetUICustomControlLocationFromName(name);
+            auto filePath = this->_dataProvider->GetUICustomControlLocationFromName(this->_name);
 
             std::ifstream file(filePath);
 
@@ -56,9 +69,17 @@ namespace projectfarm::graphics::ui
 
             const auto& controls = jsonFile["controls"];
 
+            std::optional<ControlStyle> style;
+
+            if (this->_style)
+            {
+                style = *this->_style;
+            }
+
             for (const auto& control : controls)
             {
-                if (!ui->LoadControl(control, this->shared_from_this(), *parameters))
+                if (!ui->LoadControl(control, this->shared_from_this(),
+                                     *parameters, style))
                 {
                     this->LogMessage("Failed to load control: " + control.dump());
                     return false;
@@ -69,7 +90,7 @@ namespace projectfarm::graphics::ui
         }
         catch (const std::exception& ex)
         {
-            this->LogMessage("Failed to load custom control file: " + name +
+            this->LogMessage("Failed to load custom control file: " + this->_name +
                              " with exception: " + ex.what());
 
             return false;
@@ -133,6 +154,8 @@ namespace projectfarm::graphics::ui
                         }
                     }
 
+                    value = this->TransformParameterValueFromStyle(value);
+
                     parameters.push_back({ key, value });
                 }
             }
@@ -173,5 +196,41 @@ namespace projectfarm::graphics::ui
         {
             this->_type = type->get<std::string>();
         }
+    }
+
+    std::string Custom::TransformParameterValueFromStyle(const std::string& value) const noexcept
+    {
+        auto cssKey = "css:"s;
+        if (!shared::utils::startsWith(value, cssKey))
+        {
+            return value;
+        }
+
+        auto cssValue = value.substr(cssKey.size());
+
+        // TODO: These first two if statements should be combined...
+        // they are currently used for the textbox and the cursor
+        if (cssValue == "texture" && !this->_style->Textures.empty())
+        {
+            return this->_style->Textures[0];
+        }
+        else if (cssValue == "texture1" && this->_style->Textures.size() > 0)
+        {
+            return this->_style->Textures[1];
+        }
+        else if (cssValue == "color")
+        {
+            return this->_style->Color.ToHexString();
+        }
+        else if (cssValue == "text-color")
+        {
+            return this->_style->TextColor.ToHexString();
+        }
+        else if (cssValue == "font")
+        {
+            return this->_style->Font;
+        }
+
+        return value;
     }
 }

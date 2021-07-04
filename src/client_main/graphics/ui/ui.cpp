@@ -224,7 +224,8 @@ namespace projectfarm::graphics::ui
 
     bool UI::LoadControl(const nlohmann::json& controlJson,
                          const std::shared_ptr<BaseControl>& parentControl,
-                         const std::vector<std::pair<std::string, std::string>>& parameters)
+                         const std::vector<std::pair<std::string, std::string>>& parameters,
+                         const std::optional<ControlStyle>& parentStyle)
     {
         auto normalizedJson = this->NormalizeJson(controlJson, parameters);
 
@@ -259,6 +260,14 @@ namespace projectfarm::graphics::ui
         position.SetPositionPercent(x, y);
         control->SetPosition(position);
 
+        control->ReadStylesDataFromJson(controlJson, this->shared_from_this(), parameters);
+
+        if (!control->RefreshStyles(true, parentStyle))
+        {
+            this->LogMessage("Failed to refresh styles for control: " + controlJson.dump());
+            return false;
+        }
+
         if (!control->SetupFromJson(controlJson, this->shared_from_this(), parameters))
         {
             this->LogMessage("Failed to setup control with json: " + controlJson.dump());
@@ -270,18 +279,12 @@ namespace projectfarm::graphics::ui
         {
             for (const auto& childControl : *controls)
             {
-                if (!this->LoadControl(childControl, control, parameters))
+                if (!this->LoadControl(childControl, control, parameters, parentStyle))
                 {
                     this->LogMessage("Failed to load control: " + childControl.dump());
                     return false;
                 }
             }
-        }
-
-        if (!control->RefreshStyles())
-        {
-            this->LogMessage("Failed to refresh styles for control: " + controlJson.dump());
-            return false;
         }
 
         return true;

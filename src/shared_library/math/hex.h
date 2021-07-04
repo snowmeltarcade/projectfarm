@@ -5,6 +5,7 @@
 #include <cstdint>
 #include <optional>
 #include <string>
+#include <sstream>
 
 namespace projectfarm::shared::math
 {
@@ -52,6 +53,29 @@ namespace projectfarm::shared::math
             res += static_cast<T>(value * base);
 
             index--;
+        }
+
+        return res;
+    }
+
+    // TODO: In C++20 set this to `constexpr`
+    template <typename T>
+    /*constexpr*/ std::string DecToHex(T dec)
+    {
+        std::stringstream ss;
+        ss << std::hex << std::uppercase << static_cast<uint32_t>(dec);
+
+        auto res = ss.str();
+
+        // pad the value with zeros
+        // there are two characters per byte
+        constexpr auto size = sizeof(T) * 2;
+
+        auto diff = size - res.length();
+        if (diff > 0)
+        {
+            std::string zeros(diff, '0');
+            res = zeros + res;
         }
 
         return res;

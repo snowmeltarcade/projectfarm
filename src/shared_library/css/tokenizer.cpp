@@ -108,6 +108,9 @@ namespace projectfarm::shared::css
             }
         };
 
+        // the value may have a data location parameter
+        auto isReadingDataLocationParameter {false};
+
         for (; pos < css.size(); ++pos)
         {
             auto c { '\0' };
@@ -126,10 +129,21 @@ namespace projectfarm::shared::css
                 saveAttributeValue(pos);
                 continue;
             }
+            else if (c == BlockOpenCharacter)
+            {
+                isReadingDataLocationParameter = true;
+            }
             else if (c == BlockCloseCharacter)
             {
-                saveAttributeValue(pos);
-                return true;
+                if (isReadingDataLocationParameter)
+                {
+                    isReadingDataLocationParameter = false;
+                }
+                else
+                {
+                    saveAttributeValue(pos);
+                    return true;
+                }
             }
 
             value += c;

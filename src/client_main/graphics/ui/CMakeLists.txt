@@ -13,6 +13,7 @@ target_sources(
 		fit_types.cpp
 		styles.cpp
 		control_types.cpp
+		control_style.cpp
 	PUBLIC
 		ui.h
 		canvas.h
@@ -27,4 +28,5 @@ target_sources(
 		fit_types.h
 		styles.h
 		control_types.h
+		control_style.h
 )

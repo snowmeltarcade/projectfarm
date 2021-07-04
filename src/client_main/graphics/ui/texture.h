@@ -18,7 +18,7 @@ namespace projectfarm::graphics::ui
         ~Texture() override = default;
 
         [[nodiscard]]
-        bool Load(const std::filesystem::path& texturePath) noexcept;
+        bool Load() noexcept;
 
         ControlTypes GetControlType() const noexcept override
         {
@@ -29,12 +29,14 @@ namespace projectfarm::graphics::ui
 
         void Render() override;
 
+        void ReadStylesDataFromJson(const nlohmann::json& controlJson,
+                                    const std::shared_ptr<UI>& ui,
+                                    const std::vector<std::pair<std::string, std::string>>& parameters) override;
+
         [[nodiscard]]
         bool SetupFromJson(const nlohmann::json& controlJson,
                            const std::shared_ptr<UI>& ui,
                            const std::vector<std::pair<std::string, std::string>>& parameters) override;
-
-        void ApplyStyle(const shared::css::CSSClass& cssClass) noexcept override;
 
         void SetColor(const shared::graphics::colors::Color& color) noexcept
         {
@@ -44,10 +46,17 @@ namespace projectfarm::graphics::ui
             }
         }
 
+    protected:
+        void ApplyStyle(bool isLoading) noexcept override;
+
     private:
         void OnDrag(uint32_t, uint32_t, uint32_t dx, uint32_t dy) noexcept override;
 
         std::shared_ptr<graphics::Texture> _backgroundTexture;
+
+        // this describes the texture in the assigned style to use,
+        // for instance, texture0, texture1, texture2 etc...
+        uint8_t _textureIndex {0u};
     };
 }
 

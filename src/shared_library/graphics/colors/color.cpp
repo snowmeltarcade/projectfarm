@@ -1,8 +1,9 @@
 #include "color.h"
+#include "color_hsv.h"
 
 namespace projectfarm::shared::graphics::colors
 {
-    std::optional<Color> FromString(std::string_view s)
+    std::optional<Color> FromString(std::string_view s) noexcept
     {
         if (s.empty())
         {
@@ -22,5 +23,10 @@ namespace projectfarm::shared::graphics::colors
 
         auto [_, c] = *color;
         return c;
+    }
+
+    Color Mix(Color rgba, ColorHSV) noexcept
+    {
+        return rgba;
     }
 }

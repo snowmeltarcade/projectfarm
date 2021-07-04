@@ -28,15 +28,7 @@ namespace projectfarm::graphics::ui
         }
 
         [[nodiscard]]
-        bool SetText(std::string_view text) noexcept
-        {
-            return this->SetText(text, this->_fontName, this->_color);
-        }
-
-        [[nodiscard]]
         bool SetText(std::string_view text,
-                     std::string_view fontName,
-                     const shared::graphics::colors::Color& color,
                      bool forceUpdate = false) noexcept;
 
         [[nodiscard]]
@@ -50,6 +42,10 @@ namespace projectfarm::graphics::ui
         void Render() override;
 
         void Destroy();
+
+        void ReadStylesDataFromJson(const nlohmann::json& controlJson,
+                                    const std::shared_ptr<UI>& ui,
+                                    const std::vector<std::pair<std::string, std::string>>& parameters) override;
 
         [[nodiscard]]
         bool SetupFromJson(const nlohmann::json& controlJson,
@@ -82,14 +78,13 @@ namespace projectfarm::graphics::ui
         shared::math::Vector2D Script_GetCustomPropertyVector2D(std::string_view name,
                                                                 std::string_view parameter) noexcept override;
 
-        void ApplyStyle(const shared::css::CSSClass& cssClass) noexcept override;
+    protected:
+        void ApplyStyle(bool isLoading) noexcept override;
 
     private:
         std::shared_ptr<graphics::Texture> _backgroundTexture;
 
         std::string _text;
-        std::string _fontName;
-        shared::graphics::colors::Color _color;
         Font::RenderDetails _renderDetails;
 
         std::string _characterOverride;

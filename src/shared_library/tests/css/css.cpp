@@ -199,6 +199,19 @@ TEST_CASE("LoadFromRaw - valid CSS - returns valid result", "[css]")
 
     validCSS.push_back( { "selector1{:;key1:value1}", cssDocument } );
 
+    ////
+    // attributes with data location parameters
+    ////
+    cssDocument = CSSDocument();
+    cssClass = CSSClass();
+
+    cssClass.Selectors.push_back( { CSSSelectorTypes::Type, "selector" } );
+    cssClass.Attributes.push_back( { "key1", "{location1}/value1" } );
+    cssClass.Attributes.push_back( { "key2", "{location2}/value2" } );
+    cssDocument.Classes.push_back(cssClass);
+
+    validCSS.push_back( { "selector{key1:{location1}/value1;key2:{location2}/value2}", cssDocument } );
+
     for (const auto& [css, doc] : validCSS)
     {
         auto result = LoadFromRaw(css);
