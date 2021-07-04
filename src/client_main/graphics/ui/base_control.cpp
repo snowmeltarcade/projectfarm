@@ -261,7 +261,7 @@ namespace projectfarm::graphics::ui
 
     bool BaseControl::RefreshStyles(bool isLoading, const std::optional<ControlStyle>& parentStyle) noexcept
     {
-        shared::css::CSSClass cssClass;
+        std::optional<shared::css::CSSClass> cssClass;
 
         auto type = this->GetControlType();
 
@@ -277,14 +277,14 @@ namespace projectfarm::graphics::ui
                                                                     shared::css::CSSSelectorTypes::Type);
             css)
         {
-            cssClass = *css;
+            cssClass = css;
         }
 
         if (auto css = this->_ui->GetStyles()->GetBySelectorAndType(this->_id,
                                                                     shared::css::CSSSelectorTypes::Id);
             css)
         {
-            cssClass = *css;
+            cssClass = css;
         }
 
         if (!this->_cssClass.empty())
@@ -293,7 +293,7 @@ namespace projectfarm::graphics::ui
                                                                         shared::css::CSSSelectorTypes::Class);
                 css)
             {
-                cssClass = *css;
+                cssClass = css;
             }
             else
             {
@@ -311,7 +311,10 @@ namespace projectfarm::graphics::ui
         else
         {
             // override any previous styles
-            this->_style = std::make_shared<ControlStyle>(cssClass, this->_logger, this->_dataProvider);
+            if (cssClass)
+            {
+                this->_style = std::make_shared<ControlStyle>(*cssClass, this->_logger, this->_dataProvider);
+            }
         }
 
         this->ApplyStyle(isLoading);

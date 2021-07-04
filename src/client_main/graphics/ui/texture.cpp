@@ -12,7 +12,7 @@ namespace projectfarm::graphics::ui
 
         this->_backgroundTexture->SetRenderToWorldSpace(false);
 
-        if (this->_style->Textures.size() < this->_textureIndex)
+        if (this->_style->Textures.size() <= this->_textureIndex)
         {
             this->_backgroundTexture->SetMaterialName("solid_color_with_tex_coords_with_mask");
 
