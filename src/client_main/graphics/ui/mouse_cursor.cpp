@@ -80,18 +80,6 @@ namespace projectfarm::graphics::ui
         }
     }
 
-    void MouseCursor::ReadStylesDataFromJson(const nlohmann::json& controlJson,
-                                     const std::shared_ptr<UI>& ui,
-                                     const std::vector<std::pair<std::string, std::string>>& parentParameters)
-    {
-        auto normalizedJson = ui->NormalizeJson(controlJson, parentParameters);
-
-        if (auto cssClass = normalizedJson.find("cssClass"); cssClass != normalizedJson.end())
-        {
-            this->_cssClass = cssClass->get<std::string>();
-        }
-    }
-
     bool MouseCursor::SetupFromJson(const nlohmann::json& controlJson,
                                     const std::shared_ptr<UI>& ui,
                                     const std::vector<std::pair<std::string, std::string>>& parameters)

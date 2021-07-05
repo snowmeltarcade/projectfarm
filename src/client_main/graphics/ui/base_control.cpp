@@ -63,11 +63,39 @@ namespace projectfarm::graphics::ui
         }
     }
 
+    std::string BaseControl::GetStyleEventPostfix() const noexcept
+    {
+        std::string postfix;
+
+        if (!this->GetIsEnabled())
+        {
+            postfix = "disabled";
+        }
+
+        // add the postfix's postfix
+        if (!postfix.empty())
+        {
+            postfix = "@" + postfix;
+        }
+
+        return postfix;
+    }
+
     void BaseControl::SetPosition(const ControlPosition& position) noexcept
     {
         this->_position = position;
 
         this->UpdateVisibility();
+    }
+
+    void BaseControl::SetIsEnabled(bool isEnabled) noexcept
+    {
+        this->_isEnabled = isEnabled;
+
+        if (!this->RefreshStyles(false, {}, true))
+        {
+            this->LogMessage("Failed to set `isEnabled` to: "s + (isEnabled ? "true" : "false"));
+        }
     }
 
     bool BaseControl::GetIsEnabled() const noexcept
@@ -259,7 +287,9 @@ namespace projectfarm::graphics::ui
         return rect;
     }
 
-    bool BaseControl::RefreshStyles(bool isLoading, const std::optional<ControlStyle>& parentStyle) noexcept
+    bool BaseControl::RefreshStyles(bool isLoading,
+                                    const std::optional<ControlStyle>& parentStyle,
+                                    bool refreshChildStyles) noexcept
     {
         std::optional<shared::css::CSSClass> cssClass;
 
@@ -271,16 +301,18 @@ namespace projectfarm::graphics::ui
             static_cast<const Custom*>(this)->GetName() :
             ControlTypesToString(type);
 
+        auto eventPostfix = this->GetStyleEventPostfix();
+
         // check the control type, then id then css class in this order
         // and allow the latter to override the former
-        if (auto css = this->_ui->GetStyles()->GetBySelectorAndType(typeName,
+        if (auto css = this->_ui->GetStyles()->GetBySelectorAndType(typeName + eventPostfix,
                                                                     shared::css::CSSSelectorTypes::Type);
             css)
         {
             cssClass = css;
         }
 
-        if (auto css = this->_ui->GetStyles()->GetBySelectorAndType(this->_id,
+        if (auto css = this->_ui->GetStyles()->GetBySelectorAndType(this->_id + eventPostfix,
                                                                     shared::css::CSSSelectorTypes::Id);
             css)
         {
@@ -289,7 +321,7 @@ namespace projectfarm::graphics::ui
 
         if (!this->_cssClass.empty())
         {
-            if (auto css = this->_ui->GetStyles()->GetBySelectorAndType(this->_cssClass,
+            if (auto css = this->_ui->GetStyles()->GetBySelectorAndType(this->_cssClass + eventPostfix,
                                                                         shared::css::CSSSelectorTypes::Class);
                 css)
             {
@@ -297,7 +329,7 @@ namespace projectfarm::graphics::ui
             }
             else
             {
-                this->LogMessage("Failed to find css class with selector: " + this->_cssClass);
+                this->LogMessage("Failed to find css class with selector: " + this->_cssClass + eventPostfix);
                 return false;
             }
         }
@@ -318,6 +350,18 @@ namespace projectfarm::graphics::ui
         }
 
         this->ApplyStyle(isLoading);
+
+        if (refreshChildStyles)
+        {
+            for (const auto &child : this->_children)
+            {
+                if (!child->RefreshStyles(isLoading, parentStyle, refreshChildStyles))
+                {
+                    this->LogMessage("Failed to refresh child style.");
+                    return false;
+                }
+            }
+        }
 
         return true;
     }
@@ -393,28 +437,42 @@ namespace projectfarm::graphics::ui
         return this->shared_from_this();
     }
 
-    bool BaseControl::SetCommonValuesFromJson(const nlohmann::json& json) noexcept
+    void BaseControl::ReadStylesDataFromJson(const nlohmann::json& controlJson,
+                                             const std::shared_ptr<UI>& ui,
+                                             const std::vector<std::pair<std::string, std::string>>& parameters)
     {
-        if (auto id = json.find("id"); id != json.end())
+        auto normalizedJson = ui->NormalizeJson(controlJson, parameters);
+
+        if (auto id = normalizedJson.find("id"); id != normalizedJson.end())
         {
             this->_id = id->get<std::string>();
         }
 
-        if (auto isVisible = json.find("isVisible"); isVisible != json.end())
+        if (auto cssClass = normalizedJson.find("cssClass"); cssClass != normalizedJson.end())
         {
-            // use this as a string to allow for parameters in uesr controls
-            this->_isVisible = isVisible->get<std::string>() == "true";
+            this->_cssClass = cssClass->get<std::string>();
         }
 
-        if (auto isEnabled = json.find("isEnabled"); isEnabled != json.end())
+        if (auto isEnabled = normalizedJson.find("isEnabled"); isEnabled != normalizedJson.end())
         {
-            // use this as a string to allow for parameters in uesr controls
+            // use this as a string to allow for parameters in user controls
             this->_isEnabled = isEnabled->get<std::string>() == "true";
+        }
+
+        this->ReadChildStylesDataFromJson(ui, normalizedJson);
+    }
+
+    bool BaseControl::SetCommonValuesFromJson(const nlohmann::json& json) noexcept
+    {
+        if (auto isVisible = json.find("isVisible"); isVisible != json.end())
+        {
+            // use this as a string to allow for parameters in user controls
+            this->_isVisible = isVisible->get<std::string>() == "true";
         }
 
         if (auto canFocus = json.find("canFocus"); canFocus != json.end())
         {
-            // use this as a string to allow for parameters in uesr controls
+            // use this as a string to allow for parameters in user controls
             this->_canFocus = canFocus->get<std::string>() == "true";
         }
 

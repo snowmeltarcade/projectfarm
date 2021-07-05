@@ -39,9 +39,8 @@ namespace projectfarm::graphics::ui
 
         void Render() override;
 
-        void ReadStylesDataFromJson(const nlohmann::json& controlJson,
-                                    const std::shared_ptr<UI>& ui,
-                                    const std::vector<std::pair<std::string, std::string>>& parameters) override;
+        void ReadChildStylesDataFromJson(const std::shared_ptr<UI>& ui,
+                                         const nlohmann::json& normalizedJson) override;
 
         [[nodiscard]]
         bool SetupFromJson(const nlohmann::json& controlJson,

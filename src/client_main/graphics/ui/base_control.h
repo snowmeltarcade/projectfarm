@@ -52,10 +52,9 @@ namespace projectfarm::graphics::ui
         void RenderChildren() const noexcept;
 
         // this is used to read any needed data that `RefreshStyles` needs
-        // it is primarily used for the `custom` control
-        virtual void ReadStylesDataFromJson(const nlohmann::json& controlJson,
-                                            const std::shared_ptr<UI>& ui,
-                                            const std::vector<std::pair<std::string, std::string>>& parameters) = 0;
+        void ReadStylesDataFromJson(const nlohmann::json& controlJson,
+                                    const std::shared_ptr<UI>& ui,
+                                    const std::vector<std::pair<std::string, std::string>>& parameters);
 
         [[nodiscard]]
         virtual bool SetupFromJson(const nlohmann::json& controlJson,
@@ -117,10 +116,7 @@ namespace projectfarm::graphics::ui
             return this->_isHidden;
         }
 
-        void SetIsEnabled(bool isEnabled) noexcept
-        {
-            this->_isEnabled = isEnabled;
-        }
+        void SetIsEnabled(bool isEnabled) noexcept;
 
         [[nodiscard]]
         bool GetIsEnabled() const noexcept;
@@ -260,7 +256,9 @@ namespace projectfarm::graphics::ui
         }
 
         [[nodiscard]]
-        bool RefreshStyles(bool isLoading, const std::optional<ControlStyle>& parentStyle) noexcept;
+        bool RefreshStyles(bool isLoading,
+                           const std::optional<ControlStyle>& parentStyle,
+                           bool refreshChildStyles = false) noexcept;
 
     private:
         // no [[nodiscard]]
@@ -275,8 +273,17 @@ namespace projectfarm::graphics::ui
 
         void SetParentSize(const ControlSize& size) noexcept;
 
+        [[nodiscard]]
+        std::string GetStyleEventPostfix() const noexcept;
+
     protected:
         virtual void ApplyStyle(bool isLoading) noexcept
+        {
+        }
+
+        // this is used to read any needed data that `RefreshStyles` needs from the child control
+        virtual void ReadChildStylesDataFromJson(const std::shared_ptr<UI>& ui,
+                                                 const nlohmann::json& normalizedJson)
         {
         }
 

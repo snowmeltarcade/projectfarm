@@ -18,18 +18,10 @@ namespace projectfarm::graphics::ui
         this->RenderChildren();
     }
 
-    void Custom::ReadStylesDataFromJson(const nlohmann::json& controlJson,
-                                        const std::shared_ptr<UI>& ui,
-                                        const std::vector<std::pair<std::string, std::string>>& parentParameters)
+    void Custom::ReadChildStylesDataFromJson(const std::shared_ptr<UI>& ui,
+                                             const nlohmann::json& normalizedJson)
     {
-        auto normalizedJson = ui->NormalizeJson(controlJson, parentParameters);
-
         this->_name = normalizedJson["name"].get<std::string>();
-
-        if (auto cssClass = normalizedJson.find("cssClass"); cssClass != normalizedJson.end())
-        {
-            this->_cssClass = cssClass->get<std::string>();
-        }
     }
 
     bool Custom::SetupFromJson(const nlohmann::json& controlJson,
@@ -200,6 +192,11 @@ namespace projectfarm::graphics::ui
 
     std::string Custom::TransformParameterValueFromStyle(const std::string& value) const noexcept
     {
+        if (!this->_style)
+        {
+            return value;
+        }
+
         auto cssKey = "css:"s;
         if (!shared::utils::startsWith(value, cssKey))
         {
