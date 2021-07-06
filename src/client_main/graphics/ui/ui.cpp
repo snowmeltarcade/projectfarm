@@ -543,6 +543,16 @@ namespace projectfarm::graphics::ui
 
     void UI::UpdateFocusedControlAtPoint(uint32_t x, uint32_t y) noexcept
     {
+	    if (this->_focusedControl && *this->_focusedControl)
+        {
+            (*this->_focusedControl)->SetIsFocused(false);
+        }
+
         this->_focusedControl = this->_baseCanvas->GetFocusedControlAtPoint(x, y);
+
+        if (this->_focusedControl && *this->_focusedControl)
+        {
+            (*this->_focusedControl)->SetIsFocused(true);
+        }
     }
 }

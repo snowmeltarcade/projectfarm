@@ -71,6 +71,10 @@ namespace projectfarm::graphics::ui
         {
             postfix = "disabled";
         }
+        else if (this->GetIsFocused())
+        {
+            postfix = "focused";
+        }
 
         // add the postfix's postfix
         if (!postfix.empty())
@@ -108,6 +112,16 @@ namespace projectfarm::graphics::ui
         }
 
         return this->_isEnabled;
+    }
+
+    void BaseControl::SetIsFocused(bool isFocused) noexcept
+    {
+        this->_isFocused = isFocused;
+
+        if (!this->RefreshStyles(false, {}, true))
+        {
+            this->LogMessage("Failed to set `isFocused` to: "s + (isFocused ? "true" : "false"));
+        }
     }
 
     void BaseControl::HandleClick(uint32_t x, uint32_t y) noexcept

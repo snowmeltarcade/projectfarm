@@ -121,6 +121,14 @@ namespace projectfarm::graphics::ui
         [[nodiscard]]
         bool GetIsEnabled() const noexcept;
 
+        void SetIsFocused(bool isFocused) noexcept;
+
+        [[nodiscard]]
+        bool GetIsFocused() const noexcept
+        {
+            return this->_isFocused;
+        }
+
         void HandleClick(uint32_t x, uint32_t y) noexcept;
         virtual void OnClick(uint32_t, uint32_t) noexcept
         {
@@ -322,6 +330,8 @@ namespace projectfarm::graphics::ui
 
         // Should this control respond to interactions and UI events or not.
         bool _isEnabled {true};
+
+        bool _isFocused {false};
 
         // can this control be focus?
         // the mouse cursor cannot be for instance
