@@ -8,7 +8,6 @@
 #include <v8.h>
 #include <libplatform/libplatform.h>
 
-#include "logging/consume_logger.h"
 #include "script.h"
 #include "script_types.h"
 #include "function_types.h"
@@ -18,8 +17,7 @@
 
 namespace projectfarm::shared::scripting
 {
-    class ScriptSystem final : public shared::ConsumeLogger,
-                               public shared::math::ConsumeRandomEngine,
+    class ScriptSystem final : public shared::math::ConsumeRandomEngine,
                                public shared::ConsumeDataProvider
     {
     public:

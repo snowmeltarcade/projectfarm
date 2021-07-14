@@ -9,6 +9,7 @@
 #include "gc_persistent.h"
 #include "markdown/markdown.h"
 #include "time/clock.h"
+#include "api/logging/logging.h"
 
 using namespace std::literals;
 
@@ -16,7 +17,7 @@ namespace projectfarm::shared::scripting
 {
     bool ScriptSystem::Initialize(const std::filesystem::path& executableDirectory) noexcept
     {
-        this->LogMessage("Initializing v8 with version: "s + v8::V8::GetVersion());
+        api::logging::Log("Initializing v8 with version: "s + v8::V8::GetVersion());
 
         v8::V8::InitializeICUDefaultLocation(executableDirectory.u8string().c_str());
         // our v8 was compiled not to use external data
@@ -33,14 +34,14 @@ namespace projectfarm::shared::scripting
 
         this->_isolate = v8::Isolate::New(this->_createParams);
 
-        this->LogMessage("Initialized v8.");
+        api::logging::Log("Initialized v8.");
 
         return true;
     }
 
     void ScriptSystem::Shutdown() noexcept
     {
-        this->LogMessage("Shutting down v8...");
+        api::logging::Log("Shutting down v8...");
 
         GCPersistent::ClearDeleteQueue();
 
@@ -62,7 +63,7 @@ namespace projectfarm::shared::scripting
             this->_createParams.array_buffer_allocator = nullptr;
         }
 
-        this->LogMessage("Shut down v8.");
+        api::logging::Log("Shut down v8.");
     }
 
     std::shared_ptr<Script> ScriptSystem::CreateScript(ScriptTypes type, const std::filesystem::path& filePath) noexcept
@@ -71,7 +72,7 @@ namespace projectfarm::shared::scripting
 
         if (!fp.is_open())
         {
-            this->LogMessage("Failed to open file: " + filePath.u8string());
+            api::logging::Log("Failed to open file: " + filePath.u8string());
             return nullptr;
         }
 
@@ -93,7 +94,7 @@ namespace projectfarm::shared::scripting
         auto script = this->_scriptFactory->CreateScript(type);
         if (!script)
         {
-            this->LogMessage("Failed to create script of type: " + std::to_string(static_cast<uint8_t>(type)));
+            api::logging::Log("Failed to create script of type: " + std::to_string(static_cast<uint8_t>(type)));
             return {};
         }
 
@@ -106,13 +107,13 @@ namespace projectfarm::shared::scripting
 
         if (!this->CompileCode(code, context, tryCatch))
         {
-            this->LogMessage("Failed to compile the code: " + code);
+            api::logging::Log("Failed to compile the code: " + code);
             return {};
         }
 
         if (!this->ExtractFunctions(context, script))
         {
-            this->LogMessage("Failed to extract functions.");
+            api::logging::Log("Failed to extract functions.");
             return {};
         }
 
@@ -147,7 +148,7 @@ namespace projectfarm::shared::scripting
         {
             v8::String::Utf8Value error(this->_isolate, tryCatch.Exception());
 
-            this->LogMessage("Failed to compile script with error: "s + static_cast<const char*>(*error) +
+            api::logging::Log("Failed to compile script with error: "s + static_cast<const char*>(*error) +
                              "\nwith code: " + code);
             return false;
         }
@@ -157,7 +158,7 @@ namespace projectfarm::shared::scripting
         {
             v8::String::Utf8Value error(this->_isolate, tryCatch.Exception());
 
-            this->LogMessage("Failed to run script with error: "s + static_cast<const char*>(*error) +
+            api::logging::Log("Failed to run script with error: "s + static_cast<const char*>(*error) +
                              "\nwith code: " + code);
             return false;
         }
@@ -184,7 +185,7 @@ namespace projectfarm::shared::scripting
             {
                 if (required)
                 {
-                    this->LogMessage("Failed to find the function: " + functionName);
+                    api::logging::Log("Failed to find the function: " + functionName);
                     return false;
                 }
                 else
@@ -207,7 +208,7 @@ namespace projectfarm::shared::scripting
         // but we do want to ensure `nullptr` is not returned
         if (!this->CreateScript(ScriptTypes::Include, filePath))
         {
-            this->LogMessage("Failed to create script with file path: " + filePath.u8string());
+            api::logging::Log("Failed to create script with file path: " + filePath.u8string());
             return false;
         }
 
@@ -362,7 +363,7 @@ namespace projectfarm::shared::scripting
         for (int i = 0; i < args.Length(); ++i)
         {
             v8::String::Utf8Value message(args.GetIsolate(), args[i]);
-            ss->LogMessage(*message);
+            api::logging::Log(*message);
         }
 
         args.GetReturnValue().Set(args.Length());
@@ -378,7 +379,7 @@ namespace projectfarm::shared::scripting
 
         if (args.Length() != 1)
         {
-            ss->LogMessage("Invalid number of arguments for function: `include_into_global`.");
+            api::logging::Log("Invalid number of arguments for function: `include_into_global`.");
             return;
         }
 
@@ -386,7 +387,7 @@ namespace projectfarm::shared::scripting
 
         if (!ss->LoadScriptIntoGlobalContext(*fileName))
         {
-            ss->LogMessage("Failed to include script into global: "s + *fileName);
+            api::logging::Log("Failed to include script into global: "s + *fileName);
             return;
         }
     }
@@ -403,7 +404,7 @@ namespace projectfarm::shared::scripting
 
         if (args.Length() != 2)
         {
-            ss->LogMessage("Invalid number of arguments for 'RandomInt'.");
+            api::logging::Log("Invalid number of arguments for 'RandomInt'.");
             return;
         }
 
@@ -427,7 +428,7 @@ namespace projectfarm::shared::scripting
 
         if (args.Length() != 2)
         {
-            ss->LogMessage("Invalid number of arguments for 'RandomFloat'.");
+            api::logging::Log("Invalid number of arguments for 'RandomFloat'.");
             return;
         }
 
@@ -451,7 +452,7 @@ namespace projectfarm::shared::scripting
 
         if (args.Length() != 1)
         {
-            ss->LogMessage("Invalid number of arguments for 'MathSqrt'.");
+            api::logging::Log("Invalid number of arguments for 'MathSqrt'.");
             return;
         }
 
@@ -473,7 +474,7 @@ namespace projectfarm::shared::scripting
 
         if (args.Length() != 1)
         {
-            ss->LogMessage("Invalid number of arguments for 'StringLength'.");
+            api::logging::Log("Invalid number of arguments for 'StringLength'.");
             return;
         }
 
@@ -496,7 +497,7 @@ namespace projectfarm::shared::scripting
 
         if (args.Length() < 2 || args.Length() > 3)
         {
-            ss->LogMessage("Invalid number of arguments for 'StringSubstring'.");
+            api::logging::Log("Invalid number of arguments for 'StringSubstring'.");
             return;
         }
 
@@ -507,19 +508,19 @@ namespace projectfarm::shared::scripting
 
         if (start < 0)
         {
-            ss->LogMessage("`start` must be greater than 0 for 'StringSubstring'.");
+            api::logging::Log("`start` must be greater than 0 for 'StringSubstring'.");
             return;
         }
 
         if (length < 0)
         {
-            ss->LogMessage("`length` must be greater than 0 for 'StringSubstring'.");
+            api::logging::Log("`length` must be greater than 0 for 'StringSubstring'.");
             return;
         }
 
         if (static_cast<uint32_t>(start + length) > s.length())
         {
-            ss->LogMessage("`start` + `length` must be less than the length of the string for 'StringSubstring'.");
+            api::logging::Log("`start` + `length` must be less than the length of the string for 'StringSubstring'.");
             return;
         }
 
@@ -540,7 +541,7 @@ namespace projectfarm::shared::scripting
 
         if (args.Length() != 3)
         {
-            ss->LogMessage("Invalid number of arguments for 'StringInsert'.");
+            api::logging::Log("Invalid number of arguments for 'StringInsert'.");
             return;
         }
 
@@ -550,13 +551,13 @@ namespace projectfarm::shared::scripting
 
         if (position < 0)
         {
-            ss->LogMessage("`position` must be greater than 0 for 'StringInsert'.");
+            api::logging::Log("`position` must be greater than 0 for 'StringInsert'.");
             return;
         }
 
         if (static_cast<uint32_t>(position) > s.length())
         {
-            ss->LogMessage("`position` must be >= the length of the string for 'StringInsert'.");
+            api::logging::Log("`position` must be >= the length of the string for 'StringInsert'.");
             return;
         }
 
@@ -577,7 +578,7 @@ namespace projectfarm::shared::scripting
 
         if (args.Length() != 2)
         {
-            ss->LogMessage("Invalid number of arguments for 'StringRemoveCharacterAt'.");
+            api::logging::Log("Invalid number of arguments for 'StringRemoveCharacterAt'.");
             return;
         }
 
@@ -586,13 +587,13 @@ namespace projectfarm::shared::scripting
 
         if (position < 0)
         {
-            ss->LogMessage("`position` must be >= than 0 for 'StringRemoveCharacterAt'.");
+            api::logging::Log("`position` must be >= than 0 for 'StringRemoveCharacterAt'.");
             return;
         }
 
         if (static_cast<uint32_t>(position) >= s.length())
         {
-            ss->LogMessage("`position` must be < the length of the string for 'StringRemoveCharacterAt'.");
+            api::logging::Log("`position` must be < the length of the string for 'StringRemoveCharacterAt'.");
             return;
         }
 
@@ -613,7 +614,7 @@ namespace projectfarm::shared::scripting
 
         if (args.Length() != 2)
         {
-            ss->LogMessage("Invalid number of arguments for 'StringCharAt'.");
+            api::logging::Log("Invalid number of arguments for 'StringCharAt'.");
             return;
         }
 
@@ -622,13 +623,13 @@ namespace projectfarm::shared::scripting
 
         if (position < 0)
         {
-            ss->LogMessage("`position` must be >= than 0 for 'StringCharAt'.");
+            api::logging::Log("`position` must be >= than 0 for 'StringCharAt'.");
             return;
         }
 
         if (static_cast<uint32_t>(position) >= s.length())
         {
-            ss->LogMessage("`position` must be < the length of the string for 'StringCharAt'.");
+            api::logging::Log("`position` must be < the length of the string for 'StringCharAt'.");
             return;
         }
 
@@ -650,7 +651,7 @@ namespace projectfarm::shared::scripting
 
         if (args.Length() != 2)
         {
-            ss->LogMessage("Invalid number of arguments for 'MarkdownPartPositionToTextPosition'.");
+            api::logging::Log("Invalid number of arguments for 'MarkdownPartPositionToTextPosition'.");
             return;
         }
 
@@ -659,13 +660,13 @@ namespace projectfarm::shared::scripting
 
         if (position < 0)
         {
-            ss->LogMessage("`position` must be greater than 0 for 'MarkdownPartPositionToTextPosition'.");
+            api::logging::Log("`position` must be greater than 0 for 'MarkdownPartPositionToTextPosition'.");
             return;
         }
 
         if (static_cast<uint32_t>(position) > s.length())
         {
-            ss->LogMessage("`position` must be <= the length of the string for 'MarkdownPartPositionToTextPosition'.");
+            api::logging::Log("`position` must be <= the length of the string for 'MarkdownPartPositionToTextPosition'.");
             return;
         }
 
@@ -686,7 +687,7 @@ namespace projectfarm::shared::scripting
 
         if (args.Length() != 0)
         {
-            ss->LogMessage("Invalid number of arguments for 'TimeUTCShortString'.");
+            api::logging::Log("Invalid number of arguments for 'TimeUTCShortString'.");
             return;
         }
 
@@ -707,7 +708,7 @@ namespace projectfarm::shared::scripting
 
         if (args.Length() != 0)
         {
-            ss->LogMessage("Invalid number of arguments for 'TimeUTCLongString'.");
+            api::logging::Log("Invalid number of arguments for 'TimeUTCLongString'.");
             return;
         }
 
@@ -728,7 +729,7 @@ namespace projectfarm::shared::scripting
 
         if (args.Length() != 0)
         {
-            ss->LogMessage("Invalid number of arguments for 'TimeLocalTimeShortString'.");
+            api::logging::Log("Invalid number of arguments for 'TimeLocalTimeShortString'.");
             return;
         }
 
@@ -749,7 +750,7 @@ namespace projectfarm::shared::scripting
 
         if (args.Length() != 0)
         {
-            ss->LogMessage("Invalid number of arguments for 'TimeLocalTimeLongString'.");
+            api::logging::Log("Invalid number of arguments for 'TimeLocalTimeLongString'.");
             return;
         }
 

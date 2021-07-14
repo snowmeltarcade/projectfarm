@@ -1,6 +1,7 @@
 #include <cstring>
 
 #include "packet_sender_worker.h"
+#include "api/logging/logging.h"
 
 using namespace std::literals;
 
@@ -8,18 +9,18 @@ namespace projectfarm::shared::networking
 {
     void PacketSenderWorker::StartThread() noexcept
     {
-        this->LogMessage("Starting packet sender thread...");
+        api::logging::Log("Starting packet sender thread...");
 
         this->_runThread = true;
 
         this->_thread = std::thread(&PacketSenderWorker::ThreadWorker, this);
 
-        this->LogMessage("Started packet sender thread.");
+        api::logging::Log("Started packet sender thread.");
     }
 
     void PacketSenderWorker::StopThread() noexcept
     {
-        this->LogMessage("Stopping packet sender thread...");
+        api::logging::Log("Stopping packet sender thread...");
 
         if (this->_thread.joinable())
         {
@@ -31,12 +32,12 @@ namespace projectfarm::shared::networking
             this->_thread.join();
         }
 
-        this->LogMessage("Stopped packet sender thread.");
+        api::logging::Log("Stopped packet sender thread.");
     }
 
     void PacketSenderWorker::ThreadWorker() noexcept
     {
-        this->LogMessage("In packet sender thread.");
+        api::logging::Log("In packet sender thread.");
 
         this->_currentTime = static_cast<uint64_t>(std::chrono::duration_cast<std::chrono::milliseconds>(
                 std::chrono::system_clock::now().time_since_epoch()).count());
@@ -94,7 +95,7 @@ namespace projectfarm::shared::networking
             this->_currentTime = currentTime;
         }
 
-        this->LogMessage("Exiting packet sender thread.");
+        api::logging::Log("Exiting packet sender thread.");
     }
 
     void PacketSenderWorker::AddPacketToSend(TCPsocket socket, const std::shared_ptr<Packet>& packet,
@@ -156,11 +157,11 @@ namespace projectfarm::shared::networking
                if (!SDLNet_UDP_Send(this->_udpSocket, -1, this->_udpPacket))
                {
                    // TODO: Find out how to get destination IP address from the socket, then log it below
-                   this->LogMessage("Failed to send message (UDP).");
-                   this->LogMessage(SDLNet_GetError());
+                   api::logging::Log("Failed to send message (UDP).");
+                   api::logging::Log(SDLNet_GetError());
                }
            },
-           [this, &info](const TCPsocket& socket)
+           [&info](const TCPsocket& socket)
            {
                auto bytes = info._packet->GetBytes();
                auto size = info._packet->PacketSize();
@@ -175,8 +176,8 @@ namespace projectfarm::shared::networking
                if (static_cast<uint32_t>(bytesSent) < size)
                {
                    // TODO: Find out how to get destination IP address from the socket, then log it below
-                   this->LogMessage("Failed to send message (TCP).");
-                   this->LogMessage(SDLNet_GetError());
+                   api::logging::Log("Failed to send message (TCP).");
+                   api::logging::Log(SDLNet_GetError());
                }
            }
         },

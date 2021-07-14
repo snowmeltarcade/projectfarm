@@ -1,5 +1,6 @@
 #include "script.h"
 #include "script_system.h"
+#include "api/logging/logging.h"
 
 using namespace std::literals;
 
@@ -28,7 +29,7 @@ namespace projectfarm::shared::scripting
     {
         if (this->_functions.find(type) == this->_functions.end())
         {
-            this->LogMessage("Failed to find function: " + std::to_string(static_cast<uint8_t>(type)));
+            api::logging::Log("Failed to find function: " + std::to_string(static_cast<uint8_t>(type)));
             return false;
         }
 
@@ -38,7 +39,7 @@ namespace projectfarm::shared::scripting
 
         if (!this->CallFunction(function, parameters))
         {
-            this->LogMessage("Failed to call function: "s + std::to_string(static_cast<uint8_t>(type)));
+            api::logging::Log("Failed to call function: "s + std::to_string(static_cast<uint8_t>(type)));
             return false;
         }
 
@@ -58,7 +59,7 @@ namespace projectfarm::shared::scripting
         {
             if (!this->CallFunction(*function, parameters))
             {
-                this->LogMessage("Failed to call function: "s + name);
+                api::logging::Log("Failed to call function: "s + name);
                 return false;
             }
 
@@ -93,14 +94,14 @@ namespace projectfarm::shared::scripting
             v8::String::Utf8Value functionName(this->_isolate, s);
 
             v8::String::Utf8Value error(this->_isolate, tryCatch.Exception());
-            this->LogMessage("Failed to run function: "s + *functionName +
+            api::logging::Log("Failed to run function: "s + *functionName +
                              " with error: " + *error);
             return false;
         }
 
         // ignore return results at the moment
         //v8::String::Utf8Value frs(this->_isolate, functionResult);
-        //this->LogMessage(*frs);
+        //api::logging::Log(*frs);
 
         return true;
     }
@@ -153,7 +154,7 @@ namespace projectfarm::shared::scripting
                 }
                 else
                 {
-                    this->LogMessage("Invalid parameter. Expecting int: " + parameter.GetValue());
+                    api::logging::Log("Invalid parameter. Expecting int: " + parameter.GetValue());
                 }
             }
 
