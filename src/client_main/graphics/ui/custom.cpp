@@ -212,11 +212,11 @@ namespace projectfarm::graphics::ui
         // they are currently used for the textbox and the cursor
         if (cssValue == "texture" && !this->_style->Textures.empty())
         {
-            return this->_style->Textures[0];
+            return this->_style->Textures[0].u8string();
         }
         else if (cssValue == "texture1" && this->_style->Textures.size() > 0)
         {
-            return this->_style->Textures[1];
+            return this->_style->Textures[1].u8string();
         }
         else if (cssValue == "color")
         {
