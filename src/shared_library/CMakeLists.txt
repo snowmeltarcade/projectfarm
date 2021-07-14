@@ -109,6 +109,7 @@ if (WIN32)
 	endforeach()
 endif()
 
+add_subdirectory("api")
 add_subdirectory("logging")
 add_subdirectory("utils")
 add_subdirectory("networking")
