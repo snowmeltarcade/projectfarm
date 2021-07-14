@@ -5,7 +5,7 @@
 
 namespace projectfarm::shared::api::logging
 {
-    void Log(std::string_view message, LogLevels level = LogLevels::Info);
+    void Log(std::string_view message, LogLevels level = LogLevels::Info) noexcept;
 }
 
 #endif
