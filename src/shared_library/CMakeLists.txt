@@ -110,7 +110,6 @@ if (WIN32)
 endif()
 
 add_subdirectory("api")
-add_subdirectory("logging")
 add_subdirectory("utils")
 add_subdirectory("networking")
 add_subdirectory("data")
