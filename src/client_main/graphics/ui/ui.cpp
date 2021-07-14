@@ -7,6 +7,7 @@
 #include "custom.h"
 #include "engine/game.h"
 #include "scripting/script_system.h"
+#include "api/logging/logging.h"
 
 using namespace std::literals;
 
@@ -14,7 +15,7 @@ namespace projectfarm::graphics::ui
 {
 	bool UI::Initialize() noexcept
 	{
-		this->LogMessage("Initializing UI...");
+		shared::api::logging::Log("Initializing UI...");
 
 		this->_baseCanvas->SetGraphics(this->GetGraphics());
 		this->_baseCanvas->SetLogger(this->_logger);
@@ -26,11 +27,11 @@ namespace projectfarm::graphics::ui
 		this->_styles->SetLogger(this->_logger);
 		if (!this->_styles->Initialize())
         {
-		    this->LogMessage("Failed to initialize styles.");
+		    shared::api::logging::Log("Failed to initialize styles.");
 		    return false;
         }
 
-		this->LogMessage("Initialized UI.");
+		shared::api::logging::Log("Initialized UI.");
 
 		return true;
 	}
@@ -46,7 +47,7 @@ namespace projectfarm::graphics::ui
 
             if (!file.is_open())
             {
-                this->LogMessage("Failed to open ui file: " + filePath.u8string());
+                shared::api::logging::Log("Failed to open ui file: " + filePath.u8string());
                 return false;
             }
 
@@ -59,14 +60,14 @@ namespace projectfarm::graphics::ui
             {
                 if (!this->LoadControl(control, this->_baseCanvas))
                 {
-                    this->LogMessage("Failed to load control: " + control.dump());
+                    shared::api::logging::Log("Failed to load control: " + control.dump());
                     return false;
                 }
             }
 
             if (!this->LoadControlScriptsFromJson(this->_baseCanvas, jsonFile))
             {
-                this->LogMessage("Failed to load base canvas control.");
+                shared::api::logging::Log("Failed to load base canvas control.");
                 return false;
             }
 
@@ -76,7 +77,7 @@ namespace projectfarm::graphics::ui
         }
         catch (const std::exception& ex)
         {
-            this->LogMessage("Failed to load ui file: " + name +
+            shared::api::logging::Log("Failed to load ui file: " + name +
                              "with exception: " + ex.what());
 
             return false;
@@ -87,11 +88,11 @@ namespace projectfarm::graphics::ui
 
 	void UI::Shutdown() const noexcept
 	{
-		this->LogMessage("Shutting down UI...");
+		shared::api::logging::Log("Shutting down UI...");
 
 		this->Clear();
 
-		this->LogMessage("Shut down UI.");
+		shared::api::logging::Log("Shut down UI.");
 	}
 
 	void UI::Clear() const noexcept
@@ -234,7 +235,7 @@ namespace projectfarm::graphics::ui
         auto control = this->CreateControlFromType(type);
         if (!control)
         {
-            this->LogMessage("Failed to create control of type: " + type);
+            shared::api::logging::Log("Failed to create control of type: " + type);
             return false;
         }
 
@@ -245,7 +246,7 @@ namespace projectfarm::graphics::ui
 
         if (!this->LoadControlScriptsFromJson(control, normalizedJson))
         {
-            this->LogMessage("Failed to setup UI control script for control with json: " + controlJson.dump());
+            shared::api::logging::Log("Failed to setup UI control script for control with json: " + controlJson.dump());
             return false;
         }
 
@@ -264,13 +265,13 @@ namespace projectfarm::graphics::ui
 
         if (!control->RefreshStyles(true, parentStyle))
         {
-            this->LogMessage("Failed to refresh styles for control: " + controlJson.dump());
+            shared::api::logging::Log("Failed to refresh styles for control: " + controlJson.dump());
             return false;
         }
 
         if (!control->SetupFromJson(controlJson, this->shared_from_this(), parameters))
         {
-            this->LogMessage("Failed to setup control with json: " + controlJson.dump());
+            shared::api::logging::Log("Failed to setup control with json: " + controlJson.dump());
             return false;
         }
 
@@ -281,7 +282,7 @@ namespace projectfarm::graphics::ui
             {
                 if (!this->LoadControl(childControl, control, parameters, parentStyle))
                 {
-                    this->LogMessage("Failed to load control: " + childControl.dump());
+                    shared::api::logging::Log("Failed to load control: " + childControl.dump());
                     return false;
                 }
             }
@@ -321,7 +322,7 @@ namespace projectfarm::graphics::ui
 
         if (!control)
         {
-            this->LogMessage("Unknown control type: " + type);
+            shared::api::logging::Log("Unknown control type: " + type);
             return {};
         }
 
@@ -463,7 +464,7 @@ namespace projectfarm::graphics::ui
         {
             if (!this->SetupControlScript(control, inlineScript, controlJson, key, functionType))
             {
-                this->LogMessage("Failed to setup control script with key: '" + key +
+                shared::api::logging::Log("Failed to setup control script with key: '" + key +
                                  "' and json: " + controlJson.dump());
                 return false;
             }
@@ -477,7 +478,7 @@ namespace projectfarm::graphics::ui
 
             if (!script)
             {
-                this->LogMessage("Failed to create inline UI control script with script: " + inlineScript);
+                shared::api::logging::Log("Failed to create inline UI control script with script: " + inlineScript);
                 return false;
             }
 
@@ -507,7 +508,7 @@ namespace projectfarm::graphics::ui
             {
                 if (control->GetExternalScript())
                 {
-                    this->LogMessage("External script already exists for control with key: " + key);
+                    shared::api::logging::Log("External script already exists for control with key: " + key);
                     return false;
                 }
 
@@ -519,7 +520,7 @@ namespace projectfarm::graphics::ui
 
                 if (!loadedScript)
                 {
-                    this->LogMessage("Failed to create external UI control script with key: '" + key +
+                    shared::api::logging::Log("Failed to create external UI control script with key: '" + key +
                                      "' and path: '" + path.u8string() + "' and script: " + script);
                     return false;
                 }

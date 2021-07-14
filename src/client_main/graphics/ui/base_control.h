@@ -8,7 +8,6 @@
 #include <string>
 #include <nlohmann/json.hpp>
 
-#include "logging/consume_logger.h"
 #include "graphics/consume_graphics.h"
 #include "data/consume_data_provider.h"
 #include "graphics/ui/consume_ui.h"
@@ -28,7 +27,6 @@ namespace projectfarm::graphics::ui
     class UI;
 
     class BaseControl : public projectfarm::graphics::ConsumeGraphics,
-                        public projectfarm::shared::ConsumeLogger,
                         public projectfarm::shared::ConsumeDataProvider,
                         public ConsumeUI,
                         public std::enable_shared_from_this<BaseControl>

@@ -5,12 +5,10 @@
 
 #include "css/css.h"
 #include "data/consume_data_provider.h"
-#include "logging/consume_logger.h"
 
 namespace projectfarm::graphics::ui
 {
-    class Styles final : public shared::ConsumeDataProvider,
-                         public shared::ConsumeLogger
+    class Styles final : public shared::ConsumeDataProvider
     {
     public:
         Styles() = default;

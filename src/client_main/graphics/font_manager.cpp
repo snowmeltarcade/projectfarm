@@ -3,20 +3,21 @@
 #include <vector>
 
 #include "font_manager.h"
+#include "api/logging/logging.h"
 
 namespace projectfarm::graphics
 {
     bool FontManager::Initialize()
     {
-        this->LogMessage("Initializing fonts...");
+        shared::api::logging::Log("Initializing fonts...");
 
         if (!this->LoadListedFonts())
         {
-            this->LogMessage("Failed to load listed fonts.");
+            shared::api::logging::Log("Failed to load listed fonts.");
             return false;
         }
 
-        this->LogMessage("Initialized fonts.");
+        shared::api::logging::Log("Initialized fonts.");
 
         return true;
     }
@@ -24,7 +25,6 @@ namespace projectfarm::graphics
     bool FontManager::LoadFont(uint16_t size, const std::string& name)
     {
         std::shared_ptr<Font> font = std::make_shared<Font>();
-        font->SetLogger(this->_logger);
 
         auto fontTexturePath = this->_dataProvider->ResolveFileName(
                 projectfarm::shared::DataProviderLocations::ClientFonts, name + ".png");
@@ -34,14 +34,14 @@ namespace projectfarm::graphics
 
         if (!font->Load(fontTexturePath, fontDetailsPath, size, name))
         {
-            this->LogMessage("Failed to load font: " + fontTexturePath.u8string());
+            shared::api::logging::Log("Failed to load font: " + fontTexturePath.u8string());
             return false;
         }
 
         auto fontName = std::string(name);
         if (this->_fonts.find(fontName) != this->_fonts.end())
         {
-            this->LogMessage("The font: '" + fontName + "' already exists.");
+            shared::api::logging::Log("The font: '" + fontName + "' already exists.");
             return false;
         }
 
@@ -71,7 +71,7 @@ namespace projectfarm::graphics
 
         if (!fp.is_open())
         {
-            this->LogMessage("Failed to open fontlist file: " + fontListPath.string());
+            shared::api::logging::Log("Failed to open fontlist file: " + fontListPath.string());
             return false;
         }
 
@@ -90,8 +90,8 @@ namespace projectfarm::graphics
 
             if (result.size() != 3)
             {
-                this->LogMessage("Invalid line in fontlist file:");
-                this->LogMessage(line);
+                shared::api::logging::Log("Invalid line in fontlist file:");
+                shared::api::logging::Log(line);
                 return false;
             }
 
@@ -103,7 +103,7 @@ namespace projectfarm::graphics
 
             if (!this->LoadFont(fontSize, name))
             {
-                this->LogMessage("Failed to load the font with name: " + name);
+                shared::api::logging::Log("Failed to load the font with name: " + name);
                 return false;
             }
         }

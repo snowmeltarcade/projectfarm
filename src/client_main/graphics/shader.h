@@ -6,14 +6,12 @@
 #include <algorithm>
 
 #include "graphics_dependencies.h"
-#include "logging/consume_logger.h"
 #include "data/consume_data_provider.h"
 #include "shader_types.h"
 
 namespace projectfarm::graphics
 {
-    class Shader final : public projectfarm::shared::ConsumeLogger,
-                         public projectfarm::shared::ConsumeDataProvider
+    class Shader final : public projectfarm::shared::ConsumeDataProvider
     {
     public:
         Shader() = default;

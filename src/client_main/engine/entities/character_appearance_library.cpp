@@ -2,6 +2,7 @@
 #include <fstream>
 
 #include "character_appearance_library.h"
+#include "api/logging/logging.h"
 
 namespace projectfarm::engine::entities
 {
@@ -13,7 +14,7 @@ namespace projectfarm::engine::entities
         {
             if (!this->AddToLibrary(path))
             {
-                this->LogMessage("Failed to add character appearance file to library: " + path.u8string());
+                shared::api::logging::Log("Failed to add character appearance file to library: " + path.u8string());
                 continue;
             }
         }
@@ -29,7 +30,7 @@ namespace projectfarm::engine::entities
 
             if (!fs)
             {
-                this->LogMessage("Failed to open file: " + path.u8string());
+                shared::api::logging::Log("Failed to open file: " + path.u8string());
                 return false;
             }
 
@@ -43,7 +44,7 @@ namespace projectfarm::engine::entities
         }
         catch (const std::exception& ex)
         {
-            this->LogMessage("Failed to add character appearance file: '" + path.u8string() +
+            shared::api::logging::Log("Failed to add character appearance file: '" + path.u8string() +
                              "' to library with error: " + ex.what());
             return false;
         }

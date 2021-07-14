@@ -1,5 +1,6 @@
 #include "graphics/shapes/shapes.h"
 #include "render_manager.h"
+#include "api/logging/logging.h"
 
 namespace projectfarm::graphics
 {
@@ -7,15 +8,15 @@ namespace projectfarm::graphics
 
     bool RenderManager::Load()
     {
-        this->LogMessage("Loading render manager...");
+        shared::api::logging::Log("Loading render manager...");
 
         if (!this->AddRenderLayer(RenderManager::RenderLayerId_Base))
         {
-            this->LogMessage("Failed to add base render layer.");
+            shared::api::logging::Log("Failed to add base render layer.");
             return false;
         }
 
-        this->LogMessage("Loaded render manager.");
+        shared::api::logging::Log("Loaded render manager.");
 
         return true;
     }
@@ -64,12 +65,12 @@ namespace projectfarm::graphics
 
     void RenderManager::Shutdown()
     {
-        this->LogMessage("Shutting down render manager...");
+        shared::api::logging::Log("Shutting down render manager...");
 
         this->_renderLayers.clear();
         this->_uis.clear();
 
-        this->LogMessage("Shut down render manager.");
+        shared::api::logging::Log("Shut down render manager.");
     }
 
     void RenderManager::Render()

@@ -6,15 +6,13 @@
 #include <unordered_map>
 #include <SDL.h>
 
-#include "logging/consume_logger.h"
-
 namespace projectfarm::engine
 {
-	class KeyboardInput final : public projectfarm::shared::ConsumeLogger
+	class KeyboardInput final
 	{
 	public:
         KeyboardInput() = default;
-		~KeyboardInput() override = default;
+		~KeyboardInput() = default;
 
 		bool Initialize() noexcept;
 

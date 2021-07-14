@@ -3,14 +3,12 @@
 
 #include <filesystem>
 
-#include "logging/consume_logger.h"
 #include "graphics/consume_graphics.h"
 #include "graphics/render_origin_points.h"
 
 namespace projectfarm::graphics
 {
-	class Renderable : public shared::ConsumeLogger,
-					   public ConsumeGraphics
+	class Renderable : public ConsumeGraphics
 	{
 	public:
 		Renderable() = default;

@@ -10,7 +10,6 @@
 #include <nlohmann/json.hpp>
 
 #include "time/consume_timer.h"
-#include "logging/consume_logger.h"
 #include "graphics/tile_map.h"
 #include "data/consume_data_provider.h"
 #include "graphics/consume_graphics.h"

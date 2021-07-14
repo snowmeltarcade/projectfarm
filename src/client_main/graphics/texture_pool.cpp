@@ -4,6 +4,7 @@
 #include "texture_pool.h"
 #include "engine/debug_information.h"
 #include "graphics/opengl_errors.h"
+#include "api/logging/logging.h"
 
 namespace projectfarm::graphics
 {
@@ -18,7 +19,7 @@ namespace projectfarm::graphics
         auto data = this->Create(name);
         if (data.TextureId == 0)
         {
-            this->LogMessage("Failed to create texture with name: " + name);
+            shared::api::logging::Log("Failed to create texture with name: " + name);
             return {};
         }
 
@@ -49,7 +50,7 @@ namespace projectfarm::graphics
 
         if (data.TextureId == 0)
         {
-            this->LogMessage("Failed to create texture.");
+            shared::api::logging::Log("Failed to create texture.");
         }
         else
         {
@@ -131,7 +132,7 @@ namespace projectfarm::graphics
 
         if (!this->GenerateTexture(data, surface))
         {
-            this->LogMessage("Failed to generate texture.");
+            shared::api::logging::Log("Failed to generate texture.");
             return data;
         }
 
@@ -190,7 +191,7 @@ namespace projectfarm::graphics
 
     void TexturePool::PerformCleanup()
     {
-        this->LogMessage("Performing texture pool cleanup...");
+        shared::api::logging::Log("Performing texture pool cleanup...");
 
         std::list<std::map<std::string, TexturePoolData>::iterator> itemsToRemove;
 
@@ -209,6 +210,6 @@ namespace projectfarm::graphics
             this->_textures.erase(it);
         }
 
-        this->LogMessage("Removed " + std::to_string(itemsToRemove.size()) + " texture(s) from the texture pool.");
+        shared::api::logging::Log("Removed " + std::to_string(itemsToRemove.size()) + " texture(s) from the texture pool.");
     }
 }

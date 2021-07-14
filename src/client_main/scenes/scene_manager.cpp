@@ -1,12 +1,12 @@
 #include <string>
 
 #include "engine/game.h"
-
 #include "implemented_scenes/loading_scene.h"
 #include "implemented_scenes/world_scene.h"
 #include "implemented_scenes/authenticate_scene.h"
 #include "networking/packet_factory.h"
 #include "networking/packets/client_server_entity_update.h"
+#include "api/logging/logging.h"
 
 namespace projectfarm::scenes
 {
@@ -66,7 +66,7 @@ namespace projectfarm::scenes
 
 		if (!this->_currentScene->Initialize())
 		{
-			this->LogMessage("Failed to load scene with type: " + std::to_string(static_cast<int>(type)));
+			shared::api::logging::Log("Failed to load scene with type: " + std::to_string(static_cast<int>(type)));
 			return false;
 		}
 
@@ -100,7 +100,7 @@ namespace projectfarm::scenes
 
 		if (!scene)
         {
-            this->LogMessage("Unknown scene type: " + std::to_string(static_cast<int>(type)));
+            shared::api::logging::Log("Unknown scene type: " + std::to_string(static_cast<int>(type)));
             return {};
         }
 

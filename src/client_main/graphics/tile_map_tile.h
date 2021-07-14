@@ -4,12 +4,11 @@
 #include <cstdint>
 #include <vector>
 
-#include "logging/consume_logger.h"
 #include "tile_map_tile_animation_data.h"
 
 namespace projectfarm::graphics
 {
-    class TileMapTile final : public shared::ConsumeLogger
+    class TileMapTile final
     {
     public:
         explicit TileMapTile(uint32_t numberOfFrames)
@@ -17,7 +16,8 @@ namespace projectfarm::graphics
             this->_numberOfFrames = numberOfFrames;
             this->_frames.resize(numberOfFrames);
         }
-        ~TileMapTile() override = default;
+
+        ~TileMapTile() = default;
 
         [[nodiscard]] uint32_t GetTileSetId() const noexcept
         {

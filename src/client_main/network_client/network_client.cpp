@@ -1,4 +1,5 @@
 #include "network_client.h"
+#include "api/logging/logging.h"
 
 namespace projectfarm::network_client
 {
@@ -7,56 +8,56 @@ namespace projectfarm::network_client
 	bool NetworkClient::Initialize(const std::string& hostName, uint16_t tcpPort,
                                    uint16_t clientUdpPort, uint16_t serverUdpPort)
 	{
-		this->LogMessage("Initializing network client...");
+		shared::api::logging::Log("Initializing network client...");
 
-		this->LogMessage("Resolving server address (TCP): " + hostName + ":" + std::to_string(tcpPort));
+		shared::api::logging::Log("Resolving server address (TCP): " + hostName + ":" + std::to_string(tcpPort));
 		if (SDLNet_ResolveHost(&this->_tcpServerIP, hostName.c_str(), tcpPort) < 0)
 		{
-			this->LogMessage("Failed to resolve server address (TCP).");
-			this->LogMessage(SDLNet_GetError());
+			shared::api::logging::Log("Failed to resolve server address (TCP).");
+			shared::api::logging::Log(SDLNet_GetError());
 			return false;
 		}
-		this->LogMessage("Resolved server address (TCP).");
+		shared::api::logging::Log("Resolved server address (TCP).");
 
-        this->LogMessage("Resolving server address (UDP): " + hostName + ":" + std::to_string(serverUdpPort));
+        shared::api::logging::Log("Resolving server address (UDP): " + hostName + ":" + std::to_string(serverUdpPort));
         if (SDLNet_ResolveHost(&this->_udpServerIP, hostName.c_str(), serverUdpPort) < 0)
         {
-            this->LogMessage("Failed to resolve server address (UDP).");
-            this->LogMessage(SDLNet_GetError());
+            shared::api::logging::Log("Failed to resolve server address (UDP).");
+            shared::api::logging::Log(SDLNet_GetError());
             return false;
         }
-        this->LogMessage("Resolved server address (UDP).");
+        shared::api::logging::Log("Resolved server address (UDP).");
 
-		this->LogMessage("Connecting to server over TCP...");
+		shared::api::logging::Log("Connecting to server over TCP...");
 		this->_tcpServerSocket = SDLNet_TCP_Open(&this->_tcpServerIP);
 		if (this->_tcpServerSocket == nullptr)
 		{
-			this->LogMessage("Failed to connect to server over TCP.");
-			this->LogMessage(SDLNet_GetError());
+			shared::api::logging::Log("Failed to connect to server over TCP.");
+			shared::api::logging::Log(SDLNet_GetError());
 			return false;
 		}
 
-        this->LogMessage("Creating UDP socket on port " + std::to_string(clientUdpPort) + "...");
+        shared::api::logging::Log("Creating UDP socket on port " + std::to_string(clientUdpPort) + "...");
         this->_udpServerSocket = SDLNet_UDP_Open(clientUdpPort);
         if (this->_udpServerSocket == nullptr)
         {
-            this->LogMessage("Failed to create UDP socket.");
-            this->LogMessage(SDLNet_GetError());
+            shared::api::logging::Log("Failed to create UDP socket.");
+            shared::api::logging::Log(SDLNet_GetError());
             return false;
         }
 
         auto udpIPAddress = SDLNet_UDP_GetPeerAddress(this->_udpServerSocket, -1);
         if (udpIPAddress == nullptr)
         {
-            this->LogMessage("Failed to get UDP address.");
+            shared::api::logging::Log("Failed to get UDP address.");
         }
         else
         {
-            this->LogMessage("UDP connected to host: " + std::to_string(udpIPAddress->host) +
+            shared::api::logging::Log("UDP connected to host: " + std::to_string(udpIPAddress->host) +
                                 " and port: " + std::to_string(udpIPAddress->port));
         }
 
-		this->LogMessage("Connected to server.");
+		shared::api::logging::Log("Connected to server.");
 
 		this->_tcpSocketSet = SDLNet_AllocSocketSet(1);
 		SDLNet_TCP_AddSocket(this->_tcpSocketSet, this->_tcpServerSocket);
@@ -72,7 +73,7 @@ namespace projectfarm::network_client
 		this->_udpPacket = SDLNet_AllocPacket(1024 * 100 * 100); // do 100kb for now
 		if (this->_udpPacket == nullptr)
         {
-		    this->LogMessage("Failed to allow UDP packet.");
+		    shared::api::logging::Log("Failed to allow UDP packet.");
 		    return false;
         }
 
@@ -88,7 +89,7 @@ namespace projectfarm::network_client
 
 		this->_networkClientWorker->RunThread();
 
-		this->LogMessage("Initialized network client.");
+		shared::api::logging::Log("Initialized network client.");
 
 		return true;
 	}

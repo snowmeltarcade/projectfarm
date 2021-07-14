@@ -3,34 +3,37 @@
 
 #include <filesystem>
 
-#include "logging/consume_logger.h"
-
 namespace projectfarm::engine
 {
-	class SystemArguments final : public shared::ConsumeLogger
+	class SystemArguments final
 	{
 	public:
 		SystemArguments() = default;
-		~SystemArguments() override = default;
+		~SystemArguments() = default;
 
-		[[nodiscard]] bool SetArguments(int argc, char* argv[]) noexcept;
+		[[nodiscard]]
+		bool SetArguments(int argc, char* argv[]) noexcept;
 
-		[[nodiscard]] std::filesystem::path GetBinaryPath() const noexcept
+		[[nodiscard]]
+		std::filesystem::path GetBinaryPath() const noexcept
 		{
 			return this->_binaryPath;
 		}
 
-		[[nodiscard]] bool GetShouldStartServer() const noexcept
+		[[nodiscard]]
+		bool GetShouldStartServer() const noexcept
 		{
 			return this->_shouldStartServer;
 		}
 
-        [[nodiscard]] const std::string& GetUserName() const noexcept
+        [[nodiscard]]
+        const std::string& GetUserName() const noexcept
         {
             return this->_userName;
         }
 
-        [[nodiscard]] const std::string& GetPassword() const noexcept
+        [[nodiscard]]
+        const std::string& GetPassword() const noexcept
         {
             return this->_password;
         }

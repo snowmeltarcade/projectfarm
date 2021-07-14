@@ -4,15 +4,13 @@
 #include <algorithm>
 #include <SDL.h>
 
-#include "logging/consume_logger.h"
-
 namespace projectfarm::engine
 {
-    class MouseInput final : public projectfarm::shared::ConsumeLogger
+    class MouseInput final
     {
     public:
         MouseInput() = default;
-        ~MouseInput() override = default;
+        ~MouseInput() = default;
 
         void SetPosition(uint32_t x, uint32_t y) noexcept
         {

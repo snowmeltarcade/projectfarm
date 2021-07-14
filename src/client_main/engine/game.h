@@ -11,7 +11,6 @@
 #include "mouse_input.h"
 #include "data/data_provider.h"
 #include "system_arguments.h"
-#include "logging/logger.h"
 #include "system.h"
 #include "graphics/font_manager.h"
 #include "action_manager.h"
@@ -38,7 +37,6 @@ namespace projectfarm::engine
 			this->_keyboardInput = std::make_shared<pf::engine::KeyboardInput>();
             this->_mouseInput = std::make_shared<pf::engine::MouseInput>();
 			this->_sceneManager = std::make_shared<pf::scenes::SceneManager>();
-			this->_logger = std::make_shared<pf::shared::Logger>();
 			this->_networkClient = std::make_shared<pf::network_client::NetworkClient>();
 			this->_fontManager = std::make_shared<pf::graphics::FontManager>();
 			this->_actionManager = std::make_shared<pf::engine::ActionManager>();
@@ -76,11 +74,6 @@ namespace projectfarm::engine
         {
             return this->_mouseInput;
         }
-
-		[[nodiscard]] const std::shared_ptr<pf::shared::Logger>& GetLogger() const noexcept
-		{
-			return this->_logger;
-		}
 
         [[nodiscard]] const std::shared_ptr<pf::shared::DataProvider>& GetDataProvider() const noexcept
         {
@@ -124,7 +117,6 @@ namespace projectfarm::engine
 		std::shared_ptr<pf::scenes::SceneManager> _sceneManager;
 		std::shared_ptr<pf::engine::KeyboardInput> _keyboardInput;
         std::shared_ptr<pf::engine::MouseInput> _mouseInput;
-		std::shared_ptr<pf::shared::Logger> _logger;
 		std::shared_ptr<pf::network_client::NetworkClient> _networkClient;
 		std::shared_ptr<pf::shared::DataProvider> _dataProvider;
 		std::shared_ptr<pf::graphics::FontManager> _fontManager;

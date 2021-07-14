@@ -2,6 +2,7 @@
 #include <sstream>
 
 #include "shader.h"
+#include "api/logging/logging.h"
 
 using namespace std::literals;
 
@@ -13,7 +14,7 @@ namespace projectfarm::graphics
 
         if (auto code = this->GetShaderCode(name); !code)
         {
-            this->LogMessage("Failed to get shader code for shader with name: " + name);
+            shared::api::logging::Log("Failed to get shader code for shader with name: " + name);
             return false;
         }
         else
@@ -35,8 +36,8 @@ namespace projectfarm::graphics
         glGetShaderiv(this->_shaderId, GL_COMPILE_STATUS, &compiledStatus);
         if (compiledStatus != GL_TRUE)
         {
-            this->LogMessage("Failed to compile shader with source:");
-            this->LogMessage(shaderCode);
+            shared::api::logging::Log("Failed to compile shader with source:");
+            shared::api::logging::Log(shaderCode);
             this->LogErrors();
             return false;
         }
@@ -69,11 +70,11 @@ namespace projectfarm::graphics
         if (actualLogLength > 0)
         {
             std::string logString = log;
-            this->LogMessage(logString);
+            shared::api::logging::Log(logString);
         }
         else
         {
-            this->LogMessage("No error log returned.");
+            shared::api::logging::Log("No error log returned.");
         }
 
         delete[] log;
@@ -99,7 +100,7 @@ namespace projectfarm::graphics
         std::ifstream fp(path);
         if (!fp.is_open())
         {
-            this->LogMessage("Failed to find shader with path: " + path.u8string());
+            shared::api::logging::Log("Failed to find shader with path: " + path.u8string());
             return {};
         }
 

@@ -6,13 +6,11 @@
 #include <filesystem>
 #include <vector>
 
-#include "logging/consume_logger.h"
 #include "data/consume_data_provider.h"
 
 namespace projectfarm::engine::entities
 {
-    class CharacterAppearanceLibrary final : public shared::ConsumeLogger,
-                                             public shared::ConsumeDataProvider
+    class CharacterAppearanceLibrary final : public shared::ConsumeDataProvider
     {
     public:
         CharacterAppearanceLibrary() = default;

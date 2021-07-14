@@ -6,15 +6,13 @@
 
 #include <SDL_net.h>
 
-#include "logging/consume_logger.h"
 #include "networking/packet.h"
 #include "scenes/consume_scene_manager.h"
 #include "networking/packet_receiver.h"
 
 namespace projectfarm::network_client
 {
-    class NetworkClientWorker final : public projectfarm::shared::ConsumeLogger,
-                                      public projectfarm::scenes::ConsumeSceneManager
+    class NetworkClientWorker final : public projectfarm::scenes::ConsumeSceneManager
     {
     public:
         NetworkClientWorker(TCPsocket tcpServerSocket, UDPsocket udpServerSocket,

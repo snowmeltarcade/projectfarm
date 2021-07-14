@@ -3,25 +3,24 @@
 #include "network_client_worker.h"
 #include "networking/packet_factory.h"
 #include "scenes/scene_manager.h"
+#include "api/logging/logging.h"
 
 namespace projectfarm::network_client
 {
     void NetworkClientWorker::RunThread() noexcept
     {
-        this->LogMessage("Running worker thread.");
-
-        this->_packetReceiver.SetLogger(this->_logger);
+        shared::api::logging::Log("Running worker thread.");
 
         this->_runThread = true;
 
         this->_thread = std::thread(&NetworkClientWorker::ThreadWorker, this);
 
-        this->LogMessage("Worker thread running.");
+        shared::api::logging::Log("Worker thread running.");
     }
 
     void NetworkClientWorker::StopThread() noexcept
     {
-        this->LogMessage("Stopping worker thread.");
+        shared::api::logging::Log("Stopping worker thread.");
 
         if (this->_thread.joinable())
         {
@@ -29,12 +28,12 @@ namespace projectfarm::network_client
             this->_thread.join();
         }
 
-        this->LogMessage("Worker thread stopped.");
+        shared::api::logging::Log("Worker thread stopped.");
     }
 
     void NetworkClientWorker::ThreadWorker() const noexcept
     {
-        this->LogMessage("In worker thread.");
+        shared::api::logging::Log("In worker thread.");
 
         while (this->_runThread)
         {
@@ -50,7 +49,7 @@ namespace projectfarm::network_client
             std::this_thread::sleep_for(std::chrono::milliseconds(1));
         }
 
-        this->LogMessage("Returning from worker thread.");
+        shared::api::logging::Log("Returning from worker thread.");
     }
 
     void NetworkClientWorker::CheckTCPSocket() const noexcept
@@ -62,7 +61,7 @@ namespace projectfarm::network_client
             if (!success)
             {
                 // TODO: Handle this properly
-                this->LogMessage("Server disconnected???");
+                shared::api::logging::Log("Server disconnected???");
                 return;
             }
 
@@ -88,7 +87,7 @@ namespace projectfarm::network_client
     {
 #ifdef LOGGING_PACKET_DEBUG_INFO
         //const auto debugData = packet->GetDebugData();
-        //this->LogMessage(debugData);
+        //shared::api::logging::Log(debugData);
 #endif
 
         auto sceneManager = this->GetSceneManager();

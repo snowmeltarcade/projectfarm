@@ -5,15 +5,13 @@
 #include <memory>
 #include <filesystem>
 
-#include "logging/consume_logger.h"
 #include "data/consume_data_provider.h"
 #include "graphics/consume_tile_set_pool.h"
 #include "plot.h"
 
 namespace projectfarm::engine::world
 {
-    class Plots final : public shared::ConsumeLogger,
-                        public graphics::ConsumeTileSetPool,
+    class Plots final : public graphics::ConsumeTileSetPool,
                         public shared::ConsumeDataProvider
     {
     public:

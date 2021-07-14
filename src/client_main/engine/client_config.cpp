@@ -1,22 +1,25 @@
-#include "client_config.h"
-
 #include <fstream>
 #include <nlohmann/json.hpp>
+
+#include "client_config.h"
+#include "api/logging/logging.h"
 
 namespace projectfarm::engine
 {
     bool ClientConfig::LoadConfig() noexcept
     {
-        this->LogMessage("Loading client config...");
+        shared::api::logging::Log("Loading client config...");
 
         auto filePath = this->_dataProvider->ResolveFileName(shared::DataProviderLocations::Client, "config.json");
 
-        this->LogMessage("Loading client config from " + filePath.u8string());
+        shared::api::logging::Log("Loading client config from " + filePath.u8string());
 
         std::ifstream file(filePath);
 
         if (!file.is_open())
+        {
             return false;
+        }
 
         nlohmann::json jsonFile;
 
@@ -29,7 +32,7 @@ namespace projectfarm::engine
 
         this->_screenWidthInMeters = jsonFile["screenWidthInMeters"].get<uint32_t>();
 
-        this->LogMessage("Loaded client config.");
+        shared::api::logging::Log("Loaded client config.");
 
         return true;
     }

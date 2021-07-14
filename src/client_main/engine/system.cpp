@@ -3,6 +3,7 @@
 #include <sstream>
 
 #include "system.h"
+#include "api/logging/logging.h"
 
 namespace projectfarm::engine
 {
@@ -16,7 +17,7 @@ namespace projectfarm::engine
 	void System::StartServer()
 	{
 #if !defined(IS_IOS)
-		this->LogMessage("Starting server...");
+		shared::api::logging::Log("Starting server...");
         auto devFolder = this->_dataProvider->GetDevDirectoryPath();
 
 #ifdef WIN32
@@ -25,8 +26,8 @@ namespace projectfarm::engine
         std::string command = (devFolder / "startserver.sh").string();
 #endif
 
-        this->LogMessage("Running command:");
-        this->LogMessage(command);
+        shared::api::logging::Log("Running command:");
+        shared::api::logging::Log(command);
         std::system(command.c_str());
 
 		this->_serverStarted = true;
@@ -34,14 +35,14 @@ namespace projectfarm::engine
 		// give the server a couple of seconds to load
 		std::this_thread::sleep_for(std::chrono::seconds(2));
 		
-		this->LogMessage("Started server.");
+		shared::api::logging::Log("Started server.");
 #endif
 	}
 
 	void System::StopServer()
 	{
 #if !defined(IS_IOS)
-		this->LogMessage("Stopping server...");
+		shared::api::logging::Log("Stopping server...");
         auto devFolder = this->_dataProvider->GetDevDirectoryPath();
 
 #ifdef WIN32
@@ -50,11 +51,11 @@ namespace projectfarm::engine
         std::string command = (devFolder / "stopserver.sh").string();
 #endif
 
-        this->LogMessage("Running command:");
-        this->LogMessage(command);
+        shared::api::logging::Log("Running command:");
+        shared::api::logging::Log(command);
         std::system(command.c_str());
 
-		this->LogMessage("Stopped server.");
+		shared::api::logging::Log("Stopped server.");
 #endif
 	}
 
@@ -136,6 +137,6 @@ namespace projectfarm::engine
 
         ss << std::endl;
 
-        this->_logger->LogMessage(ss.str());
+        shared::api::logging::Log(ss.str());
     }
 }

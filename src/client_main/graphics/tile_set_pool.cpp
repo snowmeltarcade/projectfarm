@@ -1,6 +1,7 @@
 #include <algorithm>
 
 #include "tile_set_pool.h"
+#include "api/logging/logging.h"
 
 namespace projectfarm::graphics
 {
@@ -17,8 +18,8 @@ namespace projectfarm::graphics
 
             if (!tileSet->Load(tileSetPath))
             {
-                this->LogMessage("Failed to load tileset: " + tileSetPath.string());
-                return nullptr;
+                shared::api::logging::Log("Failed to load tileset: " + tileSetPath.string());
+                return {};
             }
 
             this->_items[name] = { tileSet, 0 };
