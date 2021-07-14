@@ -4,6 +4,7 @@
 #include <cstdlib>
 
 #include "data_provider.h"
+#include "api/logging/logging.h"
 
 namespace projectfarm::shared
 {
@@ -13,7 +14,7 @@ namespace projectfarm::shared
                                  "tilesets.json", "tileSets",
                                  this->_tileSetLocations))
         {
-            this->LogMessage("Failed to load tile set locations");
+            api::logging::Log("Failed to load tile set locations");
             return false;
         }
 
@@ -21,7 +22,7 @@ namespace projectfarm::shared
                                  "worlds.json", "worlds",
                                  this->_worldLocations))
         {
-            this->LogMessage("Failed to load world locations");
+            api::logging::Log("Failed to load world locations");
             return false;
         }
 
@@ -29,7 +30,7 @@ namespace projectfarm::shared
                                  "action_animations.json", "animations",
                                  this->_characterActionAnimationLocations))
         {
-            this->LogMessage("Failed to load action animations locations");
+            api::logging::Log("Failed to load action animations locations");
             return false;
         }
 
@@ -37,7 +38,7 @@ namespace projectfarm::shared
                                  "uis.json", "uis",
                                  this->_uiLocations))
         {
-            this->LogMessage("Failed to load uis locations");
+            api::logging::Log("Failed to load uis locations");
             return false;
         }
 
@@ -45,7 +46,7 @@ namespace projectfarm::shared
                                  "CustomControls.json", "customControls",
                                  this->_uiCustomControlsLocations))
         {
-            this->LogMessage("Failed to load custom controls locations");
+            api::logging::Log("Failed to load custom controls locations");
             return false;
         }
 
@@ -53,7 +54,7 @@ namespace projectfarm::shared
                                  "Materials.json", "materials",
                                  this->_graphicsMaterialsLocations))
         {
-            this->LogMessage("Failed to load graphics materials locations");
+            api::logging::Log("Failed to load graphics materials locations");
             return false;
         }
 
@@ -61,7 +62,7 @@ namespace projectfarm::shared
                                  "Shaders.json", "shaders",
                                  this->_graphicsShadersLocations))
         {
-            this->LogMessage("Failed to load graphics shaders locations");
+            api::logging::Log("Failed to load graphics shaders locations");
             return false;
         }
 
@@ -69,7 +70,7 @@ namespace projectfarm::shared
                                  "DefaultCSS.json", "defaultCSS",
                                  this->_defaultCSSLocations))
         {
-            this->LogMessage("Failed to load graphics shaders locations");
+            api::logging::Log("Failed to load graphics shaders locations");
             return false;
         }
 
@@ -82,7 +83,7 @@ namespace projectfarm::shared
                                  "worlds.json", "worlds",
                                  this->_worldLocations))
         {
-            this->LogMessage("Failed to load world locations");
+            api::logging::Log("Failed to load world locations");
             return false;
         }
 
@@ -90,7 +91,7 @@ namespace projectfarm::shared
                                  "characters.json", "characters",
                                  this->_characterLocations))
         {
-            this->LogMessage("Failed to load character locations");
+            api::logging::Log("Failed to load character locations");
             return false;
         }
 
@@ -98,7 +99,7 @@ namespace projectfarm::shared
                                  "action_animations.json", "animations",
                                  this->_characterActionAnimationLocations))
         {
-            this->LogMessage("Failed to load tile set locations");
+            api::logging::Log("Failed to load tile set locations");
             return false;
         }
 
@@ -123,7 +124,7 @@ namespace projectfarm::shared
         std::ifstream file(filePath);
         if (!file.is_open())
         {
-            this->LogMessage("Failed to load " + filePath.u8string());
+            api::logging::Log("Failed to load " + filePath.u8string());
             return false;
         }
 

@@ -3,19 +3,18 @@
 
 #include <filesystem>
 
-#include "logging/consume_logger.h"
-
 namespace projectfarm::server
 {
-    class SystemArguments final : public shared::ConsumeLogger
+    class SystemArguments final
     {
     public:
         SystemArguments() = default;
-        ~SystemArguments() override = default;
+        ~SystemArguments() = default;
 
         void SetArguments(int argc, char* argv[]);
 
-        [[nodiscard]] std::filesystem::path GetBinaryPath() const
+        [[nodiscard]]
+        std::filesystem::path GetBinaryPath() const
         {
             return this->_binaryPath;
         }

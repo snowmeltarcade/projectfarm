@@ -1,16 +1,15 @@
 #ifndef PROJECTFARM_ACTION_TILE_ACTION_BASE_H
 #define PROJECTFARM_ACTION_TILE_ACTION_BASE_H
 
-#include "logging/consume_logger.h"
-
 namespace projectfarm::engine::world::action_tile_actions
 {
-    class ActionTileActionBase : public shared::ConsumeLogger
+    class ActionTileActionBase
     {
     public:
-        ~ActionTileActionBase() override = default;
+        ~ActionTileActionBase() = default;
 
-        [[nodiscard]] virtual bool Run() noexcept = 0;
+        [[nodiscard]]
+        virtual bool Run() noexcept = 0;
     };
 }
 

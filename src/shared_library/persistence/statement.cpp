@@ -20,7 +20,7 @@ namespace projectfarm::shared::persistence
         }
 
         auto res = std::all_of(this->_statements.begin(), this->_statements.end(),
-                      [this](auto& statement) -> bool
+                      [](auto& statement) -> bool
                       {
                         if (auto r = sqlite3_finalize(statement); r != SQLITE_OK)
                         {

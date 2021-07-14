@@ -5,18 +5,17 @@
 
 #include "scripting/script_factory.h"
 #include "scripting/script.h"
-#include "logging/consume_logger.h"
 
 namespace projectfarm::engine::scripting
 {
-    class ServerScriptFactory final : public shared::scripting::ScriptFactory,
-                                      public shared::ConsumeLogger
+    class ServerScriptFactory final : public shared::scripting::ScriptFactory
     {
     public:
         ServerScriptFactory() = default;
         ~ServerScriptFactory() override = default;
 
-        [[nodiscard]] std::shared_ptr<shared::scripting::Script> CreateScript(shared::scripting::ScriptTypes type) noexcept override;
+        [[nodiscard]]
+        std::shared_ptr<shared::scripting::Script> CreateScript(shared::scripting::ScriptTypes type) noexcept override;
     };
 }
 

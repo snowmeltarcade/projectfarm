@@ -3,26 +3,25 @@
 #include <SDL_net.h>
 
 #include "server.h"
-
 #include "networking/udp_packet_base.h"
 #include "networking/packet_factory.h"
 #include "networking/packets/server_client_set_player_details.h"
 #include "networking/packets/client_server_player_authenticate.h"
 #include "networking/packets/client_server_request_hashed_password.h"
 #include "networking/packets/server_client_send_hashed_password.h"
+#include "api/logging/logging.h"
 
 namespace projectfarm::server
 {
 	void Server::Run(int argc, char* argv[])
 	{
-		this->_logger->LogMessage("Starting server...");
+		shared::api::logging::Log("Starting server...");
 
-        this->_systemArguments.SetLogger(this->_logger);
         this->_systemArguments.SetArguments(argc, argv);
 
 		if (!this->Initialize())
         {
-		    this->_logger->LogMessage("Failed to initialize server.");
+		    shared::api::logging::Log("Failed to initialize server.");
 		    return;
         }
 
@@ -30,103 +29,93 @@ namespace projectfarm::server
 
 		this->Shutdown();
 
-		this->_logger->LogMessage("Exiting server.");
+		shared::api::logging::Log("Exiting server.");
 	}
 
 	bool Server::Initialize()
 	{
-		this->_logger->LogMessage("Initializing server...");
+		shared::api::logging::Log("Initializing server...");
 
 		if (SDL_Init(SDL_INIT_EVENTS) < 0)
         {
-		    this->_logger->LogMessage("Failed to init SDL.");
-            this->_logger->LogMessage(SDL_GetError());
+		    shared::api::logging::Log("Failed to init SDL.");
+            shared::api::logging::Log(SDL_GetError());
 		    return false;
         }
 
-		this->_cryptoProvider->SetLogger(this->_logger);
 		if (!this->_cryptoProvider->Initialize())
         {
-		    this->_logger->LogMessage("Failed to initialize crypto provider.");
+		    shared::api::logging::Log("Failed to initialize crypto provider.");
 		    return false;
         }
 
         this->_dataProvider = std::make_shared<projectfarm::shared::DataProvider>(this->_systemArguments.GetBinaryPath());
-        this->_dataProvider->SetLogger(this->_logger);
 		if (!this->_dataProvider->SetupServer())
         {
-		    this->_logger->LogMessage("Failed to setup data provider.");
+		    shared::api::logging::Log("Failed to setup data provider.");
 		    return false;
         }
 
-		this->_serverConfig->SetLogger(this->_logger);
 		this->_serverConfig->SetDataProvider(this->_dataProvider);
 		if (!this->_serverConfig->LoadConfig())
         {
-		    this->_logger->LogMessage("Failed to load server config.");
+		    shared::api::logging::Log("Failed to load server config.");
 		    return false;
         }
 
 		this->_randomEngine->Initialize();
 
-		this->_dataManager->SetLogger(this->_logger);
 		this->_dataManager->SetDataProvider(this->_dataProvider);
 		if (!this->_dataManager->Initialize())
         {
-		    this->_logger->LogMessage("Failed to initialize data manager.");
+		    shared::api::logging::Log("Failed to initialize data manager.");
 		    return false;
         }
 
-		this->_networking.SetLogger(this->_logger);
 		if (!this->_networking.Initialize())
 		{
-			this->_logger->LogMessage("Failed to initialize networking.");
+			shared::api::logging::Log("Failed to initialize networking.");
 			return false;
 		}
 
-		this->_packetSender->SetLogger(this->_logger);
 		if (!this->_packetSender->Initialize())
 		{
-			this->_logger->LogMessage("Failed to initialize packet sender.");
+			shared::api::logging::Log("Failed to initialize packet sender.");
 			return false;
 		}
 
-        this->_clientConnectionManager.SetLogger(this->_logger);
         if (!this->_clientConnectionManager.Initialize(this->_serverConfig))
         {
-            this->_logger->LogMessage("Failed to initialize client connection manager.");
+            shared::api::logging::Log("Failed to initialize client connection manager.");
             return false;
         }
 
-        this->_scriptFactory->SetLogger(this->_logger);
         this->_scriptSystem->SetScriptFactory(this->_scriptFactory);
         this->_scriptSystem->SetDataProvider(this->_dataProvider);
-        this->_scriptSystem->SetLogger(this->_logger);
         this->_scriptSystem->SetRandomEngine(this->_randomEngine);
         if (!this->_scriptSystem->Initialize(this->_systemArguments.GetBinaryPath()))
         {
-            this->_logger->LogMessage("Failed to initialize script system.");
+            shared::api::logging::Log("Failed to initialize script system.");
             return false;
         }
 
-        this->_actionAnimationsManager->SetLogger(this->_logger);
         this->_actionAnimationsManager->SetDataProvider(this->_dataProvider);
         this->_actionAnimationsManager->SetRandomEngine(this->_randomEngine);
         if (!this->_actionAnimationsManager->Load())
         {
-            this->_logger->LogMessage("Failed to load the action animation manager.");
+            shared::api::logging::Log("Failed to load the action animation manager.");
             return false;
         }
 
 		if (!this->CreateWorlds())
         {
-		    this->_logger->LogMessage("Failed to create worlds.");
+		    shared::api::logging::Log("Failed to create worlds.");
 		    return false;
         }
 
 		this->_shouldQuit = false;
 
-		this->_logger->LogMessage("Initialized server.");
+		shared::api::logging::Log("Initialized server.");
 
 		return true;
 	}
@@ -182,7 +171,7 @@ namespace projectfarm::server
 
 	void Server::Shutdown()
 	{
-		this->_logger->LogMessage("Shutting down server...");
+		shared::api::logging::Log("Shutting down server...");
 
         for (const auto& world : this->_worlds)
         {
@@ -200,13 +189,12 @@ namespace projectfarm::server
 
 		SDL_Quit();
 
-		this->_logger->LogMessage("Shut down server...");
+		shared::api::logging::Log("Shut down server...");
 	}
 
 	bool Server::CreateWorld(const std::string& name, const std::filesystem::path& worldFilePath)
 	{
 		auto world = std::make_shared<engine::world::World>();
-        world->SetLogger(this->_logger);
         world->SetDataProvider(this->_dataProvider);
         world->SetServer(this->GetPtr());
         world->SetPacketSender(this->_packetSender);
@@ -216,7 +204,7 @@ namespace projectfarm::server
 
 		if (!world->Load(name, worldFilePath))
 		{
-			this->_logger->LogMessage("Failed to load world: " + worldFilePath.u8string());
+			shared::api::logging::Log("Failed to load world: " + worldFilePath.u8string());
 			return false;
 		}
 
@@ -235,7 +223,7 @@ namespace projectfarm::server
 
             if (!this->CreateWorld(name, location))
             {
-                this->_logger->LogMessage("Failed to create session with location: " + location.u8string());
+                shared::api::logging::Log("Failed to create session with location: " + location.u8string());
                 return false;
             }
 
@@ -261,7 +249,7 @@ namespace projectfarm::server
 
         if (playerIt == this->_players.end())
         {
-            this->_logger->LogMessage("Failed to find player with IP: " + client->IPAddressAsString());
+            shared::api::logging::Log("Failed to find player with IP: " + client->IPAddressAsString());
             return;
         }
 
@@ -274,7 +262,7 @@ namespace projectfarm::server
 
         this->_players.erase(playerIt);
 
-        this->_logger->LogMessage("Removed player with IP: " + client->IPAddressAsString());
+        shared::api::logging::Log("Removed player with IP: " + client->IPAddressAsString());
     }
 
     void Server::OnReceivePacket(const std::shared_ptr<shared::networking::Packet>& packet,
@@ -286,7 +274,7 @@ namespace projectfarm::server
 	    auto player = this->FindPlayer(packet, client);
 	    if (player == nullptr)
         {
-	        this->_logger->LogMessage("Failed to find player, ignoring packet.");
+	        shared::api::logging::Log("Failed to find player, ignoring packet.");
 	        return;
         }
 
@@ -311,7 +299,7 @@ namespace projectfarm::server
             }
             else
             {
-                this->_logger->LogMessage("Player has no world, ignoring packet.");
+                shared::api::logging::Log("Player has no world, ignoring packet.");
                 return;
             }
         }
@@ -325,7 +313,7 @@ namespace projectfarm::server
 
 	    if (playerIter == this->_players.end())
         {
-	        this->_logger->LogMessage("Failed to find player with id: " + std::to_string(playerId));
+	        shared::api::logging::Log("Failed to find player with id: " + std::to_string(playerId));
 	        return false;
         }
 
@@ -334,7 +322,7 @@ namespace projectfarm::server
 
 	    if (worldIter == this->_worlds.end())
         {
-	        this->_logger->LogMessage("Failed to find world with name: " + destinationWorldName);
+	        shared::api::logging::Log("Failed to find world with name: " + destinationWorldName);
 	        return false;
         }
 
@@ -343,7 +331,7 @@ namespace projectfarm::server
 
 	    if (!world->AddPlayer(player, entityId))
         {
-	        this->_logger->LogMessage("Failed to add player with id: " + std::to_string(player->GetPlayerId()) +
+	        shared::api::logging::Log("Failed to add player with id: " + std::to_string(player->GetPlayerId()) +
                                       " to world: " + destinationWorldName);
 	        return false;
         }
@@ -364,7 +352,7 @@ namespace projectfarm::server
 
         if (worldIter == this->_worlds.end())
         {
-            this->_logger->LogMessage("Failed to find world with name: " + destinationWorldName);
+            shared::api::logging::Log("Failed to find world with name: " + destinationWorldName);
             return false;
         }
 
@@ -372,7 +360,7 @@ namespace projectfarm::server
 
         if (!world->AddCharacter(characterType, destinationTileType, entityId, playerId))
         {
-            this->_logger->LogMessage("Failed to add character: " + characterType +
+            shared::api::logging::Log("Failed to add character: " + characterType +
                                       " to world: " + world->GetName() +
                                       " with entity id: " + std::to_string(entityId));
             return false;
@@ -388,7 +376,7 @@ namespace projectfarm::server
 
         if (player == this->_players.end())
         {
-            this->_logger->LogMessage("Failed to find player with id: " + std::to_string(playerId));
+            shared::api::logging::Log("Failed to find player with id: " + std::to_string(playerId));
             return nullptr;
         }
 
@@ -428,7 +416,7 @@ namespace projectfarm::server
 
             if (playerIt == playersList.end())
             {
-                this->_logger->LogMessage("Failed to find player with IP: " + client->IPAddressAsString());
+                shared::api::logging::Log("Failed to find player with IP: " + client->IPAddressAsString());
                 return nullptr;
             }
 
@@ -440,7 +428,7 @@ namespace projectfarm::server
 	        auto udpPacket = std::static_pointer_cast<shared::networking::UDPPacketBase>(packet);
 	        if (!udpPacket)
             {
-	            this->_logger->LogMessage("Failed to get UDP packet base.");
+	            shared::api::logging::Log("Failed to get UDP packet base.");
 	            return nullptr;
             }
 
@@ -454,7 +442,7 @@ namespace projectfarm::server
 
             if (playerIt == playersList.end())
             {
-                this->_logger->LogMessage("Failed to find player with player id: " + std::to_string(playerId));
+                shared::api::logging::Log("Failed to find player with player id: " + std::to_string(playerId));
                 return nullptr;
             }
 
@@ -477,7 +465,7 @@ namespace projectfarm::server
         std::string currentWorld;
         if (!this->_dataManager->GetCurrentWorldByPlayerId(player->GetPlayerId(), currentWorld))
         {
-            this->_logger->LogMessage("Failed to get current world for player with id: " + std::to_string(player->GetPlayerId()));
+            shared::api::logging::Log("Failed to get current world for player with id: " + std::to_string(player->GetPlayerId()));
             return;
         }
 
@@ -496,14 +484,14 @@ namespace projectfarm::server
 
         if (world == this->_worlds.end())
         {
-            this->_logger->LogMessage("Failed to find world with name: " + currentWorld);
+            shared::api::logging::Log("Failed to find world with name: " + currentWorld);
             return;
         }
 
         if (!(*world)->AddPlayer(player, 0, false, isNewPlayerToGame))
         {
             // TODO: Inform the player of the error...
-            this->_logger->LogMessage("Failed to add player for ip address: " + std::to_string(ipAddress.host));
+            shared::api::logging::Log("Failed to add player for ip address: " + std::to_string(ipAddress.host));
             return;
         }
     }
@@ -514,7 +502,7 @@ namespace projectfarm::server
 
         if (!this->_dataManager->GetPlayerLoadDetails(playerId, loadDetails->CharacterType))
         {
-            this->_logger->LogMessage("Failed to get character load details with player id: " +
+            shared::api::logging::Log("Failed to get character load details with player id: " +
                                       std::to_string(playerId));
             return nullptr;
         }
@@ -540,7 +528,7 @@ namespace projectfarm::server
         uint32_t playerId {0};
         if (!this->_dataManager->GetPlayerIdByUserName(userName, playerId))
         {
-            this->_logger->LogMessage("Failed to get player id by username: " + userName);
+            shared::api::logging::Log("Failed to get player id by username: " + userName);
             return;
         }
 
@@ -548,22 +536,22 @@ namespace projectfarm::server
         {
             if (!this->_dataManager->InsertPlayer(userName, hashedPassword, playerId))
             {
-                this->_logger->LogMessage("Failed to insert player with username: " + userName);
+                shared::api::logging::Log("Failed to insert player with username: " + userName);
                 return;
             }
 
-            this->_logger->LogMessage("Successfully inserted player with username: " + userName +
+            shared::api::logging::Log("Successfully inserted player with username: " + userName +
                                       ". Has player id: " + std::to_string(playerId));
         }
         else
         {
             if (!this->_dataManager->UpdatePlayerLogin(userName, playerId))
             {
-                this->_logger->LogMessage("Failed to update player login with username: " + userName);
+                shared::api::logging::Log("Failed to update player login with username: " + userName);
                 return;
             }
 
-            this->_logger->LogMessage("Successfully updated player login with username: " + userName +
+            shared::api::logging::Log("Successfully updated player login with username: " + userName +
                                       ". Has player id: " + std::to_string(playerId));
         }
 
@@ -575,7 +563,7 @@ namespace projectfarm::server
 	    auto loadDetails = this->GetPlayerLoadDetails(playerId);
         if (!loadDetails)
         {
-            this->_logger->LogMessage("Failed to get player load details with player id: " + std::to_string(playerId));
+            shared::api::logging::Log("Failed to get player load details with player id: " + std::to_string(playerId));
             return;
         }
 
@@ -617,7 +605,7 @@ namespace projectfarm::server
         std::string hashedPassword;
         if (!this->_dataManager->GetHashedPassword(userName, hashedPassword))
         {
-            this->_logger->LogMessage("Failed to get hashed password for username: " + userName);
+            shared::api::logging::Log("Failed to get hashed password for username: " + userName);
             return;
         }
 

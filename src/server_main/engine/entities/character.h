@@ -13,7 +13,6 @@
 #include "entities/character_state_values.h"
 #include "entities/character_behaviour_states.h"
 #include "entities/character_behaviour_state_values.h"
-#include "logging/consume_logger.h"
 #include "data/consume_data_provider.h"
 #include "engine/data/consume_data_manager.h"
 #include "scripting/script.h"
@@ -31,7 +30,6 @@ namespace projectfarm::engine::world
 namespace projectfarm::engine::entities
 {
     class Character final : public Entity,
-                            public shared::ConsumeLogger,
                             public shared::ConsumeDataProvider,
                             public shared::scripting::ConsumeScriptSystem,
                             public engine::data::ConsumeDataManager,
