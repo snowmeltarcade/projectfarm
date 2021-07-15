@@ -32,7 +32,6 @@ namespace projectfarm::graphics
         
         SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "0");
 
-        this->_camera->SetLogger(this->_logger);
         this->_camera->SetGraphics(this->shared_from_this());
         this->_camera->SetDebugInformation(this->GetDebugInformation());
         this->_camera->SetScreenWidthInMeters(screenWidthInMeters);

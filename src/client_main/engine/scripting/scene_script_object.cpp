@@ -1,5 +1,6 @@
 #include "scene_script_object.h"
 #include "scripting/script.h"
+#include "api/logging/logging.h"
 
 namespace projectfarm::engine::scripting
 {
@@ -51,7 +52,7 @@ namespace projectfarm::engine::scripting
 
         if (args.Length() == 0)
         {
-            scene->LogMessage("Invalid number of arguments for 'SendMessage'.");
+            shared::api::logging::Log("Invalid number of arguments for 'SendMessage'.");
             return;
         }
 

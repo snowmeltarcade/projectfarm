@@ -62,11 +62,10 @@ namespace projectfarm::network_client
 		this->_tcpSocketSet = SDLNet_AllocSocketSet(1);
 		SDLNet_TCP_AddSocket(this->_tcpSocketSet, this->_tcpServerSocket);
 
-		this->_packetSender->SetLogger(this->_logger);
         this->_packetSender->SetUDPSocket(this->_udpServerSocket);
 		if (!this->_packetSender->Initialize())
 		{
-			this->_logger->LogMessage("Failed to initialize packet sender.");
+			shared::api::logging::Log("Failed to initialize packet sender.");
 			return false;
 		}
 

@@ -1,5 +1,6 @@
 #include "canvas.h"
 #include "ui.h"
+#include "api/logging/logging.h"
 
 namespace projectfarm::graphics::ui
 {
@@ -32,7 +33,7 @@ namespace projectfarm::graphics::ui
         auto normalizedJson = ui->NormalizeJson(controlJson, parameters);
         if (!this->SetCommonValuesFromJson(normalizedJson))
         {
-            this->LogMessage("Failed to set common values.");
+            shared::api::logging::Log("Failed to set common values.");
             return false;
         }
 

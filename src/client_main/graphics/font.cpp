@@ -227,7 +227,7 @@ namespace projectfarm::graphics
         this->_surface = IMG_Load(path.u8string().c_str());
         if (!this->_surface)
         {
-            this->_logger->LogMessage("Failed to load the texture: " + path.u8string() + " with error: " +
+            shared::api::logging::Log("Failed to load the texture: " + path.u8string() + " with error: " +
                                       IMG_GetError());
             return false;
         }

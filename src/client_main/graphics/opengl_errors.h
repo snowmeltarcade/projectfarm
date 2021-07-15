@@ -11,13 +11,13 @@ namespace projectfarm::graphics
 
 #ifdef DEBUG
 #define CHECK_OPENGL_ERROR \
-if (!projectfarm::graphics::CheckOpenGLErrorInternal(__FILE__, __LINE__, this->_logger)) \
+if (!projectfarm::graphics::CheckOpenGLErrorInternal(__FILE__, __LINE__)) \
 { \
     shared::api::logging::Log("OpenGL Error."); \
     return false; \
 }
 #define CHECK_OPENGL_ERROR_NO_RETURN \
-if (!projectfarm::graphics::CheckOpenGLErrorInternal(__FILE__, __LINE__, this->_logger)) \
+if (!projectfarm::graphics::CheckOpenGLErrorInternal(__FILE__, __LINE__)) \
 { \
     shared::api::logging::Log("OpenGL Error."); \
 }

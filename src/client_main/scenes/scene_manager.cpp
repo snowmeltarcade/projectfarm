@@ -50,7 +50,6 @@ namespace projectfarm::scenes
 		}
 
 		this->_currentScene = this->CreateSceneBySceneType(type);
-		this->_currentScene->SetLogger(this->_logger);
 		this->_currentScene->SetSceneManager(this->shared_from_this());
 		this->_currentScene->SetGraphics(this->GetGame()->GetGraphics());
 		this->_currentScene->SetDataProvider(this->GetGame()->GetDataProvider());

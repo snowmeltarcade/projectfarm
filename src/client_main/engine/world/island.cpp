@@ -79,7 +79,6 @@ namespace projectfarm::engine::world
         auto layers = this->BuildLayers(fs);
 
         this->_tileMap = std::make_shared<graphics::TileMap>();
-        this->_tileMap->SetLogger(this->_logger);
         this->_tileMap->SetDataProvider(this->_dataProvider);
         this->_tileMap->SetGraphics(this->GetGraphics());
         this->_tileMap->SetRenderManager(this->_renderManager);

@@ -73,7 +73,7 @@ namespace projectfarm::scenes::implemented_scenes
             ss << "Received invalid packet: ";
             ss << static_cast<int>(packetType);
 
-            this->GetSceneManager()->LogMessage(ss.str());
+            shared::api::logging::Log(ss.str());
         }
 
         return isValid;
@@ -86,7 +86,7 @@ namespace projectfarm::scenes::implemented_scenes
 
         auto playerId = serverClientSetPlayerDetails->GetPlayerId();
 
-        this->_logger->LogMessage("Setting player details. Player Id: " + std::to_string(playerId));
+        shared::api::logging::Log("Setting player details. Player Id: " + std::to_string(playerId));
 
         auto &player = this->GetSceneManager()->GetGame()->GetPlayer();
 
@@ -105,7 +105,7 @@ namespace projectfarm::scenes::implemented_scenes
 
         auto worldToLoad = serverClientLoadWorld->GetWorldToLoad();
 
-        this->_logger->LogMessage("Received packet to load this world: " + worldToLoad);
+        shared::api::logging::Log("Received packet to load this world: " + worldToLoad);
 
         this->LoadNewWorld(worldToLoad);
     }
@@ -120,7 +120,7 @@ namespace projectfarm::scenes::implemented_scenes
 
         if (userName != this->_userName)
         {
-            this->LogMessage("Received username: " + userName + " does not match expected username: " + this->_userName);
+            shared::api::logging::Log("Received username: " + userName + " does not match expected username: " + this->_userName);
             return;
         }
 
@@ -130,7 +130,7 @@ namespace projectfarm::scenes::implemented_scenes
             auto res = this->_cryptoProvider->QuickHash(this->_password);
             if (!res)
             {
-                this->LogMessage("Failed to hash password.");
+                shared::api::logging::Log("Failed to hash password.");
                 return;
             }
 
@@ -138,22 +138,22 @@ namespace projectfarm::scenes::implemented_scenes
         }
         else if (this->_cryptoProvider->Compare(this->_password, hashedPassword))
         {
-            this->LogMessage("Passwords Match :)");
+            shared::api::logging::Log("Passwords Match :)");
             this->SendServerAuthenticatePacket(hashedPassword);
         }
         else
         {
-            this->LogMessage("Passwords Don't Match :(");
+            shared::api::logging::Log("Passwords Don't Match :(");
         }
     }
 
     bool AuthenticateScene::Initialize()
     {
-        this->LogMessage("Initializing loading scene scene.");
+        shared::api::logging::Log("Initializing loading scene scene.");
 
         if (!this->SetupUI())
         {
-            this->LogMessage("Failed to setup UI.");
+            shared::api::logging::Log("Failed to setup UI.");
             return false;
         }
 
@@ -172,10 +172,10 @@ namespace projectfarm::scenes::implemented_scenes
         if (!this->_userName.empty() && !this->_password.empty())
         {
             this->_shouldLogIn = true;
-            this->LogMessage("Credentials provided. Logging in...");
+            shared::api::logging::Log("Credentials provided. Logging in...");
         }
 
-        this->LogMessage("Initialized loading scene scene.");
+        shared::api::logging::Log("Initialized loading scene scene.");
 
         return true;
     }
@@ -196,7 +196,7 @@ namespace projectfarm::scenes::implemented_scenes
         {
             if (!this->StartLoggingIn())
             {
-                this->LogMessage("Failed to start logging in.");
+                shared::api::logging::Log("Failed to start logging in.");
                 return;
             }
         }
@@ -256,13 +256,13 @@ namespace projectfarm::scenes::implemented_scenes
         this->_ui->SetScene(this->shared_from_this());
         if (!this->_ui->Initialize())
         {
-            this->LogMessage("Failed to initialize UI.");
+            shared::api::logging::Log("Failed to initialize UI.");
             return false;
         }
 
         if (!this->_ui->LoadFromFile("authenticate_screen"))
         {
-            this->LogMessage("Failed to load ui from file: authenticate_screen");
+            shared::api::logging::Log("Failed to load ui from file: authenticate_screen");
             return false;
         }
 
@@ -285,15 +285,15 @@ namespace projectfarm::scenes::implemented_scenes
     {
         if (!this->_shouldLogIn)
         {
-            this->LogMessage("Already logging in.");
+            shared::api::logging::Log("Already logging in.");
             return false;
         }
 
-        this->LogMessage("Starting to log in...");
+        shared::api::logging::Log("Starting to log in...");
 
         if (!this->SetupLoggingInUI())
         {
-            this->LogMessage("Failed to setup logging in UI.");
+            shared::api::logging::Log("Failed to setup logging in UI.");
             return false;
         }
 
@@ -367,7 +367,7 @@ namespace projectfarm::scenes::implemented_scenes
 
     void AuthenticateScene::PerformUdpTest() noexcept
     {
-        this->LogMessage("Performing UDP Test...");
+        shared::api::logging::Log("Performing UDP Test...");
 
         this->_udpTestCounter += this->GetTimer()->GetLastFrameDurationInMilliseconds();
 
@@ -393,7 +393,7 @@ namespace projectfarm::scenes::implemented_scenes
         {
             if (parameters.size() != 2)
             {
-                this->LogMessage("Invalid number of parameters for `login` scene message.");
+                shared::api::logging::Log("Invalid number of parameters for `login` scene message.");
                 return "Invalid number of parameters.";
             }
 
