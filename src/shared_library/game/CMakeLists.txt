@@ -1,8 +1,9 @@
 target_sources(
     "${SHARED_LIBRARY_PROJECT_NAME}"
     PRIVATE
-        logging.cpp
+        game.cpp
     PUBLIC
-        logging.h
-        log_levels.h
+        game.h
 )
+
+add_subdirectory("world")
