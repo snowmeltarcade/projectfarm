@@ -1,6 +1,7 @@
 #include "texture.h"
 #include "graphics.h"
 #include "opengl_errors.h"
+#include "api/logging/logging.h"
 
 namespace projectfarm::graphics
 {
@@ -9,7 +10,7 @@ namespace projectfarm::graphics
 	    auto data = this->GetGraphics()->GetTexturePool()->Get(path);
         if (data.TextureId == 0)
         {
-            this->LogMessage("Failed to create texture.");
+            shared::api::logging::Log("Failed to create texture.");
             return false;
         }
 
@@ -30,7 +31,7 @@ namespace projectfarm::graphics
 
         if (data.TextureId == 0)
         {
-            this->LogMessage("Failed to create texture.");
+            shared::api::logging::Log("Failed to create texture.");
             return false;
         }
 
@@ -105,8 +106,8 @@ namespace projectfarm::graphics
 		                                                     this->_renderToWorldSpace,
 		                                                     renderLayerIndex))
 		{
-			this->_logger->LogMessage("Failed to render texture.");
-			this->_logger->LogMessage(SDL_GetError());
+			shared::api::logging::Log("Failed to render texture.");
+			shared::api::logging::Log(SDL_GetError());
 			return;
 		}
 	}

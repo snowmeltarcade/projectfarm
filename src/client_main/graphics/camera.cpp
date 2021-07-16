@@ -170,7 +170,7 @@ namespace projectfarm::graphics
 
         if (defaultResolution == this->_defaultScreenResolutions.end())
         {
-            this->LogMessage("Failed to find default resolution.");
+            shared::api::logging::Log("Failed to find default resolution.");
             return {};
         }
 

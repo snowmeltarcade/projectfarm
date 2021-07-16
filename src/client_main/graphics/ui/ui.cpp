@@ -18,13 +18,11 @@ namespace projectfarm::graphics::ui
 		shared::api::logging::Log("Initializing UI...");
 
 		this->_baseCanvas->SetGraphics(this->GetGraphics());
-		this->_baseCanvas->SetLogger(this->_logger);
 
 		this->ReconfirmSize();
 
 		this->_styles = std::make_shared<Styles>();
 		this->_styles->SetDataProvider(this->_dataProvider);
-		this->_styles->SetLogger(this->_logger);
 		if (!this->_styles->Initialize())
         {
 		    shared::api::logging::Log("Failed to initialize styles.");
@@ -326,7 +324,6 @@ namespace projectfarm::graphics::ui
             return {};
         }
 
-        control->SetLogger(this->_logger);
         control->SetGraphics(this->GetGraphics());
         control->SetDataProvider(this->_dataProvider);
         control->SetUI(this->shared_from_this());

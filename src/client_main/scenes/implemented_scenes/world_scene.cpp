@@ -118,7 +118,7 @@ namespace projectfarm::scenes::implemented_scenes
 
         auto worldToLoad = serverClientLoadWorld->GetWorldToLoad();
 
-        this->_logger->LogMessage("Received packet to load this world: " + worldToLoad);
+        shared::api::logging::Log("Received packet to load this world: " + worldToLoad);
 
         this->GetSceneManager()->AddLoadSceneParameter(WorldScene::LoadParameter_WorldName, worldToLoad);
         this->GetSceneManager()->QueueLoadScene(projectfarm::scenes::SceneTypes::Loading);
@@ -307,7 +307,6 @@ namespace projectfarm::scenes::implemented_scenes
         shared::api::logging::Log("Loading world: " + worldName);
 
         this->_world = std::make_shared<engine::world::World>();
-        this->_world->SetLogger(this->_logger);
         this->_world->SetDataProvider(this->_dataProvider);
         this->_world->SetGraphics(this->GetGraphics());
         this->_world->SetRenderManager(this->_renderManager);
@@ -363,8 +362,6 @@ namespace projectfarm::scenes::implemented_scenes
     bool WorldScene::SetupUI()
     {
         this->_ui = std::make_shared<projectfarm::graphics::ui::UI>();
-
-        this->_ui->SetLogger(this->_logger);
         this->_ui->SetGraphics(this->GetGraphics());
         this->_ui->SetDataProvider(this->_dataProvider);
         this->_ui->SetFontManager(this->_fontManager);

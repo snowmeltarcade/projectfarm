@@ -25,7 +25,6 @@ namespace projectfarm::graphics
 
             const auto& shaders = jsonFile["shaders"];
 
-            this->_shaderProgram.SetLogger(this->_logger);
             if (!this->_shaderProgram.Create())
             {
                 shared::api::logging::Log("Failed to create shader program.");

@@ -5,6 +5,7 @@
 #include "engine/action_types.h"
 #include "character_appearance_manager.h"
 #include "character_appearance_library.h"
+#include "api/logging/logging.h"
 
 using namespace std::literals::string_literals;
 
@@ -48,11 +49,9 @@ namespace projectfarm::engine::entities
         this->_stateMachine = std::make_shared<StateMachineType>(StateIdle);
 
         this->_characterAppearanceManager = std::make_unique<CharacterAppearanceManager>(StateIdle);
-        this->_characterAppearanceManager->SetLogger(this->_logger);
         this->_characterAppearanceManager->SetTileSetPool(this->_tileSetPool);
 
         this->_tileMap = std::make_shared<graphics::TileMap>();
-        this->_tileMap->SetLogger(this->_logger);
         this->_tileMap->SetDataProvider(this->_dataProvider);
         this->_tileMap->SetGraphics(this->GetGraphics());
         this->_tileMap->SetRenderManager(this->_renderManager);
@@ -65,7 +64,7 @@ namespace projectfarm::engine::entities
         if (!this->_tileMap->LoadDirect(5, 1, 1,
                                         tileWidthInPixels, tileHeightInPixels))
         {
-            this->LogMessage("Failed to load tilemap.");
+            shared::api::logging::Log("Failed to load tilemap.");
             return false;
         }
 
@@ -223,7 +222,7 @@ namespace projectfarm::engine::entities
         }
         else
         {
-            this->LogMessage("Unknown action: " + std::to_string(static_cast<uint32_t>(action)));
+            shared::api::logging::Log("Unknown action: " + std::to_string(static_cast<uint32_t>(action)));
             return;
         }
 
@@ -315,7 +314,7 @@ namespace projectfarm::engine::entities
         }
         else
         {
-            this->LogMessage("Unknown character state: " +
+            shared::api::logging::Log("Unknown character state: " +
                              std::to_string(static_cast<uint8_t>(currentState.GetKey())) +
                              ":" + std::to_string(static_cast<uint8_t>(currentState.GetValue())));
         }
@@ -427,7 +426,7 @@ namespace projectfarm::engine::entities
             auto paths = library->GetCharacterAppearanceFilePaths(type, part);
             if (paths.empty())
             {
-                this->LogMessage("Failed to get character appearance file paths for type: '" + type + "' and part: '" + part + "'");
+                shared::api::logging::Log("Failed to get character appearance file paths for type: '" + type + "' and part: '" + part + "'");
                 return;
             }
 
@@ -440,7 +439,7 @@ namespace projectfarm::engine::entities
 
         if (!this->_characterAppearanceManager->LoadCharacterAppearanceFile(path, layerIndex))
         {
-            this->LogMessage("Failed to load character appearance file with path: " + path.u8string());
+            shared::api::logging::Log("Failed to load character appearance file with path: " + path.u8string());
             return;
         }
     }

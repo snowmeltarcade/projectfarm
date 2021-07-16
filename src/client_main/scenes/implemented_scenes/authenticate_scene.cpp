@@ -248,7 +248,6 @@ namespace projectfarm::scenes::implemented_scenes
     {
         this->_ui = std::make_shared<projectfarm::graphics::ui::UI>();
 
-        this->_ui->SetLogger(this->_logger);
         this->_ui->SetGraphics(this->GetGraphics());
         this->_ui->SetDataProvider(this->_dataProvider);
         this->_ui->SetFontManager(this->_fontManager);

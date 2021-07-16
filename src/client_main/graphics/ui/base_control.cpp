@@ -314,7 +314,7 @@ namespace projectfarm::graphics::ui
             // override any previous styles
             if (cssClass)
             {
-                this->_style = std::make_shared<ControlStyle>(*cssClass, this->_logger, this->_dataProvider);
+                this->_style = std::make_shared<ControlStyle>(*cssClass, this->_dataProvider);
             }
         }
 
@@ -468,7 +468,6 @@ namespace projectfarm::graphics::ui
         if (!this->_maskTexture)
         {
             this->_maskTexture = std::make_shared<graphics::Texture>();
-            this->_maskTexture->SetLogger(this->_logger);
             this->_maskTexture->SetGraphics(this->GetGraphics());
         }
 

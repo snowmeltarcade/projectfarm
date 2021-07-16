@@ -109,15 +109,12 @@ namespace projectfarm::graphics
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         CHECK_OPENGL_ERROR
 
-        this->_texturePool->SetLogger(this->_logger);
         this->_texturePool->SetDebugInformation(this->GetDebugInformation());
         this->_texturePool->SetGraphics(this->shared_from_this());
 
-        this->_tileSetPool->SetLogger(this->_logger);
         this->_tileSetPool->SetDataProvider(this->_dataProvider);
         this->_tileSetPool->SetGraphics(this->shared_from_this());
 
-		this->_renderManager->SetLogger(this->_logger);
         this->_renderManager->SetGraphics(this->shared_from_this());
 		if (!this->_renderManager->Load())
         {
@@ -136,7 +133,6 @@ namespace projectfarm::graphics
         for (const auto& [name, path] : this->_dataProvider->GetGraphicsShaderLocations())
         {
             auto shader = std::make_shared<Shader>();
-            shader->SetLogger(this->_logger);
             shader->SetDataProvider(this->_dataProvider);
 
             if (!shader->Load(name))
@@ -158,7 +154,6 @@ namespace projectfarm::graphics
         for (const auto& [name, path] : this->_dataProvider->GetGraphicsMaterialLocations())
         {
             auto material = std::make_shared<Material>();
-            material->SetLogger(this->_logger);
             material->SetDataProvider(this->_dataProvider);
             material->SetGraphics(this->shared_from_this());
 
@@ -171,14 +166,12 @@ namespace projectfarm::graphics
             this->_materials[name] = material;
         }
 
-        this->_mesh.SetLogger(this->_logger);
         this->_mesh.SetGraphics(this->shared_from_this());
         if (!this->_mesh.Load())
         {
             shared::api::logging::Log("Failed to load mesh.");
         }
 
-        this->_shapeMesh.SetLogger(this->_logger);
         this->_shapeMesh.SetGraphics(this->shared_from_this());
         if (!this->_shapeMesh.Load())
         {

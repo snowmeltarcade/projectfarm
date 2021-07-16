@@ -3,6 +3,7 @@
 #include "mouse_cursor.h"
 #include "graphics/graphics.h"
 #include "engine/mouse_input.h"
+#include "api/logging/logging.h"
 
 namespace projectfarm::graphics::ui
 {
@@ -15,13 +16,12 @@ namespace projectfarm::graphics::ui
         }
 
         this->_texture = std::make_shared<Texture>();
-        this->_texture->SetLogger(this->_logger);
         this->_texture->SetGraphics(this->GetGraphics());
 
         auto path = this->_style->Textures[0];
         if (!this->_texture->Load(path))
         {
-            this->LogMessage("Failed to load mouse cursor texture: " + path.u8string());
+            shared::api::logging::Log("Failed to load mouse cursor texture: " + path.u8string());
             return false;
         }
 
@@ -29,8 +29,8 @@ namespace projectfarm::graphics::ui
 
         if (SDL_ShowCursor(SDL_DISABLE) < 0)
         {
-            this->LogMessage("Failed hide cursor.");
-            this->LogMessage(SDL_GetError());
+            shared::api::logging::Log("Failed hide cursor.");
+            shared::api::logging::Log(SDL_GetError());
             return false;
         }
 
@@ -75,8 +75,8 @@ namespace projectfarm::graphics::ui
 
         if (SDL_ShowCursor(SDL_ENABLE) < 0)
         {
-            this->LogMessage("Failed show cursor.");
-            this->LogMessage(SDL_GetError());
+            shared::api::logging::Log("Failed show cursor.");
+            shared::api::logging::Log(SDL_GetError());
         }
     }
 
@@ -100,13 +100,13 @@ namespace projectfarm::graphics::ui
 
         if (!this->SetCommonValuesFromJson(normalizedJson))
         {
-            this->LogMessage("Failed to set common values.");
+            shared::api::logging::Log("Failed to set common values.");
             return false;
         }
 
         if (!this->Create())
         {
-            this->LogMessage("Failed to create mouse cursor.");
+            shared::api::logging::Log("Failed to create mouse cursor.");
             return false;
         }
 
@@ -123,7 +123,7 @@ namespace projectfarm::graphics::ui
 
         if (!this->Create())
         {
-            this->LogMessage("Failed to reload mouse cursor when applying style.");
+            shared::api::logging::Log("Failed to reload mouse cursor when applying style.");
         }
     }
 }

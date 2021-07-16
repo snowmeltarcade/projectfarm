@@ -37,9 +37,9 @@ namespace projectfarm::graphics
         SDL_Surface* surface = IMG_Load(imagePath.c_str());
         if (surface == nullptr)
         {
-            this->_logger->LogMessage("Failed to load the texture:");
-            this->_logger->LogMessage(imagePath);
-            this->_logger->LogMessage(IMG_GetError());
+            shared::api::logging::Log("Failed to load the texture:");
+            shared::api::logging::Log(imagePath);
+            shared::api::logging::Log(IMG_GetError());
             return data;
         }
 

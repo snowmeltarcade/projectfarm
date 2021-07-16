@@ -103,7 +103,7 @@ namespace projectfarm::engine
 
 		if (!this->_networking.Initialize())
 		{
-			this->_networking.LogMessage("Failed to initialize networking.");
+			shared::api::logging::Log("Failed to initialize networking.");
 			return false;
 		}
 
@@ -111,7 +111,7 @@ namespace projectfarm::engine
 		if (!this->_networkClient->Initialize(this->_clientConfig.GetHostName(), this->_clientConfig.GetTcpPort(),
 		                                      this->_clientConfig.GetClientUdpPort(), this->_clientConfig.GetServerUdpPort()))
 		{
-			this->_networkClient->LogMessage("Failed to initialize network client.");
+			shared::api::logging::Log("Failed to initialize network client.");
 			return false;
 		}
 
@@ -126,7 +126,6 @@ namespace projectfarm::engine
 
         this->_scriptSystem->SetScriptFactory(this->_scriptFactory);
         this->_scriptSystem->SetDataProvider(this->_dataProvider);
-        this->_scriptSystem->SetLogger(this->_logger);
         this->_scriptSystem->SetRandomEngine(this->_randomEngine);
         if (!this->_scriptSystem->Initialize(this->_systemArguments.GetBinaryPath()))
         {
@@ -216,7 +215,7 @@ namespace projectfarm::engine
 
             if (!this->_sceneManager->HandleQueuedScene([this](){ this->SceneLoaded(); }))
             {
-                this->GetLogger()->LogMessage("Failed to load queued scene.");
+                shared::api::logging::Log("Failed to load queued scene.");
                 return;
             }
 
@@ -264,14 +263,14 @@ namespace projectfarm::engine
 			}
             case SDL_APP_TERMINATING:
             {
-                this->GetLogger()->LogMessage("Event: Terminating");
+                shared::api::logging::Log("Event: Terminating");
                 
                 this->QuitGame();
                 break;
             }
             case SDL_APP_LOWMEMORY:
             {
-                this->GetLogger()->LogMessage("Event: Low Memory");
+                shared::api::logging::Log("Event: Low Memory");
                 
                 this->LowerMemoryPressure();
                 break;
@@ -280,29 +279,29 @@ namespace projectfarm::engine
             {
                 this->EnterLowerActivityState();
                 
-                this->GetLogger()->LogMessage("Event: Will Enter Background");
+                shared::api::logging::Log("Event: Will Enter Background");
                 break;
             }
             case SDL_APP_DIDENTERBACKGROUND:
             {
-                this->GetLogger()->LogMessage("Event: Did Enter Background");
+                shared::api::logging::Log("Event: Did Enter Background");
                 break;
             }
             case SDL_APP_WILLENTERFOREGROUND:
             {
                 this->ResumeFromLowerActivityState();
                 
-                this->GetLogger()->LogMessage("Event: Will Enter Foreground");
+                shared::api::logging::Log("Event: Will Enter Foreground");
                 break;
             }
             case SDL_APP_DIDENTERFOREGROUND:
             {
-                this->GetLogger()->LogMessage("Event: Did Enter Foreground");
+                shared::api::logging::Log("Event: Did Enter Foreground");
                 break;
             }
 			case SDL_QUIT:
 			{
-                this->GetLogger()->LogMessage("Event: Quit");
+                shared::api::logging::Log("Event: Quit");
                 
 				this->QuitGame();
 				break;

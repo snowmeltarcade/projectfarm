@@ -83,7 +83,6 @@ namespace projectfarm::network_client
 		        this->_tcpServerSocket, this->_udpServerSocket,
 		        this->_tcpSocketSet, this->_udpPacket);
 
-		this->_networkClientWorker->SetLogger(this->_logger);
 		this->_networkClientWorker->SetSceneManager(this->GetSceneManager());
 
 		this->_networkClientWorker->RunThread();

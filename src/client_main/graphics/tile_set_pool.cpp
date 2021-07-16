@@ -10,7 +10,6 @@ namespace projectfarm::graphics
         if (this->_items.count(name) == 0)
         {
             auto tileSet = std::make_shared<graphics::TileSet>();
-            tileSet->SetLogger(this->_logger);
             tileSet->SetGraphics(this->GetGraphics());
             tileSet->SetDataProvider(this->_dataProvider);
 

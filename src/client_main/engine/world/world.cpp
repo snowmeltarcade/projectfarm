@@ -62,7 +62,6 @@ namespace projectfarm::engine::world
         this->_name = pfu::ReadStringFromBinaryFile(fs);
 
         auto island = std::make_shared<Island>();
-        island->SetLogger(this->_logger);
         island->SetDataProvider(this->_dataProvider);
         island->SetGraphics(this->GetGraphics());
         island->SetRenderManager(this->_renderManager);
@@ -100,7 +99,6 @@ namespace projectfarm::engine::world
         for (const auto& islandJson : islandsJson)
         {
             auto island = std::make_shared<Island>();
-            island->SetLogger(this->_logger);
             island->SetDataProvider(this->_dataProvider);
             island->SetGraphics(this->GetGraphics());
             island->SetRenderManager(this->_renderManager);
@@ -236,7 +234,6 @@ namespace projectfarm::engine::world
     bool World::LoadBackgroundIsland(const nlohmann::json& islandJson)
     {
         this->_backgroundIsland = std::make_shared<Island>();
-        this->_backgroundIsland->SetLogger(this->_logger);
         this->_backgroundIsland->SetDataProvider(this->_dataProvider);
         this->_backgroundIsland->SetGraphics(this->GetGraphics());
         this->_backgroundIsland->SetRenderManager(this->_renderManager);
@@ -351,7 +348,6 @@ namespace projectfarm::engine::world
             return nullptr;
         }
 
-        entity->SetLogger(this->_logger);
         entity->SetTimer(this->GetTimer());
         entity->SetEntityId(entityId);
 

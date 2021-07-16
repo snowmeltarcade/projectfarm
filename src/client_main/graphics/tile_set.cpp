@@ -48,7 +48,6 @@ namespace projectfarm::graphics
         this->_tileWidth = tileWidth;
         this->_tileHeight = tileHeight;
 
-        this->_texture->SetLogger(this->_logger);
         this->_texture->SetGraphics(this->GetGraphics());
 
         if (!this->_texture->Load(imagePath))
