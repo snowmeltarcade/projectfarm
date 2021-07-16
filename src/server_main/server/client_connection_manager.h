@@ -9,7 +9,6 @@
 #include <SDL_net.h>
 
 #include "client.h"
-#include "logging/consume_logger.h"
 #include "networking/packet_sender.h"
 #include "client_connection_manager_worker.h"
 #include "server_config.h"
@@ -18,11 +17,11 @@ namespace projectfarm::server
 {
     class Server;
 
-	class ClientConnectionManager : public projectfarm::shared::ConsumeLogger
+	class ClientConnectionManager final
 	{
 	public:
 		ClientConnectionManager() = default;
-		~ClientConnectionManager() override = default;
+		~ClientConnectionManager() = default;
 
 		[[nodiscard]]
         bool Initialize(const std::shared_ptr<ServerConfig>& config) noexcept;

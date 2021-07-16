@@ -5,28 +5,32 @@
 #include <memory>
 #include <algorithm>
 
-#include "logging/consume_logger.h"
 #include "ui/ui.h"
 #include "render_layer.h"
 #include "graphics/colors/color.h"
 
 namespace projectfarm::graphics
 {
-    class RenderManager final : public shared::ConsumeLogger,
-                                public ConsumeGraphics
+    class RenderManager final : public ConsumeGraphics
     {
     public:
         RenderManager() = default;
         ~RenderManager() override = default;
 
-        [[nodiscard]] bool Load();
+        [[nodiscard]]
+        bool Load();
+
         void Shutdown();
 
-        [[nodiscard]] bool AddRenderLayer(uint16_t layerId);
-        [[nodiscard]] bool AddRenderable(uint16_t layerId, const std::shared_ptr<graphics::Renderable>& renderable);
+        [[nodiscard]]
+        bool AddRenderLayer(uint16_t layerId);
+
+        [[nodiscard]]
+        bool AddRenderable(uint16_t layerId, const std::shared_ptr<graphics::Renderable>& renderable);
 
 #ifdef DEBUG
-        [[nodiscard]] bool AddRenderableToDebugLayer(const std::shared_ptr<graphics::Renderable>& renderable);
+        [[nodiscard]]
+        bool AddRenderableToDebugLayer(const std::shared_ptr<graphics::Renderable>& renderable);
 #endif
 
         void Render();
@@ -36,7 +40,8 @@ namespace projectfarm::graphics
             this->_uis.emplace_back(ui);
         }
 
-        [[nodiscard]] std::shared_ptr<graphics::RenderLayer> GetRenderLayerByLayerId(uint16_t layerId)
+        [[nodiscard]]
+        std::shared_ptr<graphics::RenderLayer> GetRenderLayerByLayerId(uint16_t layerId)
         {
             auto it = std::find_if(this->_renderLayers.begin(), this->_renderLayers.end(),
                     [layerId](const auto& layer) -> bool { return layer->GetLayerId() == layerId; });

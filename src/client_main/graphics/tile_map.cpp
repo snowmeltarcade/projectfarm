@@ -6,12 +6,13 @@
 #include "tile_set_pool.h"
 #include "graphics.h"
 #include "time/timer.h"
+#include "api/logging/logging.h"
 
 namespace projectfarm::graphics
 {
     bool TileMap::Load(const std::filesystem::path& filePath)
     {
-        this->LogMessage("Loading tile map from " + filePath.u8string());
+        shared::api::logging::Log("Loading tile map from " + filePath.u8string());
 
         std::ifstream file(filePath);
 
@@ -32,7 +33,7 @@ namespace projectfarm::graphics
 
         if (!this->LoadDirect(numberOfLayers, widthInTiles, heightInTiles, tileWidth, tileHeight))
         {
-            this->LogMessage("Failed to load tilemap from " + filePath.u8string());
+            shared::api::logging::Log("Failed to load tilemap from " + filePath.u8string());
             this->Shutdown();
             return false;
         }
@@ -43,7 +44,7 @@ namespace projectfarm::graphics
         {
             if (!this->LoadTileSet(tileSet))
             {
-                this->LogMessage("Failed to load tileset: " + tileSet.dump());
+                shared::api::logging::Log("Failed to load tileset: " + tileSet.dump());
                 this->Shutdown();
                 return false;
             }
@@ -55,7 +56,7 @@ namespace projectfarm::graphics
         {
             if (!this->LoadTile(tile))
             {
-                this->LogMessage("Failed to load tile: " + tile.dump());
+                shared::api::logging::Log("Failed to load tile: " + tile.dump());
                 this->Shutdown();
                 return false;
             }
@@ -63,14 +64,14 @@ namespace projectfarm::graphics
 
         this->_isLoaded = true;
 
-        this->LogMessage("Loaded tile map.");
+        shared::api::logging::Log("Loaded tile map.");
 
         return true;
     }
 
     void TileMap::Shutdown()
     {
-        this->LogMessage("Shutting down tile map...");
+        shared::api::logging::Log("Shutting down tile map...");
 
         this->_tileLayers.clear();
 
@@ -78,7 +79,7 @@ namespace projectfarm::graphics
 
         this->_isLoaded = false;
 
-        this->LogMessage("Shutdown tile map.");
+        shared::api::logging::Log("Shutdown tile map.");
     }
 
     void TileMap::ClearTileSets() noexcept
@@ -178,7 +179,7 @@ namespace projectfarm::graphics
     {
         if (this->_isLoaded)
         {
-            this->LogMessage("Tilemap is already loaded.");
+            shared::api::logging::Log("Tilemap is already loaded.");
             return false;
         }
 
@@ -189,7 +190,7 @@ namespace projectfarm::graphics
             this->_tileLayers.emplace_back(std::make_shared<TileMapTileLayer>());
             if (!this->_tileLayers[i]->Setup(widthInTiles, heightInTiles))
             {
-                this->LogMessage("Failed to create tilemap layer: " + std::to_string(i));
+                shared::api::logging::Log("Failed to create tilemap layer: " + std::to_string(i));
                 return false;
             }
         }
@@ -206,7 +207,7 @@ namespace projectfarm::graphics
     {
         if (tileSet == nullptr)
         {
-            this->LogMessage("Trying to set a null tileset with tileSetId: " + std::to_string(tileSetId));
+            shared::api::logging::Log("Trying to set a null tileset with tileSetId: " + std::to_string(tileSetId));
             return false;
         }
 
@@ -225,19 +226,19 @@ namespace projectfarm::graphics
     {
         if (this->_tileSets.count(tileSetId) <= 0)
         {
-            this->LogMessage("Failed to find tile set with id: " + std::to_string(tileSetId));
+            shared::api::logging::Log("Failed to find tile set with id: " + std::to_string(tileSetId));
             return false;
         }
 
         if (layer >= this->_tileLayers.size())
         {
-            this->LogMessage("Invalid tilemap layer id: " + std::to_string(layer));
+            shared::api::logging::Log("Invalid tilemap layer id: " + std::to_string(layer));
             return false;
         }
 
         if (!this->_tileSets[tileSetId]->IsAbsoluteIndexValid(indexAbsolute))
         {
-            this->LogMessage("Invalid absolute index: " + std::to_string(tileSetId) +
+            shared::api::logging::Log("Invalid absolute index: " + std::to_string(tileSetId) +
                                 "for tileset: " + std::to_string(indexAbsolute));
             return false;
         }
@@ -254,7 +255,6 @@ namespace projectfarm::graphics
         if (tileIter == this->_tiles.end())
         {
             std::shared_ptr<TileMapTile> tile {std::make_shared<TileMapTile>(1)};
-            tile->SetLogger(this->_logger);
 
             tile->SetFrame(0, tileSetId, indexAbsolute, 0);
 
@@ -277,7 +277,7 @@ namespace projectfarm::graphics
     {
         if (layer >= this->_tileLayers.size())
         {
-            this->LogMessage("Invalid tilemap layer id: " + std::to_string(layer));
+            shared::api::logging::Log("Invalid tilemap layer id: " + std::to_string(layer));
             return false;
         }
 
@@ -294,7 +294,6 @@ namespace projectfarm::graphics
         if (tileIter == this->_tiles.end())
         {
             auto tile = std::make_shared<TileMapTile>(static_cast<uint32_t>(animationData.size()));
-            tile->SetLogger(this->_logger);
 
             auto frame = 0u;
             for (const auto& data : animationData)
@@ -303,20 +302,20 @@ namespace projectfarm::graphics
 
                 if (this->_tileSets.count(tileSetId) <= 0)
                 {
-                    this->LogMessage("Failed to find tile set with id: " + std::to_string(data.GetTileSetId()));
+                    shared::api::logging::Log("Failed to find tile set with id: " + std::to_string(data.GetTileSetId()));
                     return false;
                 }
 
                 if (!this->_tileSets[tileSetId]->IsAbsoluteIndexValid(data.GetIndexAbsolute()))
                 {
-                    this->LogMessage("Invalid absolute index: " + std::to_string(data.GetIndexAbsolute()) +
+                    shared::api::logging::Log("Invalid absolute index: " + std::to_string(data.GetIndexAbsolute()) +
                                      " for tileset: " + std::to_string(data.GetTileSetId()));
                     return false;
                 }
 
                 if (frame >= tile->GetNumberOfFrames())
                 {
-                    this->LogMessage("Frame: " + std::to_string(frame) +
+                    shared::api::logging::Log("Frame: " + std::to_string(frame) +
                                      " is greater than number of frames in tile: " + std::to_string(tile->GetNumberOfFrames()));
                     return false;
                 }
@@ -348,13 +347,13 @@ namespace projectfarm::graphics
         auto tileSet = this->GetGraphics()->GetTileSetPool()->Get(name);
         if (tileSet == nullptr)
         {
-            this->LogMessage("Failed to load tileset: " + name);
+            shared::api::logging::Log("Failed to load tileset: " + name);
             return false;
         }
 
         if (!this->SetTileSet(index, tileSet))
         {
-            this->LogMessage("Failed to set tileset with index: " + std::to_string(index));
+            shared::api::logging::Log("Failed to set tileset with index: " + std::to_string(index));
             return false;
         }
 
@@ -371,7 +370,7 @@ namespace projectfarm::graphics
 
         if (!this->SetTileIndex(tileSetId, layer, tileX, tileY, indexAbsolute))
         {
-            this->LogMessage("Failed to load tile: " + tile.dump());
+            shared::api::logging::Log("Failed to load tile: " + tile.dump());
             return false;
         }
 

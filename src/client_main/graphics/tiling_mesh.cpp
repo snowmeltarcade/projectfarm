@@ -1,5 +1,6 @@
 #include "tiling_mesh.h"
 #include "graphics.h"
+#include "api/logging/logging.h"
 
 namespace projectfarm::graphics
 {
@@ -127,7 +128,7 @@ namespace projectfarm::graphics
     {
         if (!texture)
         {
-            this->LogMessage("Null texture.");
+            shared::api::logging::Log("Null texture.");
             return;
         }
 

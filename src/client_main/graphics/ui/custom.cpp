@@ -5,6 +5,7 @@
 #include "custom.h"
 #include "graphics/graphics.h"
 #include "utils/util.h"
+#include "api/logging/logging.h"
 
 namespace projectfarm::graphics::ui
 {
@@ -32,7 +33,7 @@ namespace projectfarm::graphics::ui
 
         if (!this->SetCommonValuesFromJson(normalizedJson))
         {
-            this->LogMessage("Failed to set common values.");
+            shared::api::logging::Log("Failed to set common values.");
             return false;
         }
 
@@ -45,7 +46,7 @@ namespace projectfarm::graphics::ui
 
             if (!file.is_open())
             {
-                this->LogMessage("Failed to open custom control file: " + filePath.u8string());
+                shared::api::logging::Log("Failed to open custom control file: " + filePath.u8string());
                 return false;
             }
 
@@ -55,7 +56,7 @@ namespace projectfarm::graphics::ui
             auto parameters = this->GetControlParameters(controlJson, jsonFile, parentParameters);
             if (!parameters)
             {
-                this->LogMessage("Failed to set control parameters for control file: " + filePath.u8string());
+                shared::api::logging::Log("Failed to set control parameters for control file: " + filePath.u8string());
                 return false;
             }
 
@@ -73,7 +74,7 @@ namespace projectfarm::graphics::ui
                 if (!ui->LoadControl(control, this->shared_from_this(),
                                      *parameters, style))
                 {
-                    this->LogMessage("Failed to load control: " + control.dump());
+                    shared::api::logging::Log("Failed to load control: " + control.dump());
                     return false;
                 }
             }
@@ -82,7 +83,7 @@ namespace projectfarm::graphics::ui
         }
         catch (const std::exception& ex)
         {
-            this->LogMessage("Failed to load custom control file: " + this->_name +
+            shared::api::logging::Log("Failed to load custom control file: " + this->_name +
                              " with exception: " + ex.what());
 
             return false;
@@ -154,7 +155,7 @@ namespace projectfarm::graphics::ui
         }
         catch (const std::exception& ex)
         {
-            this->LogMessage("Failed to load custom control file: " + controlJson.dump() +
+            shared::api::logging::Log("Failed to load custom control file: " + controlJson.dump() +
                              " with exception: " + ex.what());
 
             return {};
@@ -209,11 +210,11 @@ namespace projectfarm::graphics::ui
         // they are currently used for the textbox and the cursor
         if (cssValue == "texture" && !this->_style->Textures.empty())
         {
-            return this->_style->Textures[0];
+            return this->_style->Textures[0].u8string();
         }
         else if (cssValue == "texture1" && this->_style->Textures.size() > 0)
         {
-            return this->_style->Textures[1];
+            return this->_style->Textures[1].u8string();
         }
         else if (cssValue == "color")
         {

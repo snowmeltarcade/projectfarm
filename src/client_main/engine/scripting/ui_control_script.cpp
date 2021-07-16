@@ -7,6 +7,7 @@
 #include "graphics/ui/base_control.h"
 #include "engine/keyboard_input.h"
 #include "graphics/ui/control_types.h"
+#include "api/logging/logging.h"
 
 namespace projectfarm::engine::scripting
 {
@@ -55,7 +56,7 @@ namespace projectfarm::engine::scripting
 
         if (args.Length() != 0)
         {
-            control->LogMessage("Invalid number of arguments for 'GetCurrentControl'.");
+            shared::api::logging::Log("Invalid number of arguments for 'GetCurrentControl'.");
             return;
         }
 
@@ -78,7 +79,7 @@ namespace projectfarm::engine::scripting
 
         if (args.Length() != 0)
         {
-            ui->LogMessage("Invalid number of arguments for 'GetUI'.");
+            shared::api::logging::Log("Invalid number of arguments for 'GetUI'.");
             return;
         }
 
@@ -101,7 +102,7 @@ namespace projectfarm::engine::scripting
 
         if (args.Length() != 0)
         {
-            scene->LogMessage("Invalid number of arguments for 'GetScene'.");
+            shared::api::logging::Log("Invalid number of arguments for 'GetScene'.");
             return;
         }
 
@@ -124,7 +125,7 @@ namespace projectfarm::engine::scripting
 
         if (args.Length() != 0)
         {
-            keyboardInput->LogMessage("Invalid number of arguments for 'GetKeyboardInput'.");
+            shared::api::logging::Log("Invalid number of arguments for 'GetKeyboardInput'.");
             return;
         }
 

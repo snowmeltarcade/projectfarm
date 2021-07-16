@@ -8,17 +8,16 @@
 #include <unordered_map>
 
 #include "font_styles.h"
-#include "logging/consume_logger.h"
 #include "graphics/SDL_freeable_surface.h"
 #include "markdown/markdown.h"
 
 namespace projectfarm::graphics
 {
-    class Font final : public projectfarm::shared::ConsumeLogger
+    class Font final
     {
     public:
         Font() = default;
-        ~Font() override
+        ~Font()
         {
             this->Destroy();
         }

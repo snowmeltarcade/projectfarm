@@ -2,6 +2,7 @@
 
 #include "label.h"
 #include "graphics/graphics.h"
+#include "api/logging/logging.h"
 
 using namespace std::literals;
 
@@ -26,7 +27,7 @@ namespace projectfarm::graphics::ui
             auto font = this->_fontManager->GetFont(this->_style->Font);
             if (!font)
             {
-                this->LogMessage("Failed to get font: " + this->_style->Font);
+                shared::api::logging::Log("Failed to get font: " + this->_style->Font);
                 return false;
             }
 
@@ -43,19 +44,18 @@ namespace projectfarm::graphics::ui
                                                                   this->_maxLines);
             if (!surface)
             {
-                this->LogMessage("Failed to render text to surface.");
+                shared::api::logging::Log("Failed to render text to surface.");
                 return false;
             }
 
             this->_backgroundTexture = std::make_shared<graphics::Texture>();
-            this->_backgroundTexture->SetLogger(this->_logger);
             this->_backgroundTexture->SetGraphics(this->GetGraphics());
 
             this->_backgroundTexture->SetRenderToWorldSpace(false);
 
             if (!this->_backgroundTexture->LoadFromSurface(surface))
             {
-                this->LogMessage("Failed to load from surface.");
+                shared::api::logging::Log("Failed to load from surface.");
                 return false;
             }
 
@@ -95,7 +95,7 @@ namespace projectfarm::graphics::ui
             if (!this->CreateMask(this->_backgroundTexture->GetTextureWidth(),
                                   this->_backgroundTexture->GetTextureHeight()))
             {
-                this->LogMessage("Failed to create mask.");
+                shared::api::logging::Log("Failed to create mask.");
                 return false;
             }
 
@@ -164,7 +164,7 @@ namespace projectfarm::graphics::ui
 
         if (!this->SetCommonValuesFromJson(normalizedJson))
         {
-            this->LogMessage("Failed to set common values.");
+            shared::api::logging::Log("Failed to set common values.");
             return false;
         }
 
@@ -212,7 +212,7 @@ namespace projectfarm::graphics::ui
         {
           if (!this->SetText(s))
           {
-              this->LogMessage("Failed to set text from binding with text: " + s);
+              shared::api::logging::Log("Failed to set text from binding with text: " + s);
           }
         };
         ui->EnableSimpleBindingForParameter(std::make_shared<UI::SimpleBindingType>(binding),
@@ -220,7 +220,7 @@ namespace projectfarm::graphics::ui
 
         if (!this->SetText(text))
         {
-            this->LogMessage("Failed to set text with json: " + controlJson.dump());
+            shared::api::logging::Log("Failed to set text with json: " + controlJson.dump());
             return false;
         }
 
@@ -279,7 +279,7 @@ namespace projectfarm::graphics::ui
         {
             if (!this->SetText(this->_text,true))
             {
-                this->LogMessage("Failed to set text when applying style.");
+                shared::api::logging::Log("Failed to set text when applying style.");
             }
         }
     }
@@ -289,7 +289,7 @@ namespace projectfarm::graphics::ui
         auto font = this->_fontManager->GetFont(this->_style->Font);
         if (!font)
         {
-            this->LogMessage("Failed to find font with name: " + this->_style->Font);
+            shared::api::logging::Log("Failed to find font with name: " + this->_style->Font);
             return 0;
         }
 
@@ -312,7 +312,7 @@ namespace projectfarm::graphics::ui
         }
         catch (const std::invalid_argument& ex)
         {
-            this->LogMessage("Failed to convert to character position: " + std::string(parameter) +
+            shared::api::logging::Log("Failed to convert to character position: " + std::string(parameter) +
                              " with error: " + ex.what());
 
             return v;
@@ -321,7 +321,7 @@ namespace projectfarm::graphics::ui
         auto font = this->_fontManager->GetFont(this->_style->Font);
         if (!font)
         {
-            this->LogMessage("Failed to find font with name: " + this->_style->Font);
+            shared::api::logging::Log("Failed to find font with name: " + this->_style->Font);
             return v;
         }
 
@@ -406,7 +406,7 @@ namespace projectfarm::graphics::ui
     {
         if (parameters.size() != 2)
         {
-            this->LogMessage("`current_character_position_from_x_y_pos` expects 2 parameters.");
+            shared::api::logging::Log("`current_character_position_from_x_y_pos` expects 2 parameters.");
             return 0;
         }
 
@@ -415,7 +415,7 @@ namespace projectfarm::graphics::ui
 
         if (!x || !y)
         {
-            this->LogMessage("Invalid parameters for `current_character_position_from_x_y_pos`: x: " +
+            shared::api::logging::Log("Invalid parameters for `current_character_position_from_x_y_pos`: x: " +
                              parameters[0].GetValue() + " y: " + parameters[1].GetValue());
             return 0;
         }
@@ -423,7 +423,7 @@ namespace projectfarm::graphics::ui
         auto font = this->_fontManager->GetFont(this->_style->Font);
         if (!font)
         {
-            this->LogMessage("Failed to find font with name: " + this->_style->Font);
+            shared::api::logging::Log("Failed to find font with name: " + this->_style->Font);
             return 0;
         }
 

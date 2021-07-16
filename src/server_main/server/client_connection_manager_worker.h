@@ -12,14 +12,13 @@
 
 #include <SDL_net.h>
 
-#include "logging/consume_logger.h"
 #include "client.h"
 #include "networking/packet.h"
 #include "networking/packet_receiver.h"
 
 namespace projectfarm::server
 {
-    class ClientConnectionManagerWorker final : public projectfarm::shared::ConsumeLogger
+    class ClientConnectionManagerWorker final
     {
     public:
         using OnClientCallbackType = std::function<void(const std::shared_ptr<Client>&)>;
@@ -32,7 +31,7 @@ namespace projectfarm::server
             : _tcpPort {tcpPort},
               _udpPort {udpPort}
         {}
-        ~ClientConnectionManagerWorker() override = default;
+        ~ClientConnectionManagerWorker() = default;
 
         ClientConnectionManagerWorker(const ClientConnectionManagerWorker&) = delete;
         ClientConnectionManagerWorker(ClientConnectionManagerWorker&&) = delete;

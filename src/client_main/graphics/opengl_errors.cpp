@@ -2,10 +2,11 @@
 
 #include "opengl_errors.h"
 #include "graphics_dependencies.h"
+#include "api/logging/logging.h"
 
 namespace projectfarm::graphics
 {
-    bool CheckOpenGLErrorInternal(const char* fileName, uint32_t lineNumber, const std::shared_ptr<shared::Logger>& logger)
+    bool CheckOpenGLErrorInternal(const char* fileName, uint32_t lineNumber)
     {
         GLenum error = GL_NO_ERROR;
         bool hasError = false;
@@ -68,7 +69,7 @@ namespace projectfarm::graphics
             ss << "String: " << errorString << std::endl;
             ss << "**********" << std::endl;
 
-            logger->LogMessage(ss.str());
+            shared::api::logging::Log(ss.str());
 
             hasError = true;
         }

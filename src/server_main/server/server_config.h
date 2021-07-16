@@ -5,30 +5,32 @@
 #include <string>
 
 #include "data/consume_data_provider.h"
-#include "logging/consume_logger.h"
 
 namespace projectfarm::server
 {
-    class ServerConfig final : public shared::ConsumeDataProvider,
-                               public shared::ConsumeLogger
+    class ServerConfig final : public shared::ConsumeDataProvider
     {
     public:
         ServerConfig() = default;
         ~ServerConfig() override = default;
 
-        [[nodiscard]] bool LoadConfig();
+        [[nodiscard]]
+        bool LoadConfig();
 
-        [[nodiscard]] uint16_t GetTcpPort() const noexcept
+        [[nodiscard]]
+        uint16_t GetTcpPort() const noexcept
         {
             return this->_tcpPort;
         }
 
-        [[nodiscard]] uint16_t GetServerUdpPort() const noexcept
+        [[nodiscard]]
+        uint16_t GetServerUdpPort() const noexcept
         {
             return this->_serverUdpPort;
         }
 
-        [[nodiscard]] const std::string& GetStartingWorld() const noexcept
+        [[nodiscard]]
+        const std::string& GetStartingWorld() const noexcept
         {
             return this->_startingWorld;
         }

@@ -1,31 +1,32 @@
-#include "networking.h"
-
 #include <SDL_net.h>
+
+#include "networking.h"
+#include "api/logging/logging.h"
 
 namespace projectfarm::shared::networking
 {
 	bool Networking::Initialize()
 	{
-		this->LogMessage("Initializing networking...");
+		api::logging::Log("Initializing networking...");
 
 		if (SDLNet_Init() == -1)
 		{
-			this->LogMessage("Failed to initialize networking.");
-			this->LogMessage(SDL_GetError());
+			api::logging::Log("Failed to initialize networking.");
+			api::logging::Log(SDL_GetError());
 			return false;
 		}
 
-		this->LogMessage("Initialized networking.");
+		api::logging::Log("Initialized networking.");
 
 		return true;
 	}
 
 	void Networking::Shutdown()
 	{
-		this->LogMessage("Shutting down networking...");
+		api::logging::Log("Shutting down networking...");
 
 		SDLNet_Quit();
 
-		this->LogMessage("Shut down networking.");
+		api::logging::Log("Shut down networking.");
 	}
 }

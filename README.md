@@ -1,6 +1,9 @@
 # Project Farm
 A multiplayer farming simulator.
 
+## Browse Code
+[![Open in Visual Studio Code](https://open.vscode.dev/badges/open-in-vscode.svg)](https://open.vscode.dev/snowmeltarcade/projectfarm)
+
 ## Documentation
 See [here](./documentation/Documentation.md) for the technical documentation.
 

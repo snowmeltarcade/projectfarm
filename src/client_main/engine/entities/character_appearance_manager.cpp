@@ -1,6 +1,7 @@
 #include <set>
 
 #include "character_appearance_manager.h"
+#include "api/logging/logging.h"
 
 namespace projectfarm::engine::entities
 {
@@ -13,7 +14,7 @@ namespace projectfarm::engine::entities
 
             if (!file.is_open())
             {
-                this->LogMessage("Failed to open character file: " + filePath.u8string());
+                shared::api::logging::Log("Failed to open character file: " + filePath.u8string());
                 return false;
             }
 
@@ -42,7 +43,7 @@ namespace projectfarm::engine::entities
         }
         catch (const std::exception& ex)
         {
-            this->LogMessage("Failed to read character file: " + filePath.u8string() +
+            shared::api::logging::Log("Failed to read character file: " + filePath.u8string() +
                              "with exception: " + ex.what());
 
             return false;
@@ -108,13 +109,13 @@ namespace projectfarm::engine::entities
             auto tileSet = this->_tileSetPool->Get(tileSetName);
             if (tileSet == nullptr)
             {
-                this->LogMessage("Failed to get tileset with name: " + tileSetName);
+                shared::api::logging::Log("Failed to get tileset with name: " + tileSetName);
                 continue;
             }
 
             if (!tileMap->SetTileSet(tileSetId++, tileSet))
             {
-                this->LogMessage("Failed to set tileset when computing indexes in character appearance with name: " + tileSetName);
+                shared::api::logging::Log("Failed to set tileset when computing indexes in character appearance with name: " + tileSetName);
                 return;
             }
         }
@@ -132,7 +133,7 @@ namespace projectfarm::engine::entities
                 auto tileSetNameIter = tileSetIndexes.find(animation.TileSet);
                 if (tileSetNameIter == tileSetIndexes.end())
                 {
-                    this->LogMessage("Failed to find tileset with name: " + animation.TileSet);
+                    shared::api::logging::Log("Failed to find tileset with name: " + animation.TileSet);
                     continue;
                 }
 
@@ -141,7 +142,7 @@ namespace projectfarm::engine::entities
                 auto tileSet = this->_tileSetPool->Get(animation.TileSet);
                 if (tileSet == nullptr)
                 {
-                    this->LogMessage("Failed to get tileset with name: " + animation.TileSet);
+                    shared::api::logging::Log("Failed to get tileset with name: " + animation.TileSet);
                     continue;
                 }
 
@@ -155,7 +156,7 @@ namespace projectfarm::engine::entities
             // TODO: Layer with the different layers - hair, feet etc...
             if (!tileMap->SetTileIndex(layerIndex, 0, 0, animationData))
             {
-                this->LogMessage("Failed to set tile animation.");
+                shared::api::logging::Log("Failed to set tile animation.");
                 return;
             }
         }

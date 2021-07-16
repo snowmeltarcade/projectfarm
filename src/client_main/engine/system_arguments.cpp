@@ -1,11 +1,12 @@
 #include "utils/util.h"
 #include "system_arguments.h"
+#include "api/logging/logging.h"
 
 namespace projectfarm::engine
 {
 	bool SystemArguments::SetArguments(int argc, char* argv[]) noexcept
 	{
-		this->LogMessage("Arguments:");
+		shared::api::logging::Log("Arguments:");
 
 		for (int i = 0; i < argc; ++i)
 		{
@@ -13,11 +14,11 @@ namespace projectfarm::engine
 
             if (pfu::startsWith(arg, "-password"))
             {
-                this->LogMessage("-password=*****");
+                shared::api::logging::Log("-password=*****");
             }
             else
             {
-                this->LogMessage(arg);
+                shared::api::logging::Log(arg);
             }
 
 			if (i == 0)
@@ -34,7 +35,7 @@ namespace projectfarm::engine
                 auto parts = pfu::split("=", arg);
                 if (parts.size() != 2 || parts[1].empty())
                 {
-                    this->LogMessage("Please enter a username.");
+                    shared::api::logging::Log("Please enter a username.");
                     return false;
                 }
 
@@ -45,7 +46,7 @@ namespace projectfarm::engine
                 auto parts = pfu::split("=", arg);
                 if (parts.size() != 2 || parts[1].empty())
                 {
-                    this->LogMessage("Please enter a password.");
+                    shared::api::logging::Log("Please enter a password.");
                     return false;
                 }
 
@@ -56,7 +57,7 @@ namespace projectfarm::engine
 		// only one is empty, not both
 		if (this->_userName.empty() != this->_password.empty())
         {
-		    this->LogMessage("Please enter both username and password.");
+		    shared::api::logging::Log("Please enter both username and password.");
 		    return false;
         }
 

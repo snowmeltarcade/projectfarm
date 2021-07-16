@@ -3,6 +3,7 @@
 
 #include "packet_receiver.h"
 #include "networking/packet_factory.h"
+#include "api/logging/logging.h"
 
 namespace projectfarm::shared::networking
 {
@@ -15,8 +16,8 @@ namespace projectfarm::shared::networking
 
         if (udpPacket->len <= 0)
         {
-            this->LogMessage("Did not receive packet data.");
-            return nullptr;
+            api::logging::Log("Did not receive packet data.");
+            return {};
         }
 
         auto data = reinterpret_cast<std::byte*>(udpPacket->data);
@@ -90,7 +91,7 @@ namespace projectfarm::shared::networking
 
 #ifdef LOGGING_PACKET_DEBUG_INFO
             //auto debugData = packet->GetDebugData();
-            //this->LogMessage(debugData);
+            //api::logging::Log(debugData);
 #endif
 
             return {true, packet};

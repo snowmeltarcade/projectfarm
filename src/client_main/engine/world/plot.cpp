@@ -1,4 +1,5 @@
 #include "plot.h"
+#include "api/logging/logging.h"
 
 namespace projectfarm::engine::world
 {
@@ -11,7 +12,7 @@ namespace projectfarm::engine::world
         {
             if (!this->LoadAnimationFrameFromJson(jsonFile))
             {
-                this->LogMessage("Failed to set plot data: " + jsonFile.dump());
+                shared::api::logging::Log("Failed to set plot data: " + jsonFile.dump());
                 return false;
             }
         }
@@ -21,7 +22,7 @@ namespace projectfarm::engine::world
             {
                 if (!this->LoadAnimationFrameFromJson(animationJson))
                 {
-                    this->LogMessage("Failed to load animation data: " + animationJson.dump());
+                    shared::api::logging::Log("Failed to load animation data: " + animationJson.dump());
                     return false;
                 }
             }
@@ -32,7 +33,7 @@ namespace projectfarm::engine::world
         {
             if (!this->SetDisallowedCharacterStates(*disallowedCharacterStates))
             {
-                this->LogMessage("Failed to set disallowed character states.");
+                shared::api::logging::Log("Failed to set disallowed character states.");
                 return false;
             }
         }
@@ -52,7 +53,7 @@ namespace projectfarm::engine::world
         auto tileSet = this->_tileSetPool->Get(tileSetName);
         if (tileSet == nullptr)
         {
-            this->LogMessage("Failed to find tileSet with name: " + tileSetName);
+            shared::api::logging::Log("Failed to find tileSet with name: " + tileSetName);
             return false;
         }
 

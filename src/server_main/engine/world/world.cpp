@@ -18,6 +18,7 @@
 #include "action_tile_actions/warp.h"
 #include "server/server.h"
 #include "time/clock.h"
+#include "api/logging/logging.h"
 
 using namespace std::literals;
 
@@ -27,27 +28,26 @@ namespace projectfarm::engine::world
     {
         this->_timer = std::make_shared<shared::time::Timer>();
 
-        this->_plots->SetLogger(this->_logger);
         this->_plots->SetDataProvider(this->_dataProvider);
         if (!this->_plots->Load(name))
         {
-            this->LogMessage("Failed to load plots.");
+            shared::api::logging::Log("Failed to load plots.");
             return false;
         }
 
         if (!this->LoadFromFile(filePath))
         {
-            this->LogMessage("Failed to load world from file: " + filePath.u8string());
+            shared::api::logging::Log("Failed to load world from file: " + filePath.u8string());
             return false;
         }
 
         if (!this->AddWorldEntity())
         {
-            this->LogMessage("Failed to add world entity for world: " + this->_name);
+            shared::api::logging::Log("Failed to add world entity for world: " + this->_name);
             return false;
         }
 
-        this->LogMessage("Loaded world file: " + this->_name);
+        shared::api::logging::Log("Loaded world file: " + this->_name);
 
         return true;
     }
@@ -58,7 +58,7 @@ namespace projectfarm::engine::world
         {
             if (!this->LoadFromBinaryFile(filePath))
             {
-                this->LogMessage("Failed to load world from binary file: " + filePath.u8string());
+                shared::api::logging::Log("Failed to load world from binary file: " + filePath.u8string());
                 return false;
             }
         }
@@ -66,14 +66,14 @@ namespace projectfarm::engine::world
         {
             if (!this->LoadFromJsonFile(filePath))
             {
-                this->LogMessage("Failed to load world from json file: " + filePath.u8string());
+                shared::api::logging::Log("Failed to load world from json file: " + filePath.u8string());
                 return false;
             }
         }
 
         if (!this->InitiateScript())
         {
-            this->LogMessage("Failed to initiate script");
+            shared::api::logging::Log("Failed to initiate script");
             return false;
         }
 
@@ -86,7 +86,7 @@ namespace projectfarm::engine::world
 
         if (!fs.is_open())
         {
-            this->LogMessage("Failed to open world file: " + filePath.u8string());
+            shared::api::logging::Log("Failed to open world file: " + filePath.u8string());
             return false;
         }
 
@@ -94,7 +94,7 @@ namespace projectfarm::engine::world
 
         if (!this->LoadIsland(fs))
         {
-            this->LogMessage("Failed to load island.");
+            shared::api::logging::Log("Failed to load island.");
             return false;
         }
 
@@ -110,7 +110,7 @@ namespace projectfarm::engine::world
 
             if (!file.is_open())
             {
-                this->LogMessage("Failed to open world file: " + filePath.u8string());
+                shared::api::logging::Log("Failed to open world file: " + filePath.u8string());
                 return false;
             }
 
@@ -125,14 +125,14 @@ namespace projectfarm::engine::world
             {
                 if (!this->LoadIsland(islandJson))
                 {
-                    this->LogMessage("Failed to load island: " + islandJson.dump());
+                    shared::api::logging::Log("Failed to load island: " + islandJson.dump());
                     return false;
                 }
             }
         }
         catch (const std::exception& ex)
         {
-            this->LogMessage("Failed to read world file: " + filePath.u8string() +
+            shared::api::logging::Log("Failed to read world file: " + filePath.u8string() +
                              "with exception: " + ex.what());
 
             return false;
@@ -144,11 +144,9 @@ namespace projectfarm::engine::world
     bool World::LoadIsland(const nlohmann::json& islandJson)
     {
         auto island = std::make_shared<Island>();
-        island->SetLogger(this->_logger);
-
         if (!island->LoadFromJson(islandJson, this->_plots))
         {
-            this->LogMessage("Failed to load island with json: " + islandJson.dump());
+            shared::api::logging::Log("Failed to load island with json: " + islandJson.dump());
             return false;
         }
 
@@ -160,11 +158,9 @@ namespace projectfarm::engine::world
     bool World::LoadIsland(std::ifstream& fs) noexcept
     {
         auto island = std::make_shared<Island>();
-        island->SetLogger(this->_logger);
-
         if (!island->LoadFromBinary(fs, this->_plots))
         {
-            this->LogMessage("Failed to load island with from binary file.");
+            shared::api::logging::Log("Failed to load island with from binary file.");
             return false;
         }
 
@@ -182,7 +178,7 @@ namespace projectfarm::engine::world
         this->_script = this->_scriptSystem->CreateScript(shared::scripting::ScriptTypes::World, scriptPath);
         if (!this->_script)
         {
-            this->LogMessage("Failed to load world script: " + scriptName.u8string());
+            shared::api::logging::Log("Failed to load world script: " + scriptName.u8string());
             return false;
         }
 
@@ -190,7 +186,7 @@ namespace projectfarm::engine::world
 
         if (!this->_script->CallFunction(shared::scripting::FunctionTypes::Init, {}))
         {
-            this->LogMessage("Failed to call the 'init' function for script: " + scriptName.u8string());
+            shared::api::logging::Log("Failed to call the 'init' function for script: " + scriptName.u8string());
             return false;
         }
 
@@ -228,7 +224,7 @@ namespace projectfarm::engine::world
         auto entityIt = std::find_if(this->_entities.begin(), this->_entities.end(), [=](const auto& e) { return e->GetEntityId() == entityId; });
         if (entityIt == this->_entities.end())
         {
-            this->LogMessage("Failed to find entity with id:" + std::to_string(entityId) + " to remove it.");
+            shared::api::logging::Log("Failed to find entity with id:" + std::to_string(entityId) + " to remove it.");
             return false;
         }
 
@@ -239,7 +235,7 @@ namespace projectfarm::engine::world
     {
         if (!entity)
         {
-            this->LogMessage("entity is null.");
+            shared::api::logging::Log("entity is null.");
             return false;
         }
 
@@ -337,7 +333,7 @@ namespace projectfarm::engine::world
 
         if (!this->_dataManager->UpdatePlayerCurrentWorld(player->GetPlayerId(), this->GetName()))
         {
-            this->LogMessage("Failed to update player current world. Player Id: " + std::to_string(player->GetPlayerId()) +
+            shared::api::logging::Log("Failed to update player current world. Player Id: " + std::to_string(player->GetPlayerId()) +
                              " World Name: " + this->GetName());
             return false;
         }
@@ -351,7 +347,7 @@ namespace projectfarm::engine::world
 
             if (tiles.empty())
             {
-                this->LogMessage("Failed to find action tile: type=playerspawn");
+                shared::api::logging::Log("Failed to find action tile: type=playerspawn");
                 return false;
             }
 
@@ -370,7 +366,7 @@ namespace projectfarm::engine::world
 
             if (!this->_dataManager->GetPosByPlayerId(player->GetPlayerId(), xPos, yPos))
             {
-                this->LogMessage("Failed to get player pos with player id: " + std::to_string(player->GetPlayerId()));
+                shared::api::logging::Log("Failed to get player pos with player id: " + std::to_string(player->GetPlayerId()));
                 return false;
             }
 
@@ -384,7 +380,7 @@ namespace projectfarm::engine::world
 
         if (!character)
         {
-            this->LogMessage("Failed to create character: " + player->GetCharacterType());
+            shared::api::logging::Log("Failed to create character: " + player->GetCharacterType());
             return false;
         }
 
@@ -418,7 +414,7 @@ namespace projectfarm::engine::world
         auto player = this->GetServer()->GetPlayerById(playerId);
         if (!player)
         {
-            this->LogMessage("Failed to get player with id: " + std::to_string(playerId));
+            shared::api::logging::Log("Failed to get player with id: " + std::to_string(playerId));
             return;
         }
 
@@ -429,7 +425,7 @@ namespace projectfarm::engine::world
 
         if (!this->RemoveWorldEntity(player->GetCharacter()))
         {
-            this->LogMessage("Failed to remove player's character with player id: " + std::to_string(playerId));
+            shared::api::logging::Log("Failed to remove player's character with player id: " + std::to_string(playerId));
         }
 
         player->SetCurrentWorld(nullptr);
@@ -443,7 +439,7 @@ namespace projectfarm::engine::world
 
         if (!this->GetServer()->AddPlayerToWorld(playerId, entityId, destinationWorldName))
         {
-            this->LogMessage("Failed to move player with id: " + std::to_string(playerId) +
+            shared::api::logging::Log("Failed to move player with id: " + std::to_string(playerId) +
                              " to world: " + destinationWorldName +
                              " with entity id: " + std::to_string(entityId));
             return false;
@@ -458,14 +454,14 @@ namespace projectfarm::engine::world
     {
         if (!this->_dataManager->UpdateEntityAppearance(character->GetEntityId(), character->GetAppearanceDetails()))
         {
-            this->LogMessage("Failed to update entity appearance for entity with id: "s +
+            shared::api::logging::Log("Failed to update entity appearance for entity with id: "s +
                 std::to_string(character->GetEntityId()));
             return false;
         }
 
         if (!this->RemoveWorldEntity(character))
         {
-            this->LogMessage("Failed to remove entity with entity id: " + std::to_string(character->GetEntityId()) +
+            shared::api::logging::Log("Failed to remove entity with entity id: " + std::to_string(character->GetEntityId()) +
                              " from world: " + this->_name);
             return false;
         }
@@ -475,7 +471,7 @@ namespace projectfarm::engine::world
                                                     character->GetEntityId(),
                                                     character->GetPlayerId()))
         {
-            this->LogMessage("Failed to move entity with entity id: " + std::to_string(character->GetEntityId()) +
+            shared::api::logging::Log("Failed to move entity with entity id: " + std::to_string(character->GetEntityId()) +
                              " to world: " + destinationWorldName);
             return false;
         }
@@ -501,7 +497,7 @@ namespace projectfarm::engine::world
         else
         {
             auto packetType = static_cast<uint32_t>(packet->GetPacketType());
-            this->LogMessage("Unknown packet type: " + std::to_string(packetType));
+            shared::api::logging::Log("Unknown packet type: " + std::to_string(packetType));
         }
     }
 
@@ -609,7 +605,7 @@ namespace projectfarm::engine::world
             auto player = this->GetServer()->GetPlayerById(playerId);
             if (!player)
             {
-                this->LogMessage("Failed to get player with id: " + std::to_string(playerId));
+                shared::api::logging::Log("Failed to get player with id: " + std::to_string(playerId));
                 continue;
             }
 
@@ -650,7 +646,7 @@ namespace projectfarm::engine::world
         auto character = this->CreateCharacter(type, entityId, playerId);
         if (!character)
         {
-            this->LogMessage("Failed to create character of type: " + type);
+            shared::api::logging::Log("Failed to create character of type: " + type);
             return nullptr;
         }
 
@@ -675,7 +671,7 @@ namespace projectfarm::engine::world
         auto actionTiles = this->GetActionTilesByProperty("type", destinationTileType);
         if (actionTiles.empty())
         {
-            this->LogMessage("Failed to find warp destination tile type for world: " + this->_name);
+            shared::api::logging::Log("Failed to find warp destination tile type for world: " + this->_name);
             return nullptr;
         }
 
@@ -686,7 +682,7 @@ namespace projectfarm::engine::world
         {
             if (tiles.empty())
             {
-                this->LogMessage("Failed to find warp tiles for world: " + this->_name);
+                shared::api::logging::Log("Failed to find warp tiles for world: " + this->_name);
                 return nullptr;
             }
 
@@ -707,7 +703,6 @@ namespace projectfarm::engine::world
                                                                 uint32_t entityId, uint32_t playerId) noexcept
     {
         auto character = this->CreateEntity<entities::Character>(entityId);
-        character->SetLogger(this->_logger);
         character->SetDataProvider(this->_dataProvider);
         character->SetScriptSystem(this->_scriptSystem);
         character->SetDataManager(this->_dataManager);
@@ -716,13 +711,13 @@ namespace projectfarm::engine::world
         auto filePath = this->_dataProvider->GetCharacterPathFromName(type);
         if (filePath.empty())
         {
-            this->LogMessage("Failed to get file path for character type: " + type);
+            shared::api::logging::Log("Failed to get file path for character type: " + type);
             return nullptr;
         }
 
         if (!character->LoadFromFile(filePath))
         {
-            this->LogMessage("Failed to load character from file: " + filePath.u8string());
+            shared::api::logging::Log("Failed to load character from file: " + filePath.u8string());
             return nullptr;
         }
 
@@ -744,7 +739,7 @@ namespace projectfarm::engine::world
         {
             if (!this->_dataManager->GetEntityAppearance(entityId, appearanceDetails))
             {
-                this->LogMessage("Failed to get entity appearance for entity id: " + std::to_string(entityId));
+                shared::api::logging::Log("Failed to get entity appearance for entity id: " + std::to_string(entityId));
                 return nullptr;
             }
 
@@ -753,14 +748,14 @@ namespace projectfarm::engine::world
 
         if (!character->ConfirmAppearance(this->_actionAnimationsManager))
         {
-            this->LogMessage("Failed to confirm character appearance with entity id: " + std::to_string(character->GetEntityId()));
+            shared::api::logging::Log("Failed to confirm character appearance with entity id: " + std::to_string(character->GetEntityId()));
             return nullptr;
         }
 
         if (!this->_dataManager->UpdateEntityAppearance(character->GetEntityId(), character->GetAppearanceDetails(),
                                                         isNewEntity))
         {
-            this->LogMessage("Failed to insert entity appearance with entity id: " +
+            shared::api::logging::Log("Failed to insert entity appearance with entity id: " +
                              std::to_string(character->GetEntityId()));
             return nullptr;
         }
@@ -771,7 +766,7 @@ namespace projectfarm::engine::world
     void World::HandleClientServerWorldLoadedPacket(const std::shared_ptr<shared::networking::Packet>&,
                                                     const std::shared_ptr<engine::Player>& player) noexcept
     {
-        this->LogMessage("Player: " + player->GetUsername() + " has loaded world: " + this->_name);
+        shared::api::logging::Log("Player: " + player->GetUsername() + " has loaded world: " + this->_name);
 
         const auto serverClientPlayerJoinedWorld = std::static_pointer_cast<shared::networking::packets::ServerClientPlayerJoinedWorld>(
                 shared::networking::PacketFactory::CreatePacket(
@@ -811,13 +806,13 @@ namespace projectfarm::engine::world
 
         if (!character)
         {
-            this->LogMessage("Failed to get character for player id: " + std::to_string(player->GetPlayerId()));
+            shared::api::logging::Log("Failed to get character for player id: " + std::to_string(player->GetPlayerId()));
             return;
         }
 
         if (clientServerEntityUpdatePacket->GetEntityId() != character->GetEntityId())
         {
-            this->LogMessage("Client trying to update a packet that isn't the clients players. Player Id: "
+            shared::api::logging::Log("Client trying to update a packet that isn't the clients players. Player Id: "
                 + std::to_string(player->GetPlayerId()) + ". Entity Id: "
                 + std::to_string(clientServerEntityUpdatePacket->GetEntityId()));
             return;
@@ -921,13 +916,12 @@ namespace projectfarm::engine::world
 
             if (destinationWorld.empty() || destinationTileType.empty())
             {
-                this->LogMessage("Failed to get properties for warp tile at: " + std::to_string(tx)
+                shared::api::logging::Log("Failed to get properties for warp tile at: " + std::to_string(tx)
                     + ":" + std::to_string(ty));
                 return;
             }
 
             auto warp = std::make_shared<action_tile_actions::Warp>(character, destinationWorld, destinationTileType);
-            warp->SetLogger(this->_logger);
 
             this->PushActionTileAction(std::static_pointer_cast<action_tile_actions::ActionTileActionBase>(warp));
         }
@@ -939,7 +933,7 @@ namespace projectfarm::engine::world
         {
             if (!action->Run())
             {
-                this->LogMessage("Failed to run action tile action.");
+                shared::api::logging::Log("Failed to run action tile action.");
                 continue;
             }
         }

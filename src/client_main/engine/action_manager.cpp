@@ -1,32 +1,31 @@
 #include "action_manager.h"
-
 #include "action_input_sources/action_input_source_keyboard.h"
+#include "api/logging/logging.h"
 
 namespace projectfarm::engine
 {
     bool ActionManager::Initialize()
     {
-        this->LogMessage("Initializing action manager...");
+        shared::api::logging::Log("Initializing action manager...");
 
         auto keyboardSource = std::make_shared<action_input_sources::ActionInputSourceKeyboard>();
-        keyboardSource->SetLogger(this->_logger);
         keyboardSource->SetGame(this->GetGame());
 
         this->_inputSources.emplace_back(std::move(keyboardSource));
 
-        this->LogMessage("Initialized action manager.");
+        shared::api::logging::Log("Initialized action manager.");
 
         return true;
     }
 
     void ActionManager::Shutdown()
     {
-        this->LogMessage("Shutting down action manager...");
+        shared::api::logging::Log("Shutting down action manager...");
 
         this->_actionableEntities.clear();
         this->_inputSources.clear();
 
-        this->LogMessage("Shut down action manager.");
+        shared::api::logging::Log("Shut down action manager.");
     }
 
     void ActionManager::ProcessActions()
@@ -43,7 +42,7 @@ namespace projectfarm::engine
                 const auto& entity = this->GetActionableEntityById(id);
                 if (entity == nullptr)
                 {
-                    this->LogMessage("Failed to find actionable entity with id: " + std::to_string(id));
+                    shared::api::logging::Log("Failed to find actionable entity with id: " + std::to_string(id));
                     continue;
                 }
 
@@ -60,7 +59,7 @@ namespace projectfarm::engine
                 const auto& entity = this->GetActionableEntityById(id);
                 if (entity == nullptr)
                 {
-                    this->LogMessage("Failed to find actionable entity with id: " + std::to_string(id));
+                    shared::api::logging::Log("Failed to find actionable entity with id: " + std::to_string(id));
                     continue;
                 }
 

@@ -5,6 +5,7 @@
 #include "statement.h"
 #include "database.h"
 #include "utils/util.h"
+#include "api/logging/logging.h"
 
 using namespace std::literals;
 
@@ -14,17 +15,17 @@ namespace projectfarm::shared::persistence
     {
         if (this->_statements.empty())
         {
-            this->LogMessage("Statement has already been shutdown.");
+            api::logging::Log("Statement has already been shutdown.");
             return;
         }
 
         auto res = std::all_of(this->_statements.begin(), this->_statements.end(),
-                      [this](auto& statement) -> bool
+                      [](auto& statement) -> bool
                       {
                         if (auto r = sqlite3_finalize(statement); r != SQLITE_OK)
                         {
                             auto message = sqlite3_errstr(r);
-                            this->LogMessage("Failed to finalize statement with error: "s + message);
+                            api::logging::Log("Failed to finalize statement with error: "s + message);
                             return false;
                         }
 
@@ -33,7 +34,7 @@ namespace projectfarm::shared::persistence
 
         if (!res)
         {
-            this->LogMessage("Failed to finalize statement.");
+            api::logging::Log("Failed to finalize statement.");
             return;
         }
 
@@ -45,14 +46,14 @@ namespace projectfarm::shared::persistence
         const auto database = this->_database.lock();
         if (!database)
         {
-            this->LogMessage("Database has already been shutdown.");
+            api::logging::Log("Database has already been shutdown.");
             return false;
         }
 
         std::ifstream file(path);
         if (!file.is_open())
         {
-            this->LogMessage("Failed to open file: " + path.u8string());
+            api::logging::Log("Failed to open file: " + path.u8string());
             return false;
         }
 
@@ -77,7 +78,7 @@ namespace projectfarm::shared::persistence
                                 r != SQLITE_OK)
                         {
                             auto message = sqlite3_errstr(r);
-                            this->LogMessage("Failed to prepare statement with error: "s + message);
+                            api::logging::Log("Failed to prepare statement with error: "s + message);
                             return false;
                         }
 
@@ -88,7 +89,7 @@ namespace projectfarm::shared::persistence
 
         if (!res)
         {
-            this->LogMessage("Failed to prepare statement.");
+            api::logging::Log("Failed to prepare statement.");
             return false;
         }
 
@@ -99,7 +100,7 @@ namespace projectfarm::shared::persistence
     {
         if (this->_statements.empty())
         {
-            this->LogMessage("Statement has not been setup.");
+            api::logging::Log("Statement has not been setup.");
             return false;
         }
 
@@ -122,7 +123,7 @@ namespace projectfarm::shared::persistence
                 res != SQLITE_OK)
             {
                 auto message = sqlite3_errstr(res);
-                this->LogMessage("Failed to set parameter int: "s + std::to_string(parameter) + " with error: "s + message);
+                api::logging::Log("Failed to set parameter int: "s + std::to_string(parameter) + " with error: "s + message);
                 // It may be that a statement doesn't use this index as the statement
                 // is part of a sql file. Log the error, but ignore it
             }
@@ -135,7 +136,7 @@ namespace projectfarm::shared::persistence
     {
         if (this->_statements.empty())
         {
-            this->LogMessage("Statement has not been setup.");
+            api::logging::Log("Statement has not been setup.");
             return false;
         }
 
@@ -158,7 +159,7 @@ namespace projectfarm::shared::persistence
                 res != SQLITE_OK)
             {
                 auto message = sqlite3_errstr(res);
-                this->LogMessage("Failed to set parameter string: "s + parameter + " with error: "s + message);
+                api::logging::Log("Failed to set parameter string: "s + parameter + " with error: "s + message);
                 // It may be that a statement doesn't use this index as the statement
                 // is part of a sql file. Log the error, but ignore it
             }
@@ -176,13 +177,13 @@ namespace projectfarm::shared::persistence
                                      r != SQLITE_DONE && r != SQLITE_ROW)
                                  {
                                      auto message = sqlite3_errstr(r);
-                                     this->LogMessage("Failed to run statement with error: "s + message);
+                                     api::logging::Log("Failed to run statement with error: "s + message);
                                      return false;
                                  }
 
                                  if (!this->GleanReturnValues(statement))
                                  {
-                                     this->LogMessage("Failed to glean return values.");
+                                     api::logging::Log("Failed to glean return values.");
                                      return false;
                                  }
 
@@ -190,7 +191,7 @@ namespace projectfarm::shared::persistence
                                      r != SQLITE_OK)
                                  {
                                      auto message = sqlite3_errstr(r);
-                                     this->LogMessage("Failed to reset statement with error: "s + message);
+                                     api::logging::Log("Failed to reset statement with error: "s + message);
                                      return false;
                                  }
 
@@ -198,7 +199,7 @@ namespace projectfarm::shared::persistence
                                      r != SQLITE_OK)
                                  {
                                      auto message = sqlite3_errstr(r);
-                                     this->LogMessage("Failed to clear bindings for statement with error: "s + message);
+                                     api::logging::Log("Failed to clear bindings for statement with error: "s + message);
                                      return false;
                                  }
 
@@ -207,7 +208,7 @@ namespace projectfarm::shared::persistence
 
         if (!res)
         {
-            this->LogMessage("Failed to run statement.");
+            api::logging::Log("Failed to run statement.");
             return false;
         }
 
@@ -242,13 +243,13 @@ namespace projectfarm::shared::persistence
                 }
                 case SQLITE_NULL:
                 {
-                    this->LogMessage("Got SQLITE_NULL with value: " + std::to_string(i));
+                    api::logging::Log("Got SQLITE_NULL with value: " + std::to_string(i));
                     break;
                 }
                 default:
                 {
                     // we only support ints and strings at the moment
-                    this->LogMessage("Ignoring column result type: " + std::to_string(type) +
+                    api::logging::Log("Ignoring column result type: " + std::to_string(type) +
                                      " at column index: " + std::to_string(i));
                     continue;
                 }

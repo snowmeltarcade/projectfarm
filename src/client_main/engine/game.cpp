@@ -3,12 +3,13 @@
 #include "game.h"
 #include "device_capabilities.h"
 #include "scenes/implemented_scenes/authenticate_scene.h"
+#include "api/logging/logging.h"
 
 namespace projectfarm::engine
 {
 	void Game::Run(int argc, char* argv[])
 	{
-		this->_logger->LogMessage("Starting game...");
+		shared::api::logging::Log("Starting game...");
 
 		if (!this->Initialize(argc, argv))
         {
@@ -20,52 +21,47 @@ namespace projectfarm::engine
 
 		this->Shutdown();
 
-		this->_logger->LogMessage("Exiting game.");
+		shared::api::logging::Log("Exiting game.");
 	}
 
 	bool Game::Initialize(int argc, char* argv[])
 	{
-		this->_logger->LogMessage("Initializing game...");
+		shared::api::logging::Log("Initializing game...");
 
-        this->_cryptoProvider->SetLogger(this->_logger);
         if (!this->_cryptoProvider->Initialize())
         {
-            this->_logger->LogMessage("Failed to setup crypto provider.");
+            shared::api::logging::Log("Failed to setup crypto provider.");
             return false;
         }
 
-        this->_systemArguments.SetLogger(this->_logger);
         if (!this->_systemArguments.SetArguments(argc, argv))
         {
-            this->_logger->LogMessage("Failed to set arguments.");
+            shared::api::logging::Log("Failed to set arguments.");
             return false;
         }
 
 		if (SDL_Init(SDL_INIT_VIDEO) < 0)
 		{
-			this->_logger->LogMessage("Failed to initialize SDL.");
-			this->_logger->LogMessage(SDL_GetError());
+			shared::api::logging::Log("Failed to initialize SDL.");
+			shared::api::logging::Log(SDL_GetError());
 			return false;
 		}
 
 		this->_dataProvider = std::make_shared<pf::shared::DataProvider>(this->_systemArguments.GetBinaryPath());
-		this->_dataProvider->SetLogger(this->_logger);
 		if (!this->_dataProvider->SetupClient())
         {
-		    this->_logger->LogMessage("Failed to setup data provider.");
+		    shared::api::logging::Log("Failed to setup data provider.");
 		    this->_dataProvider->Shutdown();
 		    return false;
         }
 
-        this->_system.SetLogger(this->_logger);
         this->_system.SetDataProvider(this->_dataProvider);
         this->_system.Initialize();
 
-		this->_clientConfig.SetLogger(this->_logger);
 		this->_clientConfig.SetDataProvider(this->_dataProvider);
 		if (!this->_clientConfig.LoadConfig())
         {
-		    this->_logger->LogMessage("Failed to load client config.");
+		    shared::api::logging::Log("Failed to load client config.");
 		    return false;
         }
 
@@ -73,80 +69,70 @@ namespace projectfarm::engine
 		{
 			this->_system.StartServer();
 		}
-		
-		this->_graphics->SetLogger(this->_logger);
+
 		this->_graphics->SetDebugInformation(this->GetDebugInformation());
 		this->_graphics->SetDataProvider(this->GetDataProvider());
 		this->_graphics->SetGame(this->shared_from_this());
 		if (!this->_graphics->Initialize(this->_clientConfig.GetScreenWidthInMeters()))
 		{
-			this->_logger->LogMessage("Failed to initialize graphics.");
+			shared::api::logging::Log("Failed to initialize graphics.");
 			this->_graphics->Shutdown(); // ensure all created resources are released
 			return false;
 		}
 
-		this->_fontManager->SetLogger(this->_logger);
 		this->_fontManager->SetDataProvider(this->_dataProvider);
 		if (!this->_fontManager->Initialize())
         {
-		    this->_logger->LogMessage("Failed to initialize font manager.");
+		    shared::api::logging::Log("Failed to initialize font manager.");
 		    this->_fontManager->Shutdown();
 		    return false;
         }
 
-		this->_keyboardInput->SetLogger(this->_logger);
 		if (!this->_keyboardInput->Initialize())
 		{
-			this->_logger->LogMessage("Failed to initialize input.");
+			shared::api::logging::Log("Failed to initialize input.");
 			return false;
 		}
 
-		this->_actionManager->SetLogger(this->_logger);
 		this->_actionManager->SetGame(this->GetPtr());
 		if (!this->_actionManager->Initialize())
         {
-		    this->_logger->LogMessage("Failed to initialize action manager.");
+		    shared::api::logging::Log("Failed to initialize action manager.");
 		    return false;
         }
 
-		this->_networking.SetLogger(this->_logger);
 		if (!this->_networking.Initialize())
 		{
-			this->_networking.LogMessage("Failed to initialize networking.");
+			shared::api::logging::Log("Failed to initialize networking.");
 			return false;
 		}
 
-		this->_networkClient->SetLogger(this->_logger);
 		this->_networkClient->SetSceneManager(this->_sceneManager);
 		if (!this->_networkClient->Initialize(this->_clientConfig.GetHostName(), this->_clientConfig.GetTcpPort(),
 		                                      this->_clientConfig.GetClientUdpPort(), this->_clientConfig.GetServerUdpPort()))
 		{
-			this->_networkClient->LogMessage("Failed to initialize network client.");
+			shared::api::logging::Log("Failed to initialize network client.");
 			return false;
 		}
 
-		this->_characterAppearanceLibrary->SetLogger(this->_logger);
 		this->_characterAppearanceLibrary->SetDataProvider(this->_dataProvider);
 		if (!this->_characterAppearanceLibrary->Setup())
         {
-		    this->_logger->LogMessage("Failed to setup character appearance library.");
+		    shared::api::logging::Log("Failed to setup character appearance library.");
 		    return false;
         }
 
         this->_randomEngine->Initialize();
 
-        this->_scriptFactory->SetLogger(this->_logger);
         this->_scriptSystem->SetScriptFactory(this->_scriptFactory);
         this->_scriptSystem->SetDataProvider(this->_dataProvider);
-        this->_scriptSystem->SetLogger(this->_logger);
         this->_scriptSystem->SetRandomEngine(this->_randomEngine);
         if (!this->_scriptSystem->Initialize(this->_systemArguments.GetBinaryPath()))
         {
-            this->_logger->LogMessage("Failed to initialize script system.");
+            shared::api::logging::Log("Failed to initialize script system.");
             return false;
         }
 
-		this->_sceneManager->SetLogger(this->_logger);
 		this->_sceneManager->SetNetworkClient(this->_networkClient);
 		this->_sceneManager->SetGame(this->GetPtr());
 		this->_sceneManager->SetTimer(this->_timer);
@@ -160,18 +146,18 @@ namespace projectfarm::engine
                 this->_systemArguments.GetPassword());
         if (!this->_sceneManager->LoadScene(pf::scenes::SceneTypes::AuthenticateScene))
 		{
-			this->_logger->LogMessage("Failed to initialize loading scene.");
+			shared::api::logging::Log("Failed to initialize loading scene.");
 			return false;
 		}
 
-		this->_logger->LogMessage("Initialized game.");
+		shared::api::logging::Log("Initialized game.");
 
 		return true;
 	}
 
 	void Game::Shutdown()
 	{
-		this->_logger->LogMessage("Shutting down game...");
+		shared::api::logging::Log("Shutting down game...");
 
         this->_scriptSystem->Shutdown();
 		this->_networkClient->Shutdown();
@@ -188,7 +174,7 @@ namespace projectfarm::engine
 
         SDL_Quit();
 		
-		this->_logger->LogMessage("Shut down game.");
+		shared::api::logging::Log("Shut down game.");
 	}
 
 	void Game::MainLoop()
@@ -229,7 +215,7 @@ namespace projectfarm::engine
 
             if (!this->_sceneManager->HandleQueuedScene([this](){ this->SceneLoaded(); }))
             {
-                this->GetLogger()->LogMessage("Failed to load queued scene.");
+                shared::api::logging::Log("Failed to load queued scene.");
                 return;
             }
 
@@ -277,14 +263,14 @@ namespace projectfarm::engine
 			}
             case SDL_APP_TERMINATING:
             {
-                this->GetLogger()->LogMessage("Event: Terminating");
+                shared::api::logging::Log("Event: Terminating");
                 
                 this->QuitGame();
                 break;
             }
             case SDL_APP_LOWMEMORY:
             {
-                this->GetLogger()->LogMessage("Event: Low Memory");
+                shared::api::logging::Log("Event: Low Memory");
                 
                 this->LowerMemoryPressure();
                 break;
@@ -293,29 +279,29 @@ namespace projectfarm::engine
             {
                 this->EnterLowerActivityState();
                 
-                this->GetLogger()->LogMessage("Event: Will Enter Background");
+                shared::api::logging::Log("Event: Will Enter Background");
                 break;
             }
             case SDL_APP_DIDENTERBACKGROUND:
             {
-                this->GetLogger()->LogMessage("Event: Did Enter Background");
+                shared::api::logging::Log("Event: Did Enter Background");
                 break;
             }
             case SDL_APP_WILLENTERFOREGROUND:
             {
                 this->ResumeFromLowerActivityState();
                 
-                this->GetLogger()->LogMessage("Event: Will Enter Foreground");
+                shared::api::logging::Log("Event: Will Enter Foreground");
                 break;
             }
             case SDL_APP_DIDENTERFOREGROUND:
             {
-                this->GetLogger()->LogMessage("Event: Did Enter Foreground");
+                shared::api::logging::Log("Event: Did Enter Foreground");
                 break;
             }
 			case SDL_QUIT:
 			{
-                this->GetLogger()->LogMessage("Event: Quit");
+                shared::api::logging::Log("Event: Quit");
                 
 				this->QuitGame();
 				break;

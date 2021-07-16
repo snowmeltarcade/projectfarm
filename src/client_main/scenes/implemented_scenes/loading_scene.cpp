@@ -61,7 +61,7 @@ namespace projectfarm::scenes::implemented_scenes
 			ss << "Received invalid packet: ";
 			ss << static_cast<int>(packetType);
 
-			this->GetSceneManager()->LogMessage(ss.str());
+			shared::api::logging::Log(ss.str());
 		}
 
 		return isValid;
@@ -74,18 +74,18 @@ namespace projectfarm::scenes::implemented_scenes
 
         auto worldToLoad = serverClientLoadWorld->GetWorldToLoad();
 
-        this->_logger->LogMessage("Received packet to load this world: " + worldToLoad);
+        shared::api::logging::Log("Received packet to load this world: " + worldToLoad);
 
         this->LoadNewWorld(worldToLoad);
 	}
 
 	bool LoadingScene::Initialize()
 	{
-	    this->LogMessage("Initializing loading scene scene.");
+	    shared::api::logging::Log("Initializing loading scene scene.");
 
 		if (!this->SetupUI())
         {
-		    this->LogMessage("Failed to setup UI.");
+		    shared::api::logging::Log("Failed to setup UI.");
 		    return false;
         }
 
@@ -99,7 +99,7 @@ namespace projectfarm::scenes::implemented_scenes
             }
         }
 
-        this->LogMessage("Initialized loading scene scene.");
+        shared::api::logging::Log("Initialized loading scene scene.");
 
 		return true;
 	}
@@ -132,8 +132,6 @@ namespace projectfarm::scenes::implemented_scenes
 	bool LoadingScene::SetupUI()
 	{
         this->_ui = std::make_shared<projectfarm::graphics::ui::UI>();
-
-        this->_ui->SetLogger(this->_logger);
         this->_ui->SetGraphics(this->GetGraphics());
         this->_ui->SetDataProvider(this->_dataProvider);
         this->_ui->SetFontManager(this->_fontManager);
@@ -141,13 +139,13 @@ namespace projectfarm::scenes::implemented_scenes
         this->_ui->SetScene(this->shared_from_this());
         if (!this->_ui->Initialize())
         {
-            this->LogMessage("Failed to initialize UI.");
+            shared::api::logging::Log("Failed to initialize UI.");
             return false;
         }
 
         if (!this->_ui->LoadFromFile("loading_screen"))
         {
-            this->LogMessage("Failed to load ui from file: loading_screen");
+            shared::api::logging::Log("Failed to load ui from file: loading_screen");
             return false;
         }
 

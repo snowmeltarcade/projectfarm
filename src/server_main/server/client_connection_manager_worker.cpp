@@ -1,25 +1,23 @@
 #include "client_connection_manager_worker.h"
-
 #include "networking/packet_factory.h"
+#include "api/logging/logging.h"
 
 namespace projectfarm::server
 {
     void ClientConnectionManagerWorker::RunThread()
     {
-        this->LogMessage("Running worker thread for client connection manager");
-
-        this->_packetReceiver.SetLogger(this->_logger);
+        shared::api::logging::Log("Running worker thread for client connection manager");
 
         this->_runThread = true;
 
         this->_thread = std::thread(&ClientConnectionManagerWorker::ThreadWorker, this);
 
-        this->LogMessage("Worker thread running for client connection manager");
+        shared::api::logging::Log("Worker thread running for client connection manager");
     }
 
     void ClientConnectionManagerWorker::StopThread()
     {
-        this->LogMessage("Stopping worker thread for client connection manager");
+        shared::api::logging::Log("Stopping worker thread for client connection manager");
 
         if (this->_thread.joinable())
         {
@@ -27,16 +25,16 @@ namespace projectfarm::server
             this->_thread.join();
         }
 
-        this->LogMessage("Worker thread stopped for client connection manager");
+        shared::api::logging::Log("Worker thread stopped for client connection manager");
     }
 
     void ClientConnectionManagerWorker::ThreadWorker() noexcept
     {
-        this->LogMessage("In worker thread for client connection manager");
+        shared::api::logging::Log("In worker thread for client connection manager");
 
         if (!this->Initialize())
         {
-            this->LogMessage("Failed to initialize client connection manager worker.");
+            shared::api::logging::Log("Failed to initialize client connection manager worker.");
             return;
         }
 
@@ -53,7 +51,7 @@ namespace projectfarm::server
 
         this->Shutdown();
 
-        this->LogMessage("Returning from worker thread for client connection manager");
+        shared::api::logging::Log("Returning from worker thread for client connection manager");
     }
 
     void ClientConnectionManagerWorker::CheckForNewClients() noexcept
@@ -65,7 +63,7 @@ namespace projectfarm::server
 
             std::shared_ptr<Client> client = std::make_shared<Client>(clientIP, clientSocket);
 
-            this->LogMessage("New client: " + client->IPAddressAsString());
+            shared::api::logging::Log("New client: " + client->IPAddressAsString());
 
             // TODO: Check we have not already added all clients allocated for this socket set
             SDLNet_TCP_AddSocket(this->_tcpSocketSet, client->GetSocket());
@@ -123,7 +121,7 @@ namespace projectfarm::server
     {
         for (const auto& client : this->_clientsToRemove)
         {
-            this->LogMessage("Removing client: " + client->IPAddressAsString());
+            shared::api::logging::Log("Removing client: " + client->IPAddressAsString());
 
             if (this->_onClientRemoveCallback)
             {
@@ -160,36 +158,36 @@ namespace projectfarm::server
 
     bool ClientConnectionManagerWorker::Initialize() noexcept
     {
-        this->LogMessage("Initializing client connection manager worker...");
+        shared::api::logging::Log("Initializing client connection manager worker...");
 
         if (!this->CreateTCP())
         {
-            this->LogMessage("Failed to initialize TCP.");
+            shared::api::logging::Log("Failed to initialize TCP.");
             return false;
         }
 
         if (!this->CreateUDP())
         {
-            this->LogMessage("Failed to initialize UDP.");
+            shared::api::logging::Log("Failed to initialize UDP.");
             return false;
         }
 
         this->_tcpSocketSet = SDLNet_AllocSocketSet(16);
         if (!this->_tcpSocketSet)
         {
-            this->LogMessage("Failed to allocate socket set.");
-            this->LogMessage(SDLNet_GetError());
+            shared::api::logging::Log("Failed to allocate socket set.");
+            shared::api::logging::Log(SDLNet_GetError());
             return false;
         }
 
-        this->LogMessage("Initialized client connection manager worker.");
+        shared::api::logging::Log("Initialized client connection manager worker.");
 
         return true;
     }
 
     void ClientConnectionManagerWorker::Shutdown() noexcept
     {
-        this->LogMessage("Shutting down client connection manager worker...");
+        shared::api::logging::Log("Shutting down client connection manager worker...");
 
         for (auto client : this->_clients)
         {
@@ -210,29 +208,29 @@ namespace projectfarm::server
         this->ShutdownTCP();
         this->ShutdownUDP();
 
-        this->LogMessage("Shut down client connection manager worker.");
+        shared::api::logging::Log("Shut down client connection manager worker.");
     }
 
     bool ClientConnectionManagerWorker::CreateTCP()
     {
-        this->LogMessage("Creating TCP...");
+        shared::api::logging::Log("Creating TCP...");
 
         IPaddress localServerIP;
 
-        this->LogMessage("Binding to port: " + std::to_string(this->_tcpPort));
+        shared::api::logging::Log("Binding to port: " + std::to_string(this->_tcpPort));
 
         if (SDLNet_ResolveHost(&localServerIP, nullptr, this->_tcpPort) < 0)
         {
-            this->LogMessage("Failed to resolve the TCP server host:");
-            this->LogMessage(SDLNet_GetError());
+            shared::api::logging::Log("Failed to resolve the TCP server host:");
+            shared::api::logging::Log(SDLNet_GetError());
             return false;
         }
 
         this->_tcpServerSocket = SDLNet_TCP_Open(&localServerIP);
         if (this->_tcpServerSocket == nullptr)
         {
-            this->LogMessage("Failed to open the TCP server socket: " + std::to_string(this->_tcpPort));
-            this->LogMessage(SDLNet_GetError());
+            shared::api::logging::Log("Failed to open the TCP server socket: " + std::to_string(this->_tcpPort));
+            shared::api::logging::Log(SDLNet_GetError());
             return false;
         }
 
@@ -247,20 +245,20 @@ namespace projectfarm::server
 
     bool ClientConnectionManagerWorker::CreateUDP()
     {
-        this->LogMessage("Creating UDP...");
+        shared::api::logging::Log("Creating UDP...");
 
         this->_udpServerSocket = SDLNet_UDP_Open(this->_udpPort);
         if (!this->_udpServerSocket)
         {
-            this->LogMessage("Failed to open the UDP server socket: " + std::to_string(this->_udpPort));
-            this->LogMessage(SDLNet_GetError());
+            shared::api::logging::Log("Failed to open the UDP server socket: " + std::to_string(this->_udpPort));
+            shared::api::logging::Log(SDLNet_GetError());
             return false;
         }
 
         this->_udpPacket = SDLNet_AllocPacket(1024 * 100 * 100); // do 100kb for now
         if (!this->_udpPacket)
         {
-            this->LogMessage("Failed to allow UDP packet.");
+            shared::api::logging::Log("Failed to allow UDP packet.");
             return false;
         }
 

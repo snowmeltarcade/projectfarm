@@ -1,15 +1,15 @@
 #include "client_connection_manager.h"
 #include "server.h"
+#include "api/logging/logging.h"
 
 namespace projectfarm::server
 {
 	bool ClientConnectionManager::Initialize(const std::shared_ptr<ServerConfig>& config) noexcept
 	{
-		this->LogMessage("Initializing client connection manager.");
+		shared::api::logging::Log("Initializing client connection manager.");
 
 		this->_clientConnectionManagerWorker = std::make_unique<ClientConnectionManagerWorker>(config->GetTcpPort(),
                                                                                                config->GetServerUdpPort());
-		this->_clientConnectionManagerWorker->SetLogger(this->_logger);
 
 		this->_clientConnectionManagerWorker->SetOnClientAddCallback([this](const auto& client)
                                                                      { this->OnClientAdd(client); });
@@ -25,21 +25,21 @@ namespace projectfarm::server
 
 		this->_clientConnectionManagerWorker->RunThread();
 
-		this->LogMessage("Initialized client connection manager");
+		shared::api::logging::Log("Initialized client connection manager");
 
 		return true;
 	}
 
 	void ClientConnectionManager::Shutdown() noexcept
 	{
-		this->LogMessage("Shutting down client connection manager");
+		shared::api::logging::Log("Shutting down client connection manager");
 
 		if (this->_clientConnectionManagerWorker)
         {
             this->_clientConnectionManagerWorker->StopThread();
         }
 
-		this->LogMessage("Shut down session client manager");
+		shared::api::logging::Log("Shut down session client manager");
 	}
 
     void ClientConnectionManager::Tick(const std::shared_ptr<Server>& server) noexcept
@@ -53,7 +53,7 @@ namespace projectfarm::server
 
 	    for (const auto& client : this->_clientsToAdd)
         {
-	        this->LogMessage("Added client: " + client->IPAddressAsString());
+	        shared::api::logging::Log("Added client: " + client->IPAddressAsString());
 
 	        server->OnClientAdd(client);
         }
@@ -62,7 +62,7 @@ namespace projectfarm::server
 
         for (const auto& client : this->_clientsToRemove)
         {
-            this->LogMessage("Removed client: " + client->IPAddressAsString());
+            shared::api::logging::Log("Removed client: " + client->IPAddressAsString());
 
             server->OnClientRemove(client);
         }

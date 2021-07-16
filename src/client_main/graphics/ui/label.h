@@ -9,6 +9,7 @@
 #include "graphics/consume_font_manager.h"
 #include "graphics/colors/color.h"
 #include "math/vector2d.h"
+#include "api/logging/logging.h"
 
 namespace projectfarm::graphics::ui
 {
@@ -58,7 +59,7 @@ namespace projectfarm::graphics::ui
         {
             if (!this->SetText(text))
             {
-                this->LogMessage("Failed to set text: " + std::string(text));
+                shared::api::logging::Log("Failed to set text: " + std::string(text));
             }
         }
 

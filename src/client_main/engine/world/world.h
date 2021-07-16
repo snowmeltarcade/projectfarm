@@ -9,7 +9,6 @@
 #include <optional>
 
 #include "time/consume_timer.h"
-#include "logging/consume_logger.h"
 #include "data/consume_data_provider.h"
 #include "graphics/consume_graphics.h"
 #include "graphics/consume_render_manager.h"

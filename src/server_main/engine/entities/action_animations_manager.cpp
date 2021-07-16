@@ -2,6 +2,7 @@
 #include <fstream>
 
 #include "action_animations_manager.h"
+#include "api/logging/logging.h"
 
 using namespace std::literals;
 
@@ -15,7 +16,7 @@ namespace projectfarm::engine::entities
         {
             if (!this->AddToLibrary(name, path))
             {
-                this->LogMessage("Failed to add character appearance file to manager: " + path.u8string());
+                shared::api::logging::Log("Failed to add character appearance file to manager: " + path.u8string());
                 continue;
             }
         }
@@ -31,7 +32,7 @@ namespace projectfarm::engine::entities
 
             if (!fs)
             {
-                this->LogMessage("Failed to open file: " + path.u8string());
+                shared::api::logging::Log("Failed to open file: " + path.u8string());
                 return false;
             }
 
@@ -45,7 +46,7 @@ namespace projectfarm::engine::entities
         }
         catch (const std::exception& ex)
         {
-            this->LogMessage("Failed to add character appearance file: '" + path.u8string() +
+            shared::api::logging::Log("Failed to add character appearance file: '" + path.u8string() +
                              "' to manager with error: " + ex.what());
             return false;
         }

@@ -2,6 +2,7 @@
 #include "server_script_factory.h"
 #include "world_script.h"
 #include "scripting/include_script.h"
+#include "api/logging/logging.h"
 
 namespace projectfarm::engine::scripting
 {
@@ -34,11 +35,9 @@ namespace projectfarm::engine::scripting
 
         if (!script)
         {
-            this->LogMessage("Unknown script type: " + std::to_string(static_cast<uint8_t>(type)));
-            return nullptr;
+            shared::api::logging::Log("Unknown script type: " + std::to_string(static_cast<uint8_t>(type)));
+            return {};
         }
-
-        script->SetLogger(this->_logger);
 
         return script;
     }

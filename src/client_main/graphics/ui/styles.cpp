@@ -1,4 +1,5 @@
 #include "styles.h"
+#include "api/logging/logging.h"
 
 using namespace projectfarm::shared::css;
 
@@ -13,7 +14,7 @@ namespace projectfarm::graphics::ui
             auto doc = shared::css::LoadFromFile(path);
             if (!doc)
             {
-                this->LogMessage("Failed to load CSS file: " + path.u8string());
+                shared::api::logging::Log("Failed to load CSS file: " + path.u8string());
                 return false;
             }
 

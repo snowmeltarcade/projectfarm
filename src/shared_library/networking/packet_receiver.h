@@ -3,20 +3,21 @@
 
 #include <memory>
 
-#include "logging/consume_logger.h"
 #include "networking/packet.h"
 
 namespace projectfarm::shared::networking
 {
-    class PacketReceiver final : public shared::ConsumeLogger
+    class PacketReceiver final
     {
     public:
         PacketReceiver() = default;
-        ~PacketReceiver() override = default;
+        ~PacketReceiver() = default;
 
-        [[nodiscard]] std::shared_ptr<Packet> CheckUDPSocket(UDPsocket socket, UDPpacket* udpPacket) const noexcept;
+        [[nodiscard]]
+        std::shared_ptr<Packet> CheckUDPSocket(UDPsocket socket, UDPpacket* udpPacket) const noexcept;
 
-        [[nodiscard]] static std::pair<bool, std::shared_ptr<Packet>> CheckTCPSocket(TCPsocket socket) noexcept;
+        [[nodiscard]]
+        static std::pair<bool, std::shared_ptr<Packet>> CheckTCPSocket(TCPsocket socket) noexcept;
     };
 }
 

@@ -1,7 +1,8 @@
-#include "plots.h"
-
 #include <nlohmann/json.hpp>
 #include <fstream>
+
+#include "plots.h"
+#include "api/logging/logging.h"
 
 namespace projectfarm::engine::world
 {
@@ -14,7 +15,7 @@ namespace projectfarm::engine::world
 
         if (!file.is_open())
         {
-            this->LogMessage("Failed to open file: " + plotsFileName.u8string());
+            shared::api::logging::Log("Failed to open file: " + plotsFileName.u8string());
             return false;
         }
 
@@ -26,11 +27,9 @@ namespace projectfarm::engine::world
         for (const auto& plotJson : plotsJson)
         {
             auto plot = std::make_shared<Plot>();
-            plot->SetLogger(this->_logger);
-
             if (!plot->LoadFromJson(plotJson))
             {
-                this->LogMessage("Failed to load plot with json: " + plotJson.dump());
+                shared::api::logging::Log("Failed to load plot with json: " + plotJson.dump());
                 return false;
             }
 
@@ -50,7 +49,7 @@ namespace projectfarm::engine::world
             }
         }
 
-        this->LogMessage("Could not find the plot: " + std::string(name));
+        shared::api::logging::Log("Could not find the plot: " + std::string(name));
 
         return Plots::EmptyIndex;
     }

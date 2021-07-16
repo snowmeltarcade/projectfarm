@@ -5,16 +5,15 @@
 #include <array>
 
 #include "graphics_dependencies.h"
-#include "logging/consume_logger.h"
 #include "shader.h"
 
 namespace projectfarm::graphics
 {
-    class ShaderProgram final : public projectfarm::shared::ConsumeLogger
+    class ShaderProgram final
     {
     public:
         ShaderProgram() = default;
-        ~ShaderProgram() override = default;
+        ~ShaderProgram() = default;
 
         [[nodiscard]]
         bool Create() noexcept;

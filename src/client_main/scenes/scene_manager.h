@@ -8,7 +8,6 @@
 #include <unordered_map>
 
 #include "engine/consume_debug_information.h"
-#include "logging/consume_logger.h"
 #include "engine/consume_game.h"
 #include "network_client/consume_network_client.h"
 #include "networking/packet.h"
@@ -19,8 +18,7 @@
 
 namespace projectfarm::scenes
 {
-	class SceneManager final : public shared::ConsumeLogger,
-	                           public engine::ConsumeGame,
+	class SceneManager final : public engine::ConsumeGame,
 						       public network_client::ConsumeNetworkClient,
                                public shared::time::ConsumeTimer,
                                public engine::ConsumeDebugInformation,

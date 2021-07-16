@@ -3,6 +3,7 @@
 
 #include "graphics.h"
 #include "material.h"
+#include "api/logging/logging.h"
 
 namespace projectfarm::graphics
 {
@@ -15,7 +16,7 @@ namespace projectfarm::graphics
 
             if (!file.is_open())
             {
-                this->LogMessage("Failed to open material file: " + path.u8string());
+                shared::api::logging::Log("Failed to open material file: " + path.u8string());
                 return false;
             }
 
@@ -24,10 +25,9 @@ namespace projectfarm::graphics
 
             const auto& shaders = jsonFile["shaders"];
 
-            this->_shaderProgram.SetLogger(this->_logger);
             if (!this->_shaderProgram.Create())
             {
-                this->LogMessage("Failed to create shader program.");
+                shared::api::logging::Log("Failed to create shader program.");
                 return false;
             }
 
@@ -38,14 +38,14 @@ namespace projectfarm::graphics
 
                 if (!this->LoadShader(vertex, fragment))
                 {
-                    this->LogMessage("Failed to load shaders.");
+                    shared::api::logging::Log("Failed to load shaders.");
                     return false;
                 }
             }
 
             if (!this->_shaderProgram.Link())
             {
-                this->LogMessage("Failed to link shader program.");
+                shared::api::logging::Log("Failed to link shader program.");
                 return false;
             }
 
@@ -69,7 +69,7 @@ namespace projectfarm::graphics
         }
         catch (const std::exception& ex)
         {
-            this->LogMessage("Failed to load material from path: " + path.u8string() +
+            shared::api::logging::Log("Failed to load material from path: " + path.u8string() +
                              "with exception: " + ex.what());
 
             return false;
@@ -87,28 +87,28 @@ namespace projectfarm::graphics
     {
         if (auto vertexShader = this->GetGraphics()->GetVertexShaderByName(vertexShaderName); !vertexShader)
         {
-            this->LogMessage("Failed to get vertex shader with name: " + vertexShaderName);
+            shared::api::logging::Log("Failed to get vertex shader with name: " + vertexShaderName);
             return false;
         }
         else
         {
             if (!this->_shaderProgram.AttachShader(vertexShader))
             {
-                this->LogMessage("Failed to attach vertex shader with name: " + vertexShaderName);
+                shared::api::logging::Log("Failed to attach vertex shader with name: " + vertexShaderName);
                 return false;
             }
         }
 
         if (auto fragmentShader = this->GetGraphics()->GetFragmentShaderByName(fragmentShaderName); !fragmentShader)
         {
-            this->LogMessage("Failed to get fragment shader with name: " + fragmentShaderName);
+            shared::api::logging::Log("Failed to get fragment shader with name: " + fragmentShaderName);
             return false;
         }
         else
         {
             if (!this->_shaderProgram.AttachShader(fragmentShader))
             {
-                this->LogMessage("Failed to attach fragment shader with name: " + fragmentShaderName);
+                shared::api::logging::Log("Failed to attach fragment shader with name: " + fragmentShaderName);
                 return false;
             }
         }

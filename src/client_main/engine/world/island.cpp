@@ -2,6 +2,7 @@
 
 #include "island.h"
 #include "utils/util.h"
+#include "api/logging/logging.h"
 
 namespace projectfarm::engine::world
 {
@@ -26,7 +27,6 @@ namespace projectfarm::engine::world
         this->_heightInMeters = this->_heightInTiles * this->_tileHeight;
 
         this->_tileMap = std::make_shared<graphics::TileMap>();
-        this->_tileMap->SetLogger(this->_logger);
         this->_tileMap->SetDataProvider(this->_dataProvider);
         this->_tileMap->SetGraphics(this->GetGraphics());
         this->_tileMap->SetRenderManager(this->_renderManager);
@@ -43,7 +43,7 @@ namespace projectfarm::engine::world
                                         this->_widthInTiles, this->_heightInTiles,
                                         tileWidthInPixels, tileHeightInPixels))
         {
-            this->LogMessage("Failed to load tilemap.");
+            shared::api::logging::Log("Failed to load tilemap.");
             return false;
         }
 
@@ -53,7 +53,7 @@ namespace projectfarm::engine::world
 
         if (!this->RefreshTileSet(layers))
         {
-            this->LogMessage("Failed to refresh tile set.");
+            shared::api::logging::Log("Failed to refresh tile set.");
             return false;
         }
 
@@ -79,7 +79,6 @@ namespace projectfarm::engine::world
         auto layers = this->BuildLayers(fs);
 
         this->_tileMap = std::make_shared<graphics::TileMap>();
-        this->_tileMap->SetLogger(this->_logger);
         this->_tileMap->SetDataProvider(this->_dataProvider);
         this->_tileMap->SetGraphics(this->GetGraphics());
         this->_tileMap->SetRenderManager(this->_renderManager);
@@ -92,7 +91,7 @@ namespace projectfarm::engine::world
                                         this->_widthInTiles, this->_heightInTiles,
                                         tileWidthInPixels, tileHeightInPixels))
         {
-            this->LogMessage("Failed to load tilemap.");
+            shared::api::logging::Log("Failed to load tilemap.");
             return false;
         }
 
@@ -102,7 +101,7 @@ namespace projectfarm::engine::world
 
         if (!this->RefreshTileSet(layers))
         {
-            this->LogMessage("Failed to refresh tile set.");
+            shared::api::logging::Log("Failed to refresh tile set.");
             return false;
         }
 
@@ -300,7 +299,7 @@ namespace projectfarm::engine::world
 
                     if (!this->_tileMap->SetTileSet(static_cast<uint8_t>(tileSetsIndexList.size()), tileSet))
                     {
-                        this->LogMessage("Failed to set tileset");
+                        shared::api::logging::Log("Failed to set tileset");
                         return false;
                     }
 
@@ -320,7 +319,7 @@ namespace projectfarm::engine::world
     {
         if (!this->IndexTileSets())
         {
-            this->LogMessage("Failed to index tile sets.");
+            shared::api::logging::Log("Failed to index tile sets.");
             return false;
         }
 
@@ -341,7 +340,7 @@ namespace projectfarm::engine::world
 
                     if (!this->UpdatePlotOnTileMap(plotIndex, static_cast<uint8_t>(layerIndex), x, y))
                     {
-                        this->LogMessage("Failed to update plot on tilemap.");
+                        shared::api::logging::Log("Failed to update plot on tilemap.");
                         return false;
                     }
                 }
@@ -371,7 +370,7 @@ namespace projectfarm::engine::world
             if (!this->_tileMap->SetTileIndex(layer, x, y,
                                               animationData))
             {
-                this->LogMessage("Failed to set tile index.");
+                shared::api::logging::Log("Failed to set tile index.");
                 return false;
             }
         }
@@ -382,7 +381,7 @@ namespace projectfarm::engine::world
                                               layer, x, y,
                                               plot->GetAbsoluteIndex(0)))
             {
-                this->LogMessage("Failed to set tile index.");
+                shared::api::logging::Log("Failed to set tile index.");
                 return false;
             }
         }
@@ -456,7 +455,7 @@ namespace projectfarm::engine::world
 
         if (!this->UpdatePlotOnTileMap(plotIndex, layerIndex, tileX, tileY))
         {
-            this->LogMessage("Failed to update plot.");
+            shared::api::logging::Log("Failed to update plot.");
         }
     }
 

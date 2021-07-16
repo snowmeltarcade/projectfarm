@@ -9,7 +9,6 @@
 #include <SDL.h>
 #include <SDL_image.h>
 
-#include "logging/consume_logger.h"
 #include "consume_graphics.h"
 #include "engine/consume_debug_information.h"
 #include "texture_pool_data.h"
@@ -17,8 +16,7 @@
 
 namespace projectfarm::graphics
 {
-    class TexturePool final : public shared::ConsumeLogger,
-                              public ConsumeGraphics,
+    class TexturePool final : public ConsumeGraphics,
                               public engine::ConsumeDebugInformation
     {
     public:
@@ -27,16 +25,20 @@ namespace projectfarm::graphics
             this->_lastCleanupTime = std::chrono::steady_clock::now();
             this->_nextCleanupTime = this->_lastCleanupTime;
         }
+
         ~TexturePool() override = default;
 
-        [[nodiscard]] TexturePoolData Get(const std::filesystem::path& name)
+        [[nodiscard]]
+        TexturePoolData Get(const std::filesystem::path& name)
         {
             return this->Get(name.u8string());
         }
 
-        [[nodiscard]] TexturePoolData Get(const std::string& name);
+        [[nodiscard]]
+        TexturePoolData Get(const std::string& name);
 
-        [[nodiscard]] TexturePoolData Create(const std::filesystem::path& path);
+        [[nodiscard]]
+        TexturePoolData Create(const std::filesystem::path& path);
 
         void Release(GLuint textureId);
         void Destroy(GLuint textureId, bool removeFromMap = true);
@@ -45,10 +47,12 @@ namespace projectfarm::graphics
 
         void Empty();
 
-        [[nodiscard]] TexturePoolData CreateTexture(SDL_Surface* surface);
+        [[nodiscard]]
+        TexturePoolData CreateTexture(SDL_Surface* surface);
 
     private:
-        [[nodiscard]] bool GenerateTexture(TexturePoolData& data, SDL_Surface* surface);
+        [[nodiscard]]
+        bool GenerateTexture(TexturePoolData& data, SDL_Surface* surface);
 
         void PerformCleanup();
 

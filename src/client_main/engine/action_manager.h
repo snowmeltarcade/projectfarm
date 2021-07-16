@@ -4,7 +4,6 @@
 #include <vector>
 #include <memory>
 
-#include "logging/consume_logger.h"
 #include "consume_game.h"
 
 #include "action_input_source.h"
@@ -12,14 +11,15 @@
 
 namespace projectfarm::engine
 {
-    class ActionManager final : public shared::ConsumeLogger,
-                                public engine::ConsumeGame
+    class ActionManager final : public engine::ConsumeGame
     {
     public:
         ActionManager() = default;
         ~ActionManager() override = default;
 
-        [[nodiscard]] bool Initialize();
+        [[nodiscard]]
+        bool Initialize();
+
         void Shutdown();
 
         void ProcessActions();

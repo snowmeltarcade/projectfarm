@@ -2,6 +2,7 @@
 #include "character_script_object.h"
 #include "engine/entities/character.h"
 #include "engine/world/world.h"
+#include "api/logging/logging.h"
 
 namespace projectfarm::engine::scripting
 {
@@ -51,14 +52,14 @@ namespace projectfarm::engine::scripting
 
         if (args.Length() != 1)
         {
-            character->LogMessage("Invalid number of arguments for 'SetUpdateInterval'.");
+            shared::api::logging::Log("Invalid number of arguments for 'SetUpdateInterval'.");
             return;
         }
 
         auto interval = args[0]->Uint32Value(context).FromMaybe(0);
         if (interval == 0)
         {
-            character->LogMessage("Ignoring value - possibly invalid.");
+            shared::api::logging::Log("Ignoring value - possibly invalid.");
             return;
         }
 
@@ -81,7 +82,7 @@ namespace projectfarm::engine::scripting
 
         if (args.Length() != 4)
         {
-            character->LogMessage("Invalid number of arguments for 'Move'.");
+            shared::api::logging::Log("Invalid number of arguments for 'Move'.");
             return;
         }
 
@@ -93,7 +94,7 @@ namespace projectfarm::engine::scripting
         auto distance = args[3]->NumberValue(context).FromMaybe(0.0f);
         if (distance == 0.0f)
         {
-            character->LogMessage("Ignoring distance - possibly invalid.");
+            shared::api::logging::Log("Ignoring distance - possibly invalid.");
             return;
         }
 
@@ -116,7 +117,7 @@ namespace projectfarm::engine::scripting
 
         if (args.Length() != 3)
         {
-            character->LogMessage("Invalid number of arguments for 'MoveTo'.");
+            shared::api::logging::Log("Invalid number of arguments for 'MoveTo'.");
             return;
         }
 
@@ -173,7 +174,7 @@ namespace projectfarm::engine::scripting
 
         if (args.Length() != 1)
         {
-            thisCharacter->LogMessage("Invalid number of arguments for 'GetCharactersWithinDistance'.");
+            shared::api::logging::Log("Invalid number of arguments for 'GetCharactersWithinDistance'.");
             return;
         }
 

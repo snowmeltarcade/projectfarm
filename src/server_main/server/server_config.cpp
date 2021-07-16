@@ -3,16 +3,17 @@
 
 #include "server_config.h"
 #include "data/data_provider_locations.h"
+#include "api/logging/logging.h"
 
 namespace projectfarm::server
 {
     bool ServerConfig::LoadConfig()
     {
-        this->LogMessage("Loading server config...");
+        shared::api::logging::Log("Loading server config...");
 
         auto filePath = this->_dataProvider->ResolveFileName(shared::DataProviderLocations::Server, "config.json");
 
-        this->LogMessage("Loading server config from " + filePath.u8string());
+        shared::api::logging::Log("Loading server config from " + filePath.u8string());
 
         std::ifstream file(filePath);
 
@@ -29,7 +30,7 @@ namespace projectfarm::server
         this->_serverUdpPort = jsonFile["serverUdpPort"].get<uint16_t>();
         this->_startingWorld = jsonFile["startingWorld"].get<std::string>();
 
-        this->LogMessage("Loaded server config.");
+        shared::api::logging::Log("Loaded server config.");
 
         return true;
     }

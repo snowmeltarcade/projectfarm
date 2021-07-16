@@ -3,7 +3,6 @@
 
 #include <memory>
 
-#include "logging/consume_logger.h"
 #include "data/consume_data_provider.h"
 #include "persistence/database.h"
 #include "entities/character_appearance_details.h"
@@ -15,8 +14,7 @@ namespace projectfarm::shared::entities
 
 namespace projectfarm::engine::data
 {
-    class DataManager final : public shared::ConsumeLogger,
-                              public shared::ConsumeDataProvider
+    class DataManager final : public shared::ConsumeDataProvider
     {
     public:
         DataManager() = default;
@@ -25,7 +23,8 @@ namespace projectfarm::engine::data
             this->Shutdown();
         }
 
-        [[nodiscard]] bool Initialize() noexcept;
+        [[nodiscard]]
+        bool Initialize() noexcept;
 
         void Shutdown() noexcept;
 

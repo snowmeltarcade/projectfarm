@@ -1,21 +1,18 @@
 #ifndef NETWORK_CLIENT_H
 #define NETWORK_CLIENT_H
 
-#include "logging/consume_logger.h"
+#include <memory>
+#include <string>
+#include <cstdint>
+#include <SDL_net.h>
+
 #include "networking/packet_sender.h"
 #include "scenes/consume_scene_manager.h"
 #include "network_client_worker.h"
 
-#include <memory>
-#include <string>
-#include <cstdint>
-
-#include <SDL_net.h>
-
 namespace projectfarm::network_client
 {
-	class NetworkClient final : public projectfarm::shared::ConsumeLogger,
-						        public projectfarm::scenes::ConsumeSceneManager,
+	class NetworkClient final : public projectfarm::scenes::ConsumeSceneManager,
 						        public std::enable_shared_from_this<NetworkClient>
 	{
 	public:

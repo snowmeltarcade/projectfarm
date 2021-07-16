@@ -1,5 +1,6 @@
 #include "island.h"
 #include "utils/util.h"
+#include "api/logging/logging.h"
 
 using namespace projectfarm::shared::utils;
 
@@ -30,7 +31,7 @@ namespace projectfarm::engine::world
         {
             if (!this->LoadLayerFromJson(layerJson))
             {
-                this->LogMessage("Failed to load layer with json: " + layerJson.dump());
+                shared::api::logging::Log("Failed to load layer with json: " + layerJson.dump());
                 return false;
             }
 
@@ -62,7 +63,7 @@ namespace projectfarm::engine::world
         {
             if (!this->LoadLayerFromBinary(fs))
             {
-                this->LogMessage("Failed to load layer from binary.");
+                shared::api::logging::Log("Failed to load layer from binary.");
                 return false;
             }
         }
