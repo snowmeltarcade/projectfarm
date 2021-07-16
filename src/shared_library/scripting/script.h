@@ -6,17 +6,16 @@
 
 #include <v8.h>
 
-#include "logging/consume_logger.h"
 #include "function_types.h"
 #include "function_parameter.h"
 
 namespace projectfarm::shared::scripting
 {
-    class Script : public shared::ConsumeLogger
+    class Script
     {
     public:
         Script() = default;
-        ~Script() override = default;
+        virtual ~Script() = default;
 
         void SetIsolate(v8::Isolate* isolate) noexcept
         {

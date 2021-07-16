@@ -2,6 +2,7 @@
 #include <sstream>
 
 #include "database.h"
+#include "api/logging/logging.h"
 
 using namespace std::string_literals;
 
@@ -11,7 +12,7 @@ namespace projectfarm::shared::persistence
     {
         if (this->IsOpen())
         {
-            this->LogMessage("Database already open: '" + path.u8string() + "'");
+            api::logging::Log("Database already open: '" + path.u8string() + "'");
             return false;
         }
 
@@ -21,7 +22,7 @@ namespace projectfarm::shared::persistence
         if (res != SQLITE_OK)
         {
             auto message = sqlite3_errstr(res);
-            this->LogMessage("Failed to open database: '" + path.u8string() +
+            api::logging::Log("Failed to open database: '" + path.u8string() +
                 "' with error: " + message);
             return false;
         }
@@ -30,12 +31,12 @@ namespace projectfarm::shared::persistence
         {
             if (!this->RunSQLFromFile(path))
             {
-                this->LogMessage("Failed to run SQL in file: " + path.u8string());
+                api::logging::Log("Failed to run SQL in file: " + path.u8string());
                 return false;
             }
         }
 
-        this->LogMessage("Opened database: " + path.u8string());
+        api::logging::Log("Opened database: " + path.u8string());
 
         return true;
     }
@@ -44,7 +45,7 @@ namespace projectfarm::shared::persistence
     {
         if (!this->IsOpen())
         {
-            this->LogMessage("Database already closed.");
+            api::logging::Log("Database already closed.");
             return false;
         }
 
@@ -58,13 +59,13 @@ namespace projectfarm::shared::persistence
         if (auto res = sqlite3_close(this->_db); res != SQLITE_OK)
         {
             auto message = sqlite3_errstr(res);
-            this->LogMessage("Failed to close database with error: "s + message);
+            api::logging::Log("Failed to close database with error: "s + message);
             return false;
         }
 
         this->_db = nullptr;
 
-        this->LogMessage("Closed database.");
+        api::logging::Log("Closed database.");
 
         return true;
     }
@@ -73,7 +74,7 @@ namespace projectfarm::shared::persistence
     {
         if (!this->IsOpen())
         {
-            this->LogMessage("Database is not connected.");
+            api::logging::Log("Database is not connected.");
             return false;
         }
 
@@ -81,7 +82,7 @@ namespace projectfarm::shared::persistence
 
         if (!fs.is_open())
         {
-            this->LogMessage("Failed to open SQL file: " + path.u8string());
+            api::logging::Log("Failed to open SQL file: " + path.u8string());
             return false;
         }
 
@@ -94,7 +95,7 @@ namespace projectfarm::shared::persistence
             res != SQLITE_OK)
         {
             auto message = sqlite3_errstr(res);
-            this->LogMessage("Failed to run SQL from file: "s + path.u8string() +
+            api::logging::Log("Failed to run SQL from file: "s + path.u8string() +
                 " with error: " + message + " and SQL error: " + sqlError);
 
             if (sqlError)
@@ -113,11 +114,9 @@ namespace projectfarm::shared::persistence
     {
         auto statement = std::make_shared<Statement>(this->weak_from_this());
 
-        statement->SetLogger(this->_logger);
-
         if (!statement->PrepareFromFile(path))
         {
-            this->LogMessage("Failed to create statement from SQL file: " + path.u8string());
+            api::logging::Log("Failed to create statement from SQL file: " + path.u8string());
             return nullptr;
         }
 

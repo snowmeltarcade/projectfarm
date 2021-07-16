@@ -5,14 +5,12 @@
 #include <tuple>
 
 #include "data/consume_data_provider.h"
-#include "logging/consume_logger.h"
 #include "consume_graphics.h"
 #include "texture.h"
 
 namespace projectfarm::graphics
 {
-    class TileSet final : public shared::ConsumeLogger,
-                          public ConsumeGraphics,
+    class TileSet final : public ConsumeGraphics,
                           public shared::ConsumeDataProvider
     {
     public:

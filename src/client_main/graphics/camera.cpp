@@ -3,6 +3,7 @@
 #include "graphics.h"
 #include "opengl_errors.h"
 #include "engine/debug_information.h"
+#include "api/logging/logging.h"
 
 namespace projectfarm::graphics
 {
@@ -10,7 +11,7 @@ namespace projectfarm::graphics
     {
         this->_currentScreenResolution = screenResolution;
 
-        this->_logger->LogMessage("Setting screen resolution to: " + screenResolution.GetName());
+        shared::api::logging::Log("Setting screen resolution to: " + screenResolution.GetName());
 
         if (this->_currentScreenResolution->FullScreen)
         {
@@ -45,12 +46,12 @@ namespace projectfarm::graphics
         this->_viewport.w = w;
         this->_viewport.h = h;
 
-        this->_logger->LogMessage("Viewport size: " + std::to_string(this->_viewport.w) + "x" +
+        shared::api::logging::Log("Viewport size: " + std::to_string(this->_viewport.w) + "x" +
                                   std::to_string(this->_viewport.h));
 
         this->_pixelsPerMeter = this->_viewport.w / this->_screenWidthInMeters;
 
-        this->_logger->LogMessage("Pixels/Meter: " + std::to_string(this->_pixelsPerMeter));
+        shared::api::logging::Log("Pixels/Meter: " + std::to_string(this->_pixelsPerMeter));
 
         return true;
     }
@@ -169,7 +170,7 @@ namespace projectfarm::graphics
 
         if (defaultResolution == this->_defaultScreenResolutions.end())
         {
-            this->LogMessage("Failed to find default resolution.");
+            shared::api::logging::Log("Failed to find default resolution.");
             return {};
         }
 

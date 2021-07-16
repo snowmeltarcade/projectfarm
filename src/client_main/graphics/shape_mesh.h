@@ -7,14 +7,12 @@
 #include <tuple>
 
 #include "graphics_dependencies.h"
-#include "logging/consume_logger.h"
 #include "consume_graphics.h"
 #include "shapes/shapes.h"
 
 namespace projectfarm::graphics
 {
-    class ShapeMesh final : public shared::ConsumeLogger,
-                            public ConsumeGraphics
+    class ShapeMesh final : public ConsumeGraphics
     {
     public:
         ShapeMesh() = default;

@@ -4,28 +4,28 @@
 #include <vector>
 #include <memory>
 
-#include "logging/consume_logger.h"
 #include "consume_game.h"
 #include "action.h"
 #include "engine/action_types.h"
 
 namespace projectfarm::engine
 {
-    class ActionInputSource : public shared::ConsumeLogger,
-                              public engine::ConsumeGame
+    class ActionInputSource : public engine::ConsumeGame
     {
     public:
         ActionInputSource() = default;
-        ~ActionInputSource() override = default;
+        ~ActionInputSource() = default;
 
         virtual void Tick() = 0;
 
-        [[nodiscard]] const std::vector<std::shared_ptr<Action>>& GetActions() const noexcept
+        [[nodiscard]]
+        const std::vector<std::shared_ptr<Action>>& GetActions() const noexcept
         {
             return this->_actions;
         }
 
-        [[nodiscard]] const std::vector<std::shared_ptr<Action>>& GetRemovedActions() const noexcept
+        [[nodiscard]]
+        const std::vector<std::shared_ptr<Action>>& GetRemovedActions() const noexcept
         {
             return this->_removedActions;
         }

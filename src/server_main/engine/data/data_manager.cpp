@@ -1,58 +1,57 @@
 #include "data_manager.h"
 #include "entities/character_appearance_details.h"
 #include "platform/platform_id.h"
+#include "api/logging/logging.h"
 
 namespace projectfarm::engine::data
 {
     bool DataManager::Initialize() noexcept
     {
-        this->LogMessage("Initializing data manager...");
+        shared::api::logging::Log("Initializing data manager...");
 
         this->_playerDatabase = std::make_shared<shared::persistence::Database>();
-        this->_playerDatabase->SetLogger(this->_logger);
 
         this->_serverCacheDatabase = std::make_shared<shared::persistence::Database>();
-        this->_serverCacheDatabase->SetLogger(this->_logger);
 
         if (!this->SetupPlayerDatabase())
         {
-            this->LogMessage("Failed to setup player database.");
+            shared::api::logging::Log("Failed to setup player database.");
             return false;
         }
 
         if (!this->SetupServerCacheDatabase())
         {
-            this->LogMessage("Failed to setup server cache database.");
+            shared::api::logging::Log("Failed to setup server cache database.");
             return false;
         }
 
-        this->LogMessage("Initialized data manager.");
+        shared::api::logging::Log("Initialized data manager.");
 
         return true;
     }
 
     void DataManager::Shutdown() noexcept
     {
-        this->LogMessage("Shutting down data manager...");
+        shared::api::logging::Log("Shutting down data manager...");
 
         if (this->_serverCacheDatabase && !this->_serverCacheDatabase->Shutdown())
         {
-            this->LogMessage("Failed to shut down server cache database.");
+            shared::api::logging::Log("Failed to shut down server cache database.");
             return;
         }
 
         if (this->_playerDatabase && !this->_playerDatabase->Shutdown())
         {
-            this->LogMessage("Failed to shut down player database.");
+            shared::api::logging::Log("Failed to shut down player database.");
             return;
         }
 
-        this->LogMessage("Shut down data manager.");
+        shared::api::logging::Log("Shut down data manager.");
     }
 
     bool DataManager::SetupPlayerDatabase() noexcept
     {
-        this->LogMessage("Setting up player database...");
+        shared::api::logging::Log("Setting up player database...");
 
         // iOS does not give write access to the application bundle directory, so we need to leave the
         // `data` and application directories and go into the `Library` directory
@@ -65,7 +64,7 @@ namespace projectfarm::engine::data
 #endif
         if (!this->_playerDatabase->Open(databasePath, false))
         {
-            this->LogMessage("Failed to open the player database.");
+            shared::api::logging::Log("Failed to open the player database.");
             return false;
         }
 
@@ -73,41 +72,41 @@ namespace projectfarm::engine::data
                                                                "create_player_database.sql");
         if (!this->_playerDatabase->RunSQLFromFile(createPath))
         {
-            this->LogMessage("Failed to run sql file: " + createPath.u8string());
+            shared::api::logging::Log("Failed to run sql file: " + createPath.u8string());
             return false;
         }
 
         if (!this->CreatePlayerDatabaseStatements())
         {
-            this->LogMessage("Failed to create player database statements.");
+            shared::api::logging::Log("Failed to create player database statements.");
             return false;
         }
 
-        this->LogMessage("Set up player database.");
+        shared::api::logging::Log("Set up player database.");
 
         return true;
     }
 
     bool DataManager::SetupServerCacheDatabase() noexcept
     {
-        this->LogMessage("Setting up server cache database...");
+        shared::api::logging::Log("Setting up server cache database...");
 
         auto templatePath = this->_dataProvider->ResolveFileName(shared::DataProviderLocations::ServerDatabases,
                                                                  "create_server_cache.sql");
 
         if (!this->_serverCacheDatabase->Open(templatePath, true))
         {
-            this->LogMessage("Failed to open server cache database.");
+            shared::api::logging::Log("Failed to open server cache database.");
             return false;
         }
 
         if (!this->CreateServerCacheStatements())
         {
-            this->LogMessage("Failed to create server cache statements.");
+            shared::api::logging::Log("Failed to create server cache statements.");
             return false;
         }
 
-        this->LogMessage("Set up server cache database.");
+        shared::api::logging::Log("Set up server cache database.");
 
         return true;
     }
@@ -119,7 +118,7 @@ namespace projectfarm::engine::data
         if (this->_serverCacheInsertEntity = this->_serverCacheDatabase->CreateStatementFromFile(path);
             !this->_serverCacheInsertEntity)
         {
-            this->LogMessage("Failed to create statement from path: " + path.u8string());
+            shared::api::logging::Log("Failed to create statement from path: " + path.u8string());
             return false;
         }
 
@@ -128,7 +127,7 @@ namespace projectfarm::engine::data
         if (this->_serverCacheUpdateEntity = this->_serverCacheDatabase->CreateStatementFromFile(path);
             !this->_serverCacheUpdateEntity)
         {
-            this->LogMessage("Failed to create statement from path: " + path.u8string());
+            shared::api::logging::Log("Failed to create statement from path: " + path.u8string());
             return false;
         }
 
@@ -137,7 +136,7 @@ namespace projectfarm::engine::data
         if (this->_serverCacheGetEntityAppearance = this->_serverCacheDatabase->CreateStatementFromFile(path);
             !this->_serverCacheGetEntityAppearance)
         {
-            this->LogMessage("Failed to create statement from path: " + path.u8string());
+            shared::api::logging::Log("Failed to create statement from path: " + path.u8string());
             return false;
         }
 
@@ -154,43 +153,43 @@ namespace projectfarm::engine::data
 
         if (!statement->SetParameterInt(index++, entityId))
         {
-            this->LogMessage("Failed to set entity id.");
+            shared::api::logging::Log("Failed to set entity id.");
             return false;
         }
 
         if (!statement->SetParameterString(index++, appearanceDetails.Hair))
         {
-            this->LogMessage("Failed to set appearance hair.");
+            shared::api::logging::Log("Failed to set appearance hair.");
             return false;
         }
 
         if (!statement->SetParameterString(index++, appearanceDetails.Body))
         {
-            this->LogMessage("Failed to set appearance body.");
+            shared::api::logging::Log("Failed to set appearance body.");
             return false;
         }
 
         if (!statement->SetParameterString(index++, appearanceDetails.ClothesTop))
         {
-            this->LogMessage("Failed to set appearance clothes top.");
+            shared::api::logging::Log("Failed to set appearance clothes top.");
             return false;
         }
 
         if (!statement->SetParameterString(index++, appearanceDetails.ClothesBottom))
         {
-            this->LogMessage("Failed to set appearance clothes bottom.");
+            shared::api::logging::Log("Failed to set appearance clothes bottom.");
             return false;
         }
 
         if (!statement->SetParameterString(index++, appearanceDetails.Feet))
         {
-            this->LogMessage("Failed to set appearance feet.");
+            shared::api::logging::Log("Failed to set appearance feet.");
             return false;
         }
 
         if (!statement->Run())
         {
-            this->LogMessage("Failed to run server cache insert entity statement.");
+            shared::api::logging::Log("Failed to run server cache insert entity statement.");
             return false;
         }
 
@@ -202,20 +201,20 @@ namespace projectfarm::engine::data
     {
         if (!this->_playerDatabaseGetPlayerAppearance->SetParameterInt(0, playerId))
         {
-            this->LogMessage("Failed to set player id.");
+            shared::api::logging::Log("Failed to set player id.");
             return false;
         }
 
         if (!this->_playerDatabaseGetPlayerAppearance->Run())
         {
-            this->LogMessage("Failed to run player database get player appearance statement.");
+            shared::api::logging::Log("Failed to run player database get player appearance statement.");
             return false;
         }
 
         auto results = this->_playerDatabaseGetPlayerAppearance->GetStringReturnValues();
         if (results.size() != 5)
         {
-            this->LogMessage("Incorrect number of results returned for player database get player appearance statement: " +
+            shared::api::logging::Log("Incorrect number of results returned for player database get player appearance statement: " +
                              std::to_string(results.size()));
             return false;
         }
@@ -237,20 +236,20 @@ namespace projectfarm::engine::data
     {
         if (!this->_serverCacheGetEntityAppearance->SetParameterInt(0, entityId))
         {
-            this->LogMessage("Failed to set entity id.");
+            shared::api::logging::Log("Failed to set entity id.");
             return false;
         }
 
         if (!this->_serverCacheGetEntityAppearance->Run())
         {
-            this->LogMessage("Failed to run server cache get entity appearance statement.");
+            shared::api::logging::Log("Failed to run server cache get entity appearance statement.");
             return false;
         }
 
         auto results = this->_serverCacheGetEntityAppearance->GetStringReturnValues();
         if (results.size() != 5)
         {
-            this->LogMessage("Incorrect number of results returned for get entity appearance statement: " +
+            shared::api::logging::Log("Incorrect number of results returned for get entity appearance statement: " +
                              std::to_string(results.size()));
             return false;
         }
@@ -276,7 +275,7 @@ namespace projectfarm::engine::data
             if ((statement) = this->_playerDatabase->CreateStatementFromFile(path); \
                 !(statement)) \
             { \
-                this->LogMessage("Failed to create statement from path: " + path.u8string()); \
+                shared::api::logging::Log("Failed to create statement from path: " + path.u8string()); \
                 return false; \
             } \
         }
@@ -306,33 +305,33 @@ namespace projectfarm::engine::data
     {
         if (!this->_playerDatabaseInsertPlayer->SetParameterString(0, userName))
         {
-            this->LogMessage("Failed to set username.");
+            shared::api::logging::Log("Failed to set username.");
             return false;
         }
 
         if (!this->_playerDatabaseInsertPlayer->SetParameterString(1, hashedPassword))
         {
-            this->LogMessage("Failed to set hashed password.");
+            shared::api::logging::Log("Failed to set hashed password.");
             return false;
         }
 
         auto secondsSinceEpoch = static_cast<uint64_t>(std::chrono::duration_cast<std::chrono::seconds>(std::chrono::system_clock::now().time_since_epoch()).count());
         if (!this->_playerDatabaseInsertPlayer->SetParameterInt(2, secondsSinceEpoch))
         {
-            this->LogMessage("Failed to set login time.");
+            shared::api::logging::Log("Failed to set login time.");
             return false;
         }
 
         if (!this->_playerDatabaseInsertPlayer->Run())
         {
-            this->LogMessage("Failed to run player database insert player statement.");
+            shared::api::logging::Log("Failed to run player database insert player statement.");
             return false;
         }
 
         auto results = this->_playerDatabaseInsertPlayer->GetIntReturnValues();
         if (results.size() != 1)
         {
-            this->LogMessage("Incorrect number of results returned for insert player statement: " +
+            shared::api::logging::Log("Incorrect number of results returned for insert player statement: " +
                              std::to_string(results.size()));
             return false;
         }
@@ -347,27 +346,27 @@ namespace projectfarm::engine::data
     {
         if (!this->_playerDatabaseUpdatePlayerLogin->SetParameterString(0, userName))
         {
-            this->LogMessage("Failed to set username.");
+            shared::api::logging::Log("Failed to set username.");
             return false;
         }
 
         auto secondsSinceEpoch = static_cast<uint64_t>(std::chrono::duration_cast<std::chrono::seconds>(std::chrono::system_clock::now().time_since_epoch()).count());
         if (!this->_playerDatabaseUpdatePlayerLogin->SetParameterInt(1, secondsSinceEpoch))
         {
-            this->LogMessage("Failed to set login time.");
+            shared::api::logging::Log("Failed to set login time.");
             return false;
         }
 
         if (!this->_playerDatabaseUpdatePlayerLogin->Run())
         {
-            this->LogMessage("Failed to run player database update player login statement.");
+            shared::api::logging::Log("Failed to run player database update player login statement.");
             return false;
         }
 
         auto results = this->_playerDatabaseUpdatePlayerLogin->GetIntReturnValues();
         if (results.size() != 1)
         {
-            this->LogMessage("Incorrect number of results returned for update player login statement: " +
+            shared::api::logging::Log("Incorrect number of results returned for update player login statement: " +
                              std::to_string(results.size()));
             return false;
         }
@@ -381,19 +380,19 @@ namespace projectfarm::engine::data
     {
         if (!this->_playerDatabaseUpdatePlayerCurrentWorld->SetParameterInt(0, playerId))
         {
-            this->LogMessage("Failed to set player id.");
+            shared::api::logging::Log("Failed to set player id.");
             return false;
         }
 
         if (!this->_playerDatabaseUpdatePlayerCurrentWorld->SetParameterString(1, worldName))
         {
-            this->LogMessage("Failed to set world name.");
+            shared::api::logging::Log("Failed to set world name.");
             return false;
         }
 
         if (!this->_playerDatabaseUpdatePlayerCurrentWorld->Run())
         {
-            this->LogMessage("Failed to run player database update player current world statement.");
+            shared::api::logging::Log("Failed to run player database update player current world statement.");
             return false;
         }
 
@@ -404,25 +403,25 @@ namespace projectfarm::engine::data
     {
         if (!this->_playerDatabaseUpdatePlayerState->SetParameterInt(0, playerId))
         {
-            this->LogMessage("Failed to set player id.");
+            shared::api::logging::Log("Failed to set player id.");
             return false;
         }
 
         if (!this->_playerDatabaseUpdatePlayerState->SetParameterInt(1, xPos))
         {
-            this->LogMessage("Failed to set x pos.");
+            shared::api::logging::Log("Failed to set x pos.");
             return false;
         }
 
         if (!this->_playerDatabaseUpdatePlayerState->SetParameterInt(2, yPos))
         {
-            this->LogMessage("Failed to set y pos.");
+            shared::api::logging::Log("Failed to set y pos.");
             return false;
         }
 
         if (!this->_playerDatabaseUpdatePlayerState->Run())
         {
-            this->LogMessage("Failed to run player database update player state statement.");
+            shared::api::logging::Log("Failed to run player database update player state statement.");
             return false;
         }
 
@@ -434,43 +433,43 @@ namespace projectfarm::engine::data
     {
         if (!this->_playerDatabaseUpdatePlayerAppearanceDetails->SetParameterInt(0, playerId))
         {
-            this->LogMessage("Failed to set player id.");
+            shared::api::logging::Log("Failed to set player id.");
             return false;
         }
 
         if (!this->_playerDatabaseUpdatePlayerAppearanceDetails->SetParameterString(1, appearanceDetails.Hair))
         {
-            this->LogMessage("Failed to set hair.");
+            shared::api::logging::Log("Failed to set hair.");
             return false;
         }
 
         if (!this->_playerDatabaseUpdatePlayerAppearanceDetails->SetParameterString(2, appearanceDetails.Body))
         {
-            this->LogMessage("Failed to set body.");
+            shared::api::logging::Log("Failed to set body.");
             return false;
         }
 
         if (!this->_playerDatabaseUpdatePlayerAppearanceDetails->SetParameterString(3, appearanceDetails.ClothesTop))
         {
-            this->LogMessage("Failed to set clothes top.");
+            shared::api::logging::Log("Failed to set clothes top.");
             return false;
         }
 
         if (!this->_playerDatabaseUpdatePlayerAppearanceDetails->SetParameterString(4, appearanceDetails.ClothesBottom))
         {
-            this->LogMessage("Failed to set clothes bottom.");
+            shared::api::logging::Log("Failed to set clothes bottom.");
             return false;
         }
 
         if (!this->_playerDatabaseUpdatePlayerAppearanceDetails->SetParameterString(5, appearanceDetails.Feet))
         {
-            this->LogMessage("Failed to set feet.");
+            shared::api::logging::Log("Failed to set feet.");
             return false;
         }
 
         if (!this->_playerDatabaseUpdatePlayerAppearanceDetails->Run())
         {
-            this->LogMessage("Failed to run player database update player appearance details statement.");
+            shared::api::logging::Log("Failed to run player database update player appearance details statement.");
             return false;
         }
 
@@ -481,20 +480,20 @@ namespace projectfarm::engine::data
     {
         if (!this->_playerDatabaseGetHashedPassword->SetParameterString(0, userName))
         {
-            this->LogMessage("Failed to set username.");
+            shared::api::logging::Log("Failed to set username.");
             return false;
         }
 
         if (!this->_playerDatabaseGetHashedPassword->Run())
         {
-            this->LogMessage("Failed to run player database get hashed password statement.");
+            shared::api::logging::Log("Failed to run player database get hashed password statement.");
             return false;
         }
 
         auto results = this->_playerDatabaseGetHashedPassword->GetStringReturnValues();
         if (results.size() > 1)
         {
-            this->LogMessage("Incorrect number of results returned for get hashed password statement: " +
+            shared::api::logging::Log("Incorrect number of results returned for get hashed password statement: " +
                              std::to_string(results.size()));
             return false;
         }
@@ -508,20 +507,20 @@ namespace projectfarm::engine::data
     {
         if (!this->_playerDatabaseGetPlayerLoadDetails->SetParameterInt(0, playerId))
         {
-            this->LogMessage("Failed to set player id.");
+            shared::api::logging::Log("Failed to set player id.");
             return false;
         }
 
         if (!this->_playerDatabaseGetPlayerLoadDetails->Run())
         {
-            this->LogMessage("Failed to run player database get player load details statement.");
+            shared::api::logging::Log("Failed to run player database get player load details statement.");
             return false;
         }
 
         auto results = this->_playerDatabaseGetPlayerLoadDetails->GetStringReturnValues();
         if (results.size() != 1)
         {
-            this->LogMessage("Incorrect number of results returned for get player load details statement: " +
+            shared::api::logging::Log("Incorrect number of results returned for get player load details statement: " +
                              std::to_string(results.size()));
             return false;
         }
@@ -535,20 +534,20 @@ namespace projectfarm::engine::data
     {
         if (!this->_playerDatabaseGetPlayerIdByUserName->SetParameterString(0, userName))
         {
-            this->LogMessage("Failed to set username.");
+            shared::api::logging::Log("Failed to set username.");
             return false;
         }
 
         if (!this->_playerDatabaseGetPlayerIdByUserName->Run())
         {
-            this->LogMessage("Failed to run player database get player id by username statement.");
+            shared::api::logging::Log("Failed to run player database get player id by username statement.");
             return false;
         }
 
         auto results = this->_playerDatabaseGetPlayerIdByUserName->GetIntReturnValues();
         if (results.size() > 1)
         {
-            this->LogMessage("Incorrect number of results returned for get player id by username statement: " +
+            shared::api::logging::Log("Incorrect number of results returned for get player id by username statement: " +
                              std::to_string(results.size()));
             return false;
         }
@@ -562,20 +561,20 @@ namespace projectfarm::engine::data
     {
         if (!this->_playerDatabaseGetCurrentWorldByPlayerId->SetParameterInt(0, playerId))
         {
-            this->LogMessage("Failed to set player id.");
+            shared::api::logging::Log("Failed to set player id.");
             return false;
         }
 
         if (!this->_playerDatabaseGetCurrentWorldByPlayerId->Run())
         {
-            this->LogMessage("Failed to run player database get current world by player id statement.");
+            shared::api::logging::Log("Failed to run player database get current world by player id statement.");
             return false;
         }
 
         auto results = this->_playerDatabaseGetCurrentWorldByPlayerId->GetStringReturnValues();
         if (results.size() > 1)
         {
-            this->LogMessage("Incorrect number of results returned for get current world by player id statement: " +
+            shared::api::logging::Log("Incorrect number of results returned for get current world by player id statement: " +
                              std::to_string(results.size()));
             return false;
         }
@@ -589,20 +588,20 @@ namespace projectfarm::engine::data
     {
         if (!this->_playerDatabaseGetPosByPlayerId->SetParameterInt(0, playerId))
         {
-            this->LogMessage("Failed to set player id.");
+            shared::api::logging::Log("Failed to set player id.");
             return false;
         }
 
         if (!this->_playerDatabaseGetPosByPlayerId->Run())
         {
-            this->LogMessage("Failed to run player database get pos by player id statement.");
+            shared::api::logging::Log("Failed to run player database get pos by player id statement.");
             return false;
         }
 
         auto results = this->_playerDatabaseGetPosByPlayerId->GetIntReturnValues();
         if (results.size() != 2)
         {
-            this->LogMessage("Incorrect number of results returned for get pos by player id statement: " +
+            shared::api::logging::Log("Incorrect number of results returned for get pos by player id statement: " +
                              std::to_string(results.size()));
             return false;
         }

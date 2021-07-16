@@ -9,7 +9,6 @@
 #include <unordered_map>
 #include <functional>
 
-#include "logging/consume_logger.h"
 #include "graphics/consume_graphics.h"
 #include "data/consume_data_provider.h"
 #include "graphics/consume_font_manager.h"
@@ -20,8 +19,7 @@
 
 namespace projectfarm::graphics::ui
 {
-	class UI final : public projectfarm::shared::ConsumeLogger,
-	                 public projectfarm::graphics::ConsumeGraphics,
+	class UI final : public projectfarm::graphics::ConsumeGraphics,
                      public projectfarm::shared::ConsumeDataProvider,
                      public projectfarm::graphics::ConsumeFontManager,
                      public projectfarm::shared::scripting::ConsumeScriptSystem,

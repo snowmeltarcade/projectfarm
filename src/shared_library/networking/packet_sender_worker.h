@@ -11,20 +11,19 @@
 
 #include <SDL_net.h>
 
-#include "logging/consume_logger.h"
 #include "networking/packet.h"
 #include "utils/util.h"
 
 namespace projectfarm::shared::networking
 {
-    class PacketSenderWorker final : public ConsumeLogger
+    class PacketSenderWorker final
     {
     public:
         PacketSenderWorker(UDPsocket udpSocket, UDPpacket* udpPacket)
         : _udpSocket {udpSocket},
           _udpPacket {udpPacket}
         {}
-        ~PacketSenderWorker() override = default;
+        ~PacketSenderWorker() = default;
 
         PacketSenderWorker(const PacketSenderWorker&) = delete;
         PacketSenderWorker(PacketSenderWorker&&) = delete;

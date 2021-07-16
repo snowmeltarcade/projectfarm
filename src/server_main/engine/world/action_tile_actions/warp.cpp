@@ -1,9 +1,9 @@
 #include "warp.h"
-
+#include "api/logging/logging.h"
 
 namespace projectfarm::engine::world::action_tile_actions
 {
-    [[nodiscard]] bool Warp::Run() noexcept
+    bool Warp::Run() noexcept
     {
         auto world = this->_character->GetCurrentWorld();
 
@@ -12,7 +12,7 @@ namespace projectfarm::engine::world::action_tile_actions
             auto actionTiles = world->GetActionTilesByProperty("type", this->_destinationTileType);
             if (actionTiles.empty())
             {
-                this->LogMessage("Failed to find warp destination tile type for world: " + this->_worldName);
+                shared::api::logging::Log("Failed to find warp destination tile type for world: " + this->_worldName);
                 return false;
             }
 
@@ -35,7 +35,7 @@ namespace projectfarm::engine::world::action_tile_actions
                                                   this->_character->GetEntityId(),
                                                   this->_worldName))
                 {
-                    this->LogMessage("Failed to transfer player with id: " + std::to_string(this->_character->GetPlayerId()) +
+                    shared::api::logging::Log("Failed to transfer player with id: " + std::to_string(this->_character->GetPlayerId()) +
                                      " to world: " + this->_worldName);
                     return false;
                 }
@@ -44,7 +44,7 @@ namespace projectfarm::engine::world::action_tile_actions
             {
                 if (!world->TransferCharacterToWorld(this->_character, this->_worldName, this->_destinationTileType))
                 {
-                    this->LogMessage("Failed to transfer character with entity id: " +
+                    shared::api::logging::Log("Failed to transfer character with entity id: " +
                                      std::to_string(this->_character->GetEntityId()) +
                                      " to world: " + this->_worldName);
 

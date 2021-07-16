@@ -16,6 +16,7 @@
 #include "time/clock.h"
 #include "engine/device_capabilities.h"
 #include "graphics/screen_resolution.h"
+#include "api/logging/logging.h"
 
 using namespace std::literals;
 
@@ -33,7 +34,7 @@ namespace projectfarm::scenes::implemented_scenes
         if (input->IsKeyPressed_Keycode(SDLK_RETURN) ||
             input->IsKeyPressed_Keycode(SDLK_RETURN2))
         {
-            this->LogMessage("Enter pressed.......");
+            shared::api::logging::Log("Enter pressed.......");
             this->_ui->HandleKeyPress_Enter();
         }
 
@@ -104,7 +105,7 @@ namespace projectfarm::scenes::implemented_scenes
             ss << "Received invalid packet: ";
             ss << static_cast<int>(packetType);
 
-            this->LogMessage(ss.str());
+            shared::api::logging::Log(ss.str());
         }
 
         return isValid;
@@ -117,7 +118,7 @@ namespace projectfarm::scenes::implemented_scenes
 
         auto worldToLoad = serverClientLoadWorld->GetWorldToLoad();
 
-        this->_logger->LogMessage("Received packet to load this world: " + worldToLoad);
+        shared::api::logging::Log("Received packet to load this world: " + worldToLoad);
 
         this->GetSceneManager()->AddLoadSceneParameter(WorldScene::LoadParameter_WorldName, worldToLoad);
         this->GetSceneManager()->QueueLoadScene(projectfarm::scenes::SceneTypes::Loading);
@@ -143,7 +144,7 @@ namespace projectfarm::scenes::implemented_scenes
 
         if (!this->_world->UpdateEntity(entityId, playerId, entityType, lastUpdateTime, data))
         {
-            //this->LogMessage("Failed to update entity: " + serverClientEntityUpdate->GetDebugData());
+            //shared::api::logging::Log("Failed to update entity: " + serverClientEntityUpdate->GetDebugData());
         }
 
         auto details = this->_cachedCharacterDetails.find(entityId);
@@ -170,7 +171,7 @@ namespace projectfarm::scenes::implemented_scenes
             return;
         }
 
-        this->LogMessage("Player: " + std::to_string(serverClientPlayerJoinedWorld->GetPlayerId()) +
+        shared::api::logging::Log("Player: " + std::to_string(serverClientPlayerJoinedWorld->GetPlayerId()) +
                          " has joined this world: " + worldName);
     }
 
@@ -186,7 +187,7 @@ namespace projectfarm::scenes::implemented_scenes
             return;
         }
 
-        this->LogMessage("Player: " + std::to_string(serverClientPlayerLeftWorld->GetPlayerId()) +
+        shared::api::logging::Log("Player: " + std::to_string(serverClientPlayerLeftWorld->GetPlayerId()) +
                          " has exited this world: " + worldName);
     }
 
@@ -202,7 +203,7 @@ namespace projectfarm::scenes::implemented_scenes
             return;
         }
 
-        this->LogMessage("Removing entity with id: " + std::to_string(serverClientRemoveEntityFromWorld->GetEntityId()) +
+        shared::api::logging::Log("Removing entity with id: " + std::to_string(serverClientRemoveEntityFromWorld->GetEntityId()) +
                          " from world: " + worldName);
 
         this->_world->RemoveEntity(serverClientRemoveEntityFromWorld->GetEntityId());
@@ -220,7 +221,7 @@ namespace projectfarm::scenes::implemented_scenes
             return;
         }
 
-        this->LogMessage("Updating character details with entity id: " + std::to_string(serverClientCharacterSetDetails->GetEntityId()));
+        shared::api::logging::Log("Updating character details with entity id: " + std::to_string(serverClientCharacterSetDetails->GetEntityId()));
 
         auto entityId = serverClientCharacterSetDetails->GetEntityId();
 
@@ -252,18 +253,18 @@ namespace projectfarm::scenes::implemented_scenes
 
     bool WorldScene::Initialize()
     {
-        this->LogMessage("Initializing main game scene.");
+        shared::api::logging::Log("Initializing main game scene.");
 
         if (!this->SetupUI())
         {
-            this->LogMessage("Failed to setup UI.");
+            shared::api::logging::Log("Failed to setup UI.");
             return false;
         }
 
         auto worldName = this->_loadParameters[WorldScene::LoadParameter_WorldName];
         if (!this->LoadWorldFile(worldName))
         {
-            this->LogMessage("Failed to load the world file with name: " + worldName);
+            shared::api::logging::Log("Failed to load the world file with name: " + worldName);
             return false;
         }
 
@@ -296,17 +297,16 @@ namespace projectfarm::scenes::implemented_scenes
 
         this->ReconfirmPixelSizes();
 
-        this->LogMessage("Initialized main game scene.");
+        shared::api::logging::Log("Initialized main game scene.");
 
         return true;
     }
 
     bool WorldScene::LoadWorldFile(const std::string& worldName)
     {
-        this->LogMessage("Loading world: " + worldName);
+        shared::api::logging::Log("Loading world: " + worldName);
 
         this->_world = std::make_shared<engine::world::World>();
-        this->_world->SetLogger(this->_logger);
         this->_world->SetDataProvider(this->_dataProvider);
         this->_world->SetGraphics(this->GetGraphics());
         this->_world->SetRenderManager(this->_renderManager);
@@ -317,11 +317,11 @@ namespace projectfarm::scenes::implemented_scenes
 
         if (!this->_world->Load(worldName))
         {
-            this->LogMessage("Failed to load world: " + worldName);
+            shared::api::logging::Log("Failed to load world: " + worldName);
             return false;
         }
 
-        this->LogMessage("Loaded world: " + this->_world->GetName());
+        shared::api::logging::Log("Loaded world: " + this->_world->GetName());
 
         return true;
     }
@@ -331,7 +331,7 @@ namespace projectfarm::scenes::implemented_scenes
         if (!this->_renderManager->AddRenderable(0,
                                                  std::static_pointer_cast<graphics::Renderable>(this->_world)))
         {
-            this->LogMessage("Failed to add world as a renderable.");
+            shared::api::logging::Log("Failed to add world as a renderable.");
             return;
         }
 
@@ -362,8 +362,6 @@ namespace projectfarm::scenes::implemented_scenes
     bool WorldScene::SetupUI()
     {
         this->_ui = std::make_shared<projectfarm::graphics::ui::UI>();
-
-        this->_ui->SetLogger(this->_logger);
         this->_ui->SetGraphics(this->GetGraphics());
         this->_ui->SetDataProvider(this->_dataProvider);
         this->_ui->SetFontManager(this->_fontManager);
@@ -371,13 +369,13 @@ namespace projectfarm::scenes::implemented_scenes
         this->_ui->SetScene(this->shared_from_this());
         if (!this->_ui->Initialize())
         {
-            this->LogMessage("Failed to initialize UI.");
+            shared::api::logging::Log("Failed to initialize UI.");
             return false;
         }
 
         if (!this->_ui->LoadFromFile("world_screen"))
         {
-            this->LogMessage("Failed to load ui from file: world_screen");
+            shared::api::logging::Log("Failed to load ui from file: world_screen");
             return false;
         }
 
@@ -448,7 +446,7 @@ namespace projectfarm::scenes::implemented_scenes
         {
             if (parameters.size() != 0)
             {
-                this->LogMessage("Invalid number of parameters for `exit` scene message.");
+                shared::api::logging::Log("Invalid number of parameters for `exit` scene message.");
                 return "Invalid number of parameters.";
             }
 
@@ -458,7 +456,7 @@ namespace projectfarm::scenes::implemented_scenes
         {
             if (parameters.size() != 1)
             {
-                this->LogMessage("Invalid number of parameters for `compute_debug_info` scene message.");
+                shared::api::logging::Log("Invalid number of parameters for `compute_debug_info` scene message.");
                 return "Invalid number of parameters.";
             }
 
@@ -468,7 +466,7 @@ namespace projectfarm::scenes::implemented_scenes
         {
             if (parameters.size() != 1)
             {
-                this->LogMessage("Invalid number of parameters for `chatbox` scene message.");
+                shared::api::logging::Log("Invalid number of parameters for `chatbox` scene message.");
                 return "Invalid number of parameters.";
             }
 
@@ -486,7 +484,7 @@ namespace projectfarm::scenes::implemented_scenes
         {
             if (parameters.size() < 1)
             {
-                this->LogMessage("Invalid number of parameters for `chatbox_command` scene message.");
+                shared::api::logging::Log("Invalid number of parameters for `chatbox_command` scene message.");
                 return "Invalid number of parameters.";
             }
 
@@ -507,7 +505,7 @@ namespace projectfarm::scenes::implemented_scenes
         {
             if (parameters.size() != 3)
             {
-                this->LogMessage("Invalid number of parameters for `set_screen_resolution` scene message.");
+                shared::api::logging::Log("Invalid number of parameters for `set_screen_resolution` scene message.");
                 return "Invalid number of parameters.";
             }
 
@@ -515,7 +513,7 @@ namespace projectfarm::scenes::implemented_scenes
             if (!width)
             {
                 auto error = "Please enter a valid value for `width`.";
-                this->LogMessage(error);
+                shared::api::logging::Log(error);
                 return error;
             }
 
@@ -523,7 +521,7 @@ namespace projectfarm::scenes::implemented_scenes
             if (!height)
             {
                 auto error = "Please enter a valid value for `height`.";
-                this->LogMessage(error);
+                shared::api::logging::Log(error);
                 return error;
             }
 
@@ -531,7 +529,7 @@ namespace projectfarm::scenes::implemented_scenes
             if (!fullScreen)
             {
                 auto error = "Please enter a valid value for `fullScreen`.";
-                this->LogMessage(error);
+                shared::api::logging::Log(error);
                 return error;
             }
 
@@ -541,7 +539,7 @@ namespace projectfarm::scenes::implemented_scenes
             if (!this->GetGraphics()->GetCamera()->SetResolution(resolution))
             {
                 auto error = "Failed to set screen resolution: " + resolution.GetName();
-                this->LogMessage(error);
+                shared::api::logging::Log(error);
                 return error;
             }
         }

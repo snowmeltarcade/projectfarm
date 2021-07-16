@@ -1,6 +1,7 @@
 #include <algorithm>
 
 #include "control_style.h"
+#include "api/logging/logging.h"
 
 namespace projectfarm::graphics::ui
 {
@@ -68,7 +69,7 @@ namespace projectfarm::graphics::ui
         }
         else
         {
-            this->LogMessage("Failed to get color RGBA style.");
+            shared::api::logging::Log("Failed to get color RGBA style.");
             return {};
         }
 
@@ -88,7 +89,7 @@ namespace projectfarm::graphics::ui
         }
         else
         {
-            this->LogMessage("Failed to get color HSV style.");
+            shared::api::logging::Log("Failed to get color HSV style.");
             return {};
         }
 
@@ -193,7 +194,7 @@ namespace projectfarm::graphics::ui
             }
             else
             {
-                this->LogMessage("Invalid color: "s + std::string(*color_rgba));
+                shared::api::logging::Log("Invalid color: "s + std::string(*color_rgba));
                 return {};
             }
         }
@@ -202,7 +203,7 @@ namespace projectfarm::graphics::ui
         {
             if (*value < 0 || *value > 255)
             {
-                this->LogMessage("Red value is invalid: " + std::to_string(*value));
+                shared::api::logging::Log("Red value is invalid: " + std::to_string(*value));
                 return {};
             }
 
@@ -213,7 +214,7 @@ namespace projectfarm::graphics::ui
         {
             if (*value < 0 || *value > 255)
             {
-                this->LogMessage("Green value is invalid: " + std::to_string(*value));
+                shared::api::logging::Log("Green value is invalid: " + std::to_string(*value));
                 return {};
             }
 
@@ -224,7 +225,7 @@ namespace projectfarm::graphics::ui
         {
             if (*value < 0 || *value > 255)
             {
-                this->LogMessage("Blue value is invalid: " + std::to_string(*value));
+                shared::api::logging::Log("Blue value is invalid: " + std::to_string(*value));
                 return {};
             }
 
@@ -235,7 +236,7 @@ namespace projectfarm::graphics::ui
         {
             if (*value < 0 || *value > 255)
             {
-                this->LogMessage("Alpha value is invalid: " + std::to_string(*value));
+                shared::api::logging::Log("Alpha value is invalid: " + std::to_string(*value));
                 return {};
             }
 
@@ -261,7 +262,7 @@ namespace projectfarm::graphics::ui
             }
             else
             {
-                this->LogMessage("Invalid color: "s + std::string(*color_hsv));
+                shared::api::logging::Log("Invalid color: "s + std::string(*color_hsv));
                 return {};
             }
         }
@@ -270,7 +271,7 @@ namespace projectfarm::graphics::ui
         {
             if (*value < 0.0f || *value > 1.0f)
             {
-                this->LogMessage("Hue value is invalid: " + std::to_string(*value));
+                shared::api::logging::Log("Hue value is invalid: " + std::to_string(*value));
                 return {};
             }
 
@@ -281,7 +282,7 @@ namespace projectfarm::graphics::ui
         {
             if (*value < 0.0f || *value > 1.0f)
             {
-                this->LogMessage("Saturation value is invalid: " + std::to_string(*value));
+                shared::api::logging::Log("Saturation value is invalid: " + std::to_string(*value));
                 return {};
             }
 
@@ -292,7 +293,7 @@ namespace projectfarm::graphics::ui
         {
             if (*value < 0.0f || *value > 1.0f)
             {
-                this->LogMessage("Brightness value is invalid: " + std::to_string(*value));
+                shared::api::logging::Log("Brightness value is invalid: " + std::to_string(*value));
                 return {};
             }
 

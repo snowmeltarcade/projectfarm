@@ -1,13 +1,13 @@
 #include "texture.h"
 #include "graphics/graphics.h"
 #include "graphics/shapes/shapes.h"
+#include "api/logging/logging.h"
 
 namespace projectfarm::graphics::ui
 {
     bool Texture::Load() noexcept
     {
         this->_backgroundTexture = std::make_shared<projectfarm::graphics::Texture>();
-        this->_backgroundTexture->SetLogger(this->_logger);
         this->_backgroundTexture->SetGraphics(this->GetGraphics());
 
         this->_backgroundTexture->SetRenderToWorldSpace(false);
@@ -25,7 +25,7 @@ namespace projectfarm::graphics::ui
             auto texturePath = this->_style->Textures[this->_textureIndex];
             if (!this->_backgroundTexture->Load(texturePath))
             {
-                this->LogMessage("Failed to load texture: " + texturePath.u8string());
+                shared::api::logging::Log("Failed to load texture: " + texturePath.u8string());
                 return false;
             }
 
@@ -34,7 +34,7 @@ namespace projectfarm::graphics::ui
 
         if (!this->CreateMask())
         {
-            this->LogMessage("Failed to create mask.");
+            shared::api::logging::Log("Failed to create mask.");
             return false;
         }
 
@@ -101,7 +101,7 @@ namespace projectfarm::graphics::ui
 
         if (!this->SetCommonValuesFromJson(normalizedJson))
         {
-            this->LogMessage("Failed to set common values.");
+            shared::api::logging::Log("Failed to set common values.");
             return false;
         }
 
@@ -112,7 +112,7 @@ namespace projectfarm::graphics::ui
 
         if (!this->Load())
         {
-            this->LogMessage("Failed to load texture.");
+            shared::api::logging::Log("Failed to load texture.");
             return false;
         }
 
@@ -135,7 +135,7 @@ namespace projectfarm::graphics::ui
 
         if (!this->Load())
         {
-            this->LogMessage("Failed to reload texture when applying style.");
+            shared::api::logging::Log("Failed to reload texture when applying style.");
         }
     }
 

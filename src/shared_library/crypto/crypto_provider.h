@@ -5,21 +5,22 @@
 #include <optional>
 #include <sodium.h>
 
-#include "logging/consume_logger.h"
-
 namespace projectfarm::shared::crypto
 {
-    class CryptoProvider final : public ConsumeLogger
+    class CryptoProvider final
     {
     public:
         CryptoProvider() = default;
-        ~CryptoProvider() override = default;
+        ~CryptoProvider() = default;
 
-        [[nodiscard]] bool Initialize() const noexcept;
+        [[nodiscard]]
+        bool Initialize() const noexcept;
 
-        [[nodiscard]] std::optional<std::string> QuickHash(std::string_view secret) const noexcept;
+        [[nodiscard]]
+        std::optional<std::string> QuickHash(std::string_view secret) const noexcept;
 
-        [[nodiscard]] static bool Compare(std::string_view secret, std::string_view hash) noexcept;
+        [[nodiscard]]
+        static bool Compare(std::string_view secret, std::string_view hash) noexcept;
     };
 }
 

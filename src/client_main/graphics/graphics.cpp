@@ -1,6 +1,5 @@
 #include <string>
 #include <sstream>
-
 #include <SDL.h>
 #include <SDL_image.h>
 
@@ -9,18 +8,19 @@
 #include "engine/debug_information.h"
 #include "opengl_errors.h"
 #include "engine/game.h"
+#include "api/logging/logging.h"
 
 namespace projectfarm::graphics
 {
 	bool Graphics::Initialize(uint32_t screenWidthInMeters)
 	{
-		this->LogMessage("Initializing graphics...");
+		shared::api::logging::Log("Initializing graphics...");
 
 		constexpr static int sdlImageFlags = IMG_INIT_PNG;
 		if (IMG_Init(sdlImageFlags) != sdlImageFlags)
 		{
-			this->LogMessage("Failed to initialize SDL Img.");
-			this->LogMessage(SDL_GetError());
+			shared::api::logging::Log("Failed to initialize SDL Img.");
+			shared::api::logging::Log(SDL_GetError());
 			return false;
 		}
         
@@ -32,7 +32,6 @@ namespace projectfarm::graphics
         
         SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "0");
 
-        this->_camera->SetLogger(this->_logger);
         this->_camera->SetGraphics(this->shared_from_this());
         this->_camera->SetDebugInformation(this->GetDebugInformation());
         this->_camera->SetScreenWidthInMeters(screenWidthInMeters);
@@ -40,7 +39,7 @@ namespace projectfarm::graphics
         auto currentResolution = this->_camera->GetCurrentResolution();
         if (!currentResolution)
         {
-            this->LogMessage("Failed to get current screen resolution.");
+            shared::api::logging::Log("Failed to get current screen resolution.");
             return false;
         }
 
@@ -60,8 +59,8 @@ namespace projectfarm::graphics
                                          flags);
 		if (!this->_window)
 		{
-			this->LogMessage("Failed to create window.");
-			this->LogMessage(SDL_GetError());
+			shared::api::logging::Log("Failed to create window.");
+			shared::api::logging::Log(SDL_GetError());
 			return false;
 		}
 
@@ -78,8 +77,8 @@ namespace projectfarm::graphics
 		this->_context = SDL_GL_CreateContext(this->_window);
 		if (!this->_context)
         {
-		    this->LogMessage("Failed to create OpenGL context.");
-		    this->LogMessage(SDL_GetError());
+		    shared::api::logging::Log("Failed to create OpenGL context.");
+		    shared::api::logging::Log(SDL_GetError());
 		    return false;
         }
 
@@ -88,10 +87,10 @@ namespace projectfarm::graphics
 		GLenum glewError = glewInit();
 		if (glewError != GLEW_OK)
         {
-		    this->LogMessage("Failed to initialize GLEW.");
+		    shared::api::logging::Log("Failed to initialize GLEW.");
 		    std::stringstream errorString;
             errorString << glewGetErrorString(glewError);
-		    this->LogMessage(errorString.str());
+		    shared::api::logging::Log(errorString.str());
 		    return false;
         }
         CHECK_OPENGL_ERROR
@@ -110,39 +109,35 @@ namespace projectfarm::graphics
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         CHECK_OPENGL_ERROR
 
-        this->_texturePool->SetLogger(this->_logger);
         this->_texturePool->SetDebugInformation(this->GetDebugInformation());
         this->_texturePool->SetGraphics(this->shared_from_this());
 
-        this->_tileSetPool->SetLogger(this->_logger);
         this->_tileSetPool->SetDataProvider(this->_dataProvider);
         this->_tileSetPool->SetGraphics(this->shared_from_this());
 
-		this->_renderManager->SetLogger(this->_logger);
         this->_renderManager->SetGraphics(this->shared_from_this());
 		if (!this->_renderManager->Load())
         {
-		    this->LogMessage("Failed to load render manager.");
+		    shared::api::logging::Log("Failed to load render manager.");
 		    return false;
         }
 
 		if (!this->_camera->SetResolution(*currentResolution))
         {
-		    this->LogMessage("Failed to set camera resolution.");
+		    shared::api::logging::Log("Failed to set camera resolution.");
 		    return false;
         }
 
-		this->LogMessage("Initialized graphics.");
+		shared::api::logging::Log("Initialized graphics.");
 
         for (const auto& [name, path] : this->_dataProvider->GetGraphicsShaderLocations())
         {
             auto shader = std::make_shared<Shader>();
-            shader->SetLogger(this->_logger);
             shader->SetDataProvider(this->_dataProvider);
 
             if (!shader->Load(name))
             {
-                this->LogMessage("Failed to load shader with name: " + name);
+                shared::api::logging::Log("Failed to load shader with name: " + name);
                 return false;
             }
 
@@ -159,31 +154,28 @@ namespace projectfarm::graphics
         for (const auto& [name, path] : this->_dataProvider->GetGraphicsMaterialLocations())
         {
             auto material = std::make_shared<Material>();
-            material->SetLogger(this->_logger);
             material->SetDataProvider(this->_dataProvider);
             material->SetGraphics(this->shared_from_this());
 
             if (!material->LoadFromFile(path))
             {
-                this->LogMessage("Failed to load material with name: " + name);
+                shared::api::logging::Log("Failed to load material with name: " + name);
                 return false;
             }
 
             this->_materials[name] = material;
         }
 
-        this->_mesh.SetLogger(this->_logger);
         this->_mesh.SetGraphics(this->shared_from_this());
         if (!this->_mesh.Load())
         {
-            this->LogMessage("Failed to load mesh.");
+            shared::api::logging::Log("Failed to load mesh.");
         }
 
-        this->_shapeMesh.SetLogger(this->_logger);
         this->_shapeMesh.SetGraphics(this->shared_from_this());
         if (!this->_shapeMesh.Load())
         {
-            this->LogMessage("Failed to load shape mesh.");
+            shared::api::logging::Log("Failed to load shape mesh.");
         }
 
 		return true;
@@ -191,7 +183,7 @@ namespace projectfarm::graphics
 
 	void Graphics::Shutdown()
 	{
-		this->LogMessage("Shutting down graphics...");
+		shared::api::logging::Log("Shutting down graphics...");
 
 		for (auto& material : this->_materials)
 		{
@@ -224,7 +216,7 @@ namespace projectfarm::graphics
 
 		IMG_Quit();
 
-		this->LogMessage("Shut down graphics.");
+		shared::api::logging::Log("Shut down graphics.");
 	}
 
 	void Graphics::Render()
@@ -253,7 +245,7 @@ namespace projectfarm::graphics
         auto material = this->_materials.find(name);
         if (material == this->_materials.end())
         {
-            this->LogMessage("Failed to find material with name: " + name);
+            shared::api::logging::Log("Failed to find material with name: " + name);
             return;
         }
 
@@ -410,7 +402,7 @@ namespace projectfarm::graphics
 	    auto currentResolution = this->_camera->GetCurrentResolution();
 	    if (!currentResolution)
         {
-	        this->LogMessage("Failed to get current screen resolution.");
+	        shared::api::logging::Log("Failed to get current screen resolution.");
 	        return;
         }
 
@@ -419,7 +411,7 @@ namespace projectfarm::graphics
 
         if (!this->_camera->SetResolution(*currentResolution))
         {
-            this->LogMessage("Failed to set screen resolution to: " + currentResolution->GetName());
+            shared::api::logging::Log("Failed to set screen resolution to: " + currentResolution->GetName());
             return;
         }
 

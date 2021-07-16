@@ -5,12 +5,11 @@
 #include <filesystem>
 #include <unordered_map>
 
-#include "logging/consume_logger.h"
 #include "data_provider_locations.h"
 
 namespace projectfarm::shared
 {
-    class DataProvider final : public ConsumeLogger
+    class DataProvider final
     {
     public:
         explicit DataProvider(const std::filesystem::path& binaryPath)
@@ -41,10 +40,13 @@ namespace projectfarm::shared
         {
             this->SetDataFolderPath(binaryPath);
         }
-        ~DataProvider() override = default;
+        ~DataProvider() = default;
 
-        [[nodiscard]] bool SetupClient();
-        [[nodiscard]] bool SetupServer();
+        [[nodiscard]]
+        bool SetupClient();
+
+        [[nodiscard]]
+        bool SetupServer();
 
         void Shutdown();
 

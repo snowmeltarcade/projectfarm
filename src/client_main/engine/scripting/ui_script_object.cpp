@@ -1,6 +1,7 @@
 #include "ui_script_object.h"
 #include "ui_base_control_script_object.h"
 #include "graphics/ui/ui.h"
+#include "api/logging/logging.h"
 
 namespace projectfarm::engine::scripting
 {
@@ -52,7 +53,7 @@ namespace projectfarm::engine::scripting
 
         if (args.Length() != 1)
         {
-            ui->LogMessage("Invalid number of arguments for 'GetControlById'.");
+            shared::api::logging::Log("Invalid number of arguments for 'GetControlById'.");
             return;
         }
 

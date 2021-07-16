@@ -1,5 +1,6 @@
 #include "world_script.h"
 #include "engine/world/world.h"
+#include "api/logging/logging.h"
 
 namespace projectfarm::engine::scripting
 {
@@ -36,7 +37,7 @@ namespace projectfarm::engine::scripting
 
         if (args.Length() != 2)
         {
-            world->LogMessage("Invalid number of arguments for 'GetActionTilesByPropertyName'.");
+            shared::api::logging::Log("Invalid number of arguments for 'GetActionTilesByPropertyName'.");
             return;
         }
 
@@ -83,7 +84,7 @@ namespace projectfarm::engine::scripting
 
         if (args.Length() < 3 || args.Length() > 4)
         {
-            world->LogMessage("Invalid number of arguments for 'AddCharacter'.");
+            shared::api::logging::Log("Invalid number of arguments for 'AddCharacter'.");
             return;
         }
 

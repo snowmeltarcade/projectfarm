@@ -1,5 +1,6 @@
 #include "world_entity.h"
 #include "utils/util.h"
+#include "api/logging/logging.h"
 
 namespace projectfarm::engine::entities
 {
@@ -20,7 +21,7 @@ namespace projectfarm::engine::entities
         auto islandCount = pfu::ReadUInt32(data, dataIndex);
         if (islandCount != islands.size())
         {
-            this->LogMessage("Invalid island count. Expected: " + std::to_string(islands.size()) +
+            shared::api::logging::Log("Invalid island count. Expected: " + std::to_string(islands.size()) +
                              " got: " + std::to_string(islandCount));
             return;
         }

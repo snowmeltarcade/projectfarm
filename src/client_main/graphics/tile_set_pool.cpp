@@ -1,6 +1,7 @@
 #include <algorithm>
 
 #include "tile_set_pool.h"
+#include "api/logging/logging.h"
 
 namespace projectfarm::graphics
 {
@@ -9,7 +10,6 @@ namespace projectfarm::graphics
         if (this->_items.count(name) == 0)
         {
             auto tileSet = std::make_shared<graphics::TileSet>();
-            tileSet->SetLogger(this->_logger);
             tileSet->SetGraphics(this->GetGraphics());
             tileSet->SetDataProvider(this->_dataProvider);
 
@@ -17,8 +17,8 @@ namespace projectfarm::graphics
 
             if (!tileSet->Load(tileSetPath))
             {
-                this->LogMessage("Failed to load tileset: " + tileSetPath.string());
-                return nullptr;
+                shared::api::logging::Log("Failed to load tileset: " + tileSetPath.string());
+                return {};
             }
 
             this->_items[name] = { tileSet, 0 };

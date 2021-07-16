@@ -11,7 +11,6 @@
 #include <tuple>
 #include <nlohmann/json.hpp>
 
-#include "logging/consume_logger.h"
 #include "data/consume_data_provider.h"
 #include "engine/entities/entity.h"
 #include "time/timer.h"
@@ -32,8 +31,7 @@
 
 namespace projectfarm::engine::world
 {
-    class World final : public shared::ConsumeLogger,
-                        public shared::ConsumeDataProvider,
+    class World final : public shared::ConsumeDataProvider,
                         public server::ConsumeServer,
                         public shared::networking::ConsumePacketSender,
                         public shared::scripting::ConsumeScriptSystem,

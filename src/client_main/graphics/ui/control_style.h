@@ -8,7 +8,6 @@
 #include <filesystem>
 #include <unordered_map>
 
-#include "logging/consume_logger.h"
 #include "css/css.h"
 #include "graphics/colors/color.h"
 #include "graphics/colors/color_hsv.h"
@@ -18,15 +17,12 @@ using namespace std::literals;
 
 namespace projectfarm::graphics::ui
 {
-    class ControlStyle final : public shared::ConsumeLogger,
-                               public shared::ConsumeDataProvider
+    class ControlStyle final : public shared::ConsumeDataProvider
     {
     public:
         ControlStyle(shared::css::CSSClass cssClass,
-                     std::shared_ptr<shared::Logger> logger,
                      std::shared_ptr<shared::DataProvider> dataProvider) noexcept
         {
-            this->SetLogger(logger);
             this->SetDataProvider(dataProvider);
 
             this->ApplyStyle(std::move(cssClass));

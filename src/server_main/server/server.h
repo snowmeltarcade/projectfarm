@@ -7,7 +7,6 @@
 #include <tuple>
 #include <cstdint>
 
-#include "logging/logger.h"
 #include "networking/networking.h"
 #include "engine/world/world.h"
 #include "networking/packet_sender.h"
@@ -31,7 +30,6 @@ namespace projectfarm::server
 	public:
 		Server()
 		{
-			this->_logger = std::make_shared<projectfarm::shared::Logger>();
 			this->_packetSender = std::make_shared<projectfarm::shared::networking::PacketSender>();
 			this->_serverConfig = std::make_shared<ServerConfig>();
 			this->_scriptSystem = std::make_shared<projectfarm::shared::scripting::ScriptSystem>();
@@ -46,7 +44,8 @@ namespace projectfarm::server
 		Server(Server&) = delete;
 		Server(Server&&) = delete;
 
-		[[nodiscard]] std::shared_ptr<Server> GetPtr()
+		[[nodiscard]]
+		std::shared_ptr<Server> GetPtr()
 		{
 			return this->shared_from_this();
 		}
@@ -76,7 +75,6 @@ namespace projectfarm::server
 	    ClientConnectionManager _clientConnectionManager;
 
 		projectfarm::shared::networking::Networking _networking;
-		std::shared_ptr<projectfarm::shared::Logger> _logger;
 		std::shared_ptr<projectfarm::shared::networking::PacketSender> _packetSender;
 		std::shared_ptr<projectfarm::shared::DataProvider> _dataProvider;
 		std::shared_ptr<projectfarm::shared::scripting::ScriptSystem> _scriptSystem;

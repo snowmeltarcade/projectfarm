@@ -1,6 +1,7 @@
 #include "keyboard_input_script_object.h"
 #include "scripting/script.h"
 #include "utils/util.h"
+#include "api/logging/logging.h"
 
 namespace projectfarm::engine::scripting
 {
@@ -59,7 +60,7 @@ namespace projectfarm::engine::scripting
 
         if (args.Length() != 1)
         {
-            keyboardInput->LogMessage("Invalid number of arguments for 'IsKeyDown'.");
+            shared::api::logging::Log("Invalid number of arguments for 'IsKeyDown'.");
             return;
         }
 
@@ -90,7 +91,7 @@ namespace projectfarm::engine::scripting
 
         if (args.Length() != 1)
         {
-            keyboardInput->LogMessage("Invalid number of arguments for 'IsKeyPressed'.");
+            shared::api::logging::Log("Invalid number of arguments for 'IsKeyPressed'.");
             return;
         }
 
@@ -121,7 +122,7 @@ namespace projectfarm::engine::scripting
 
         if (args.Length() != 1)
         {
-            keyboardInput->LogMessage("Invalid number of arguments for 'IsKeyboardStateEnabled'.");
+            shared::api::logging::Log("Invalid number of arguments for 'IsKeyboardStateEnabled'.");
             return;
         }
 

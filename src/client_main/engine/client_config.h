@@ -5,12 +5,10 @@
 #include <string>
 
 #include "data/consume_data_provider.h"
-#include "logging/consume_logger.h"
 
 namespace projectfarm::engine
 {
-    class ClientConfig final : public shared::ConsumeDataProvider,
-                               public shared::ConsumeLogger
+    class ClientConfig final : public shared::ConsumeDataProvider
     {
     public:
         ClientConfig() = default;

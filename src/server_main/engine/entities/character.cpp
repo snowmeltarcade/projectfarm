@@ -7,6 +7,7 @@
 #include "scripting/script_types.h"
 #include "scripting/function_types.h"
 #include "engine/world/world.h"
+#include "api/logging/logging.h"
 
 namespace projectfarm::engine::entities
 {
@@ -86,7 +87,7 @@ namespace projectfarm::engine::entities
 
             if (!file.is_open())
             {
-                this->LogMessage("Failed to open character file: " + filePath.u8string());
+                shared::api::logging::Log("Failed to open character file: " + filePath.u8string());
                 return false;
             }
 
@@ -112,7 +113,7 @@ namespace projectfarm::engine::entities
             this->_script = this->_scriptSystem->CreateScript(shared::scripting::ScriptTypes::Character, scriptPath);
             if (!this->_script)
             {
-                this->LogMessage("Failed to load character script: " + scriptPath.u8string());
+                shared::api::logging::Log("Failed to load character script: " + scriptPath.u8string());
                 return false;
             }
 
@@ -120,13 +121,13 @@ namespace projectfarm::engine::entities
 
             if (!this->_script->CallFunction(shared::scripting::FunctionTypes::Init, {}))
             {
-                this->LogMessage("Failed to call the 'init' function.");
+                shared::api::logging::Log("Failed to call the 'init' function.");
                 return false;
             }
         }
         catch (const std::exception& ex)
         {
-            this->LogMessage("Failed to read character file: " + filePath.u8string() +
+            shared::api::logging::Log("Failed to read character file: " + filePath.u8string() +
                              "with exception: " + ex.what());
 
             return false;
@@ -266,7 +267,7 @@ namespace projectfarm::engine::entities
         }
         else
         {
-            this->LogMessage("Unknown character state: " +
+            shared::api::logging::Log("Unknown character state: " +
                              std::to_string(static_cast<uint8_t>(currentState.GetKey())) +
                              ":" + std::to_string(static_cast<uint8_t>(currentState.GetValue())));
         }
@@ -338,7 +339,7 @@ namespace projectfarm::engine::entities
         }
         else
         {
-            this->LogMessage("Invalid dx:dy: " + std::to_string(dx) + ":" + std::to_string(dy));
+            shared::api::logging::Log("Invalid dx:dy: " + std::to_string(dx) + ":" + std::to_string(dy));
             return true;
         }
 
@@ -393,7 +394,7 @@ namespace projectfarm::engine::entities
         {
           if (!this->_script->CallFunction(shared::scripting::FunctionTypes::Update, {}))
           {
-              this->LogMessage("Failed to call update function.");
+              shared::api::logging::Log("Failed to call update function.");
               return;
           }
         };
@@ -420,7 +421,7 @@ namespace projectfarm::engine::entities
         {
           if (!this->PersistPlayerState())
           {
-              this->LogMessage("Failed to persist player state with player id: " + std::to_string(this->_playerId));
+              shared::api::logging::Log("Failed to persist player state with player id: " + std::to_string(this->_playerId));
               return;
           }
         };
@@ -434,7 +435,7 @@ namespace projectfarm::engine::entities
     {
         if (!this->IsPlayer())
         {
-            this->LogMessage("This character is not a player with entity id: " + std::to_string(this->_entityId));
+            shared::api::logging::Log("This character is not a player with entity id: " + std::to_string(this->_entityId));
             return false;
         }
 
@@ -446,7 +447,7 @@ namespace projectfarm::engine::entities
 
         if (!this->_dataManager->UpdatePlayerState(this->_playerId, xPos, yPos))
         {
-            this->LogMessage("Failed to update player state with player id: " + std::to_string(this->_playerId));
+            shared::api::logging::Log("Failed to update player state with player id: " + std::to_string(this->_playerId));
             return false;
         }
 
@@ -482,15 +483,15 @@ namespace projectfarm::engine::entities
             this->_appearanceDetails.Feet = actionAnimationsManager->GetAppearance(type, "feet");
         }
 
-        this->LogMessage("Updating appearance: " + std::to_string(this->_playerId));
+        shared::api::logging::Log("Updating appearance: " + std::to_string(this->_playerId));
 
         if (this->IsPlayer())
         {
-            this->LogMessage("Player updating appearance: " + std::to_string(this->_playerId));
+            shared::api::logging::Log("Player updating appearance: " + std::to_string(this->_playerId));
 
             if (!this->_dataManager->UpdatePlayerAppearanceDetails(this->_playerId, this->_appearanceDetails))
             {
-                this->LogMessage("Failed to update player appearance details with player id: " + std::to_string(this->_playerId));
+                shared::api::logging::Log("Failed to update player appearance details with player id: " + std::to_string(this->_playerId));
                 return false;
             }
         }

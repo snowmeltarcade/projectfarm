@@ -7,14 +7,12 @@
 #include <tuple>
 
 #include "graphics_dependencies.h"
-#include "logging/consume_logger.h"
 #include "texture.h"
 #include "consume_graphics.h"
 
 namespace projectfarm::graphics
 {
-    class TilingMesh final : public shared::ConsumeLogger,
-                             public ConsumeGraphics
+    class TilingMesh final : public ConsumeGraphics
     {
     public:
         TilingMesh() = default;

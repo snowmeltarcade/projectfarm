@@ -6,15 +6,13 @@
 #include <vector>
 #include <nlohmann/json.hpp>
 
-#include "logging/consume_logger.h"
 #include "graphics/consume_tile_set_pool.h"
 #include "graphics/tile_set.h"
 #include "entities/character_states.h"
 
 namespace projectfarm::engine::world
 {
-    class Plot final : public shared::ConsumeLogger,
-                       public graphics::ConsumeTileSetPool
+    class Plot final : public graphics::ConsumeTileSetPool
     {
     public:
         Plot() = default;

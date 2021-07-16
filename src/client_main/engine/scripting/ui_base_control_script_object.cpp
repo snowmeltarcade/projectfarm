@@ -1,6 +1,7 @@
 #include "ui_base_control_script_object.h"
 #include "scripting/math/vector2d_script_object.h"
 #include "scripting/script_system.h"
+#include "api/logging/logging.h"
 
 namespace projectfarm::engine::scripting
 {
@@ -338,7 +339,7 @@ namespace projectfarm::engine::scripting
 
         if (args.Length() < 1)
         {
-            control->LogMessage("Invalid number of arguments for 'GetCustomPropertyString'.");
+            shared::api::logging::Log("Invalid number of arguments for 'GetCustomPropertyString'.");
             return;
         }
 
@@ -372,7 +373,7 @@ namespace projectfarm::engine::scripting
 
         if (args.Length() < 1)
         {
-            control->LogMessage("Invalid number of arguments for 'GetCustomPropertyInt'.");
+            shared::api::logging::Log("Invalid number of arguments for 'GetCustomPropertyInt'.");
             return;
         }
 
@@ -406,7 +407,7 @@ namespace projectfarm::engine::scripting
 
         if (args.Length() < 1)
         {
-            control->LogMessage("Invalid number of arguments for 'GetCustomPropertyBool'.");
+            shared::api::logging::Log("Invalid number of arguments for 'GetCustomPropertyBool'.");
             return;
         }
 
@@ -440,7 +441,7 @@ namespace projectfarm::engine::scripting
 
         if (args.Length() < 1 || args.Length() > 2)
         {
-            control->LogMessage("Invalid number of arguments for 'GetCustomPropertyVector2D'.");
+            shared::api::logging::Log("Invalid number of arguments for 'GetCustomPropertyVector2D'.");
             return;
         }
 
@@ -474,7 +475,7 @@ namespace projectfarm::engine::scripting
 
         if (args.Length() != 1)
         {
-            control->LogMessage("Invalid number of arguments for 'GetControlById'.");
+            shared::api::logging::Log("Invalid number of arguments for 'GetControlById'.");
             return;
         }
 
@@ -504,7 +505,7 @@ namespace projectfarm::engine::scripting
 
         if (args.Length() != 0)
         {
-            control->LogMessage("Invalid number of arguments for 'GetParentCustomControl'.");
+            shared::api::logging::Log("Invalid number of arguments for 'GetParentCustomControl'.");
             return;
         }
 
@@ -544,7 +545,7 @@ namespace projectfarm::engine::scripting
 
         if (args.Length() <= 0)
         {
-            control->LogMessage("Invalid number of arguments for 'InvokeJavascriptFunction'.");
+            shared::api::logging::Log("Invalid number of arguments for 'InvokeJavascriptFunction'.");
             return;
         }
 

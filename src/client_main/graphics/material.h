@@ -3,7 +3,6 @@
 
 #include <filesystem>
 
-#include "logging/consume_logger.h"
 #include "data/consume_data_provider.h"
 #include "graphics/colors/color.h"
 #include "shader_program.h"
@@ -11,8 +10,7 @@
 
 namespace projectfarm::graphics
 {
-    class Material : public shared::ConsumeLogger,
-                     public projectfarm::shared::ConsumeDataProvider,
+    class Material : public projectfarm::shared::ConsumeDataProvider,
                      public ConsumeGraphics
     {
     public:

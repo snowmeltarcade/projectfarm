@@ -11,13 +11,11 @@
 
 #include "character.h"
 #include "graphics/tile_map.h"
-#include "logging/consume_logger.h"
 #include "graphics/consume_tile_set_pool.h"
 
 namespace projectfarm::engine::entities
 {
-    class CharacterAppearanceManager final : public shared::ConsumeLogger,
-                                             public graphics::ConsumeTileSetPool
+    class CharacterAppearanceManager final : public graphics::ConsumeTileSetPool
     {
     public:
         struct ActionAnimation

@@ -8,7 +8,6 @@
 
 #include "camera.h"
 #include "render_manager.h"
-#include "logging/consume_logger.h"
 #include "ui/ui.h"
 #include "engine/consume_debug_information.h"
 #include "tiling_mesh.h"
@@ -22,8 +21,7 @@
 
 namespace projectfarm::graphics
 {
-	class Graphics final : public projectfarm::shared::ConsumeLogger,
-	                       public engine::ConsumeDebugInformation,
+	class Graphics final : public engine::ConsumeDebugInformation,
 	                       public shared::ConsumeDataProvider,
 	                       public engine::ConsumeGame,
 	                       public std::enable_shared_from_this<Graphics>

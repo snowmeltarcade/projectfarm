@@ -1,47 +1,46 @@
 #include "packet_sender.h"
+#include "api/logging/logging.h"
 
 namespace projectfarm::shared::networking
 {
 	bool PacketSender::Initialize() noexcept
 	{
-		this->LogMessage("Initializing packet sender...");
+		api::logging::Log("Initializing packet sender...");
 
 		if (this->_udpSocket == nullptr)
         {
-            this->LogMessage("Creating UDP socket...");
+            api::logging::Log("Creating UDP socket...");
             this->_udpSocket = SDLNet_UDP_Open(0);
             if (this->_udpSocket == nullptr)
             {
-                this->LogMessage("Failed to create UDP socket.");
-                this->LogMessage(SDLNet_GetError());
+                api::logging::Log("Failed to create UDP socket.");
+                api::logging::Log(SDLNet_GetError());
                 return false;
             }
         }
 		else
         {
-		    this->LogMessage("Using external UDP socket.");
+		    api::logging::Log("Using external UDP socket.");
         }
 
         this->_udpPacket = SDLNet_AllocPacket(1024 * 100 * 100); // do 100kb for now
         if (this->_udpPacket == nullptr)
         {
-            this->LogMessage("Failed to allow UDP packet.");
+            api::logging::Log("Failed to allow UDP packet.");
             return false;
         }
 
 		this->_packetSenderWorker = std::make_unique<PacketSenderWorker>(this->_udpSocket, this->_udpPacket);
-		this->_packetSenderWorker->SetLogger(this->_logger);
-
 		this->_packetSenderWorker->StartThread();
 
-		this->LogMessage("Initialized packet sender.");
+		api::logging::Log("Initialized packet sender.");
 
 		return true;
 	}
 
 	void PacketSender::Shutdown() noexcept
 	{
-		this->LogMessage("Shutting down packet sender...");
+		api::logging::Log("Shutting down packet sender...");
 
 		if (this->_packetSenderWorker)
         {
@@ -57,7 +56,7 @@ namespace projectfarm::shared::networking
         SDLNet_FreePacket(this->_udpPacket);
         this->_udpPacket = nullptr;
 
-		this->LogMessage("Shut down packet sender.");
+		api::logging::Log("Shut down packet sender.");
 	}
 
 	void PacketSender::AddPacketToSend(TCPsocket socket, const std::shared_ptr<Packet>& packet,

@@ -1,15 +1,13 @@
 #ifndef NETWORKING_H
 #define NETWORKING_H
 
-#include "logging/consume_logger.h"
-
 namespace projectfarm::shared::networking
 {
-	class Networking final : public ConsumeLogger
+	class Networking final
 	{
 	public:
 		Networking() = default;
-		~Networking() override = default;
+		~Networking() = default;
 
 		Networking(Networking&) = delete;
 		Networking(Networking&&) = delete;

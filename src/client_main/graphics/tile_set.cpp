@@ -2,6 +2,7 @@
 #include <fstream>
 
 #include "tile_set.h"
+#include "api/logging/logging.h"
 
 namespace projectfarm::graphics
 {
@@ -11,7 +12,7 @@ namespace projectfarm::graphics
 
         if (!file.is_open())
         {
-            this->LogMessage("Failed to open tileset file: " + filePath.u8string());
+            shared::api::logging::Log("Failed to open tileset file: " + filePath.u8string());
             return false;
         }
 
@@ -47,12 +48,11 @@ namespace projectfarm::graphics
         this->_tileWidth = tileWidth;
         this->_tileHeight = tileHeight;
 
-        this->_texture->SetLogger(this->_logger);
         this->_texture->SetGraphics(this->GetGraphics());
 
         if (!this->_texture->Load(imagePath))
         {
-            this->LogMessage("Failed to load tileset texture: " + imagePath.string());
+            shared::api::logging::Log("Failed to load tileset texture: " + imagePath.string());
             return false;
         }
 

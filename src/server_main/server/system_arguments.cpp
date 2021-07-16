@@ -1,15 +1,16 @@
 #include "system_arguments.h"
+#include "api/logging/logging.h"
 
 namespace projectfarm::server
 {
     void SystemArguments::SetArguments(int argc, char* argv[])
     {
-        this->_logger->LogMessage("Arguments:");
+        shared::api::logging::Log("Arguments:");
         for (int i = 0; i < argc; i++)
         {
             std::string arg = argv[i];
 
-            this->_logger->LogMessage(arg);
+            shared::api::logging::Log(arg);
 
             if (i == 0)
             {

@@ -6,14 +6,12 @@
 
 #include <SDL.h>
 
-#include "logging/consume_logger.h"
 #include "data/consume_data_provider.h"
 #include "font.h"
 
 namespace projectfarm::graphics
 {
-    class FontManager final : public projectfarm::shared::ConsumeLogger,
-                              public projectfarm::shared::ConsumeDataProvider
+    class FontManager final : public projectfarm::shared::ConsumeDataProvider
     {
     public:
         FontManager() = default;

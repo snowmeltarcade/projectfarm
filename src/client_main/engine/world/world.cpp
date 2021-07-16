@@ -5,17 +5,17 @@
 #include "engine/entities/character_appearance_manager.h"
 #include "engine/game.h"
 #include "utils/util.h"
+#include "api/logging/logging.h"
 
 namespace projectfarm::engine::world
 {
     bool World::Load(const std::string& name)
     {
-        this->_plots->SetLogger(this->_logger);
         this->_plots->SetDataProvider(this->_dataProvider);
         this->_plots->SetTileSetPool(this->_tileSetPool);
         if (!this->_plots->Load(name))
         {
-            this->LogMessage("Failed to load plots.");
+            shared::api::logging::Log("Failed to load plots.");
             return false;
         }
 
@@ -28,7 +28,7 @@ namespace projectfarm::engine::world
 
         if (fileNameIter == locations.end())
         {
-            this->LogMessage("Failed to find world location with name: " + name);
+            shared::api::logging::Log("Failed to find world location with name: " + name);
             return false;
         }
 
@@ -55,14 +55,13 @@ namespace projectfarm::engine::world
 
         if (!fs.is_open())
         {
-            this->LogMessage("Failed to open world file: " + filePath.u8string());
+            shared::api::logging::Log("Failed to open world file: " + filePath.u8string());
             return false;
         }
 
         this->_name = pfu::ReadStringFromBinaryFile(fs);
 
         auto island = std::make_shared<Island>();
-        island->SetLogger(this->_logger);
         island->SetDataProvider(this->_dataProvider);
         island->SetGraphics(this->GetGraphics());
         island->SetRenderManager(this->_renderManager);
@@ -71,7 +70,7 @@ namespace projectfarm::engine::world
 
         if (!island->LoadFromBinary(fs, this->_plots))
         {
-            this->LogMessage("Failed to load island.");
+            shared::api::logging::Log("Failed to load island.");
             return false;
         }
 
@@ -86,7 +85,7 @@ namespace projectfarm::engine::world
 
         if (!file.is_open())
         {
-            this->LogMessage("Failed to open world file: " + filePath.u8string());
+            shared::api::logging::Log("Failed to open world file: " + filePath.u8string());
             return false;
         }
 
@@ -100,7 +99,6 @@ namespace projectfarm::engine::world
         for (const auto& islandJson : islandsJson)
         {
             auto island = std::make_shared<Island>();
-            island->SetLogger(this->_logger);
             island->SetDataProvider(this->_dataProvider);
             island->SetGraphics(this->GetGraphics());
             island->SetRenderManager(this->_renderManager);
@@ -109,7 +107,7 @@ namespace projectfarm::engine::world
 
             if (!island->LoadFromJson(islandJson, this->_plots))
             {
-                this->LogMessage("Failed to load island.");
+                shared::api::logging::Log("Failed to load island.");
                 return false;
             }
 
@@ -121,7 +119,7 @@ namespace projectfarm::engine::world
         {
             if (!this->LoadBackground(*jsonIt))
             {
-                this->LogMessage("Failed to load background.");
+                shared::api::logging::Log("Failed to load background.");
                 return false;
             }
         }
@@ -225,7 +223,7 @@ namespace projectfarm::engine::world
             auto islandJson = backgroundJson["island"];
             if (!this->LoadBackgroundIsland(islandJson))
             {
-                this->LogMessage("Failed to load background island.");
+                shared::api::logging::Log("Failed to load background island.");
                 return false;
             }
         }
@@ -236,7 +234,6 @@ namespace projectfarm::engine::world
     bool World::LoadBackgroundIsland(const nlohmann::json& islandJson)
     {
         this->_backgroundIsland = std::make_shared<Island>();
-        this->_backgroundIsland->SetLogger(this->_logger);
         this->_backgroundIsland->SetDataProvider(this->_dataProvider);
         this->_backgroundIsland->SetGraphics(this->GetGraphics());
         this->_backgroundIsland->SetRenderManager(this->_renderManager);
@@ -247,7 +244,7 @@ namespace projectfarm::engine::world
 
         if (!this->_backgroundIsland->LoadFromJson(islandJson, this->_plots))
         {
-            this->LogMessage("Failed to load island.");
+            shared::api::logging::Log("Failed to load island.");
             return false;
         }
 
@@ -288,7 +285,7 @@ namespace projectfarm::engine::world
         {
             if (entity = this->CreateNewEntity(entityId, playerId, entityType); !entity)
             {
-                this->LogMessage("Failed to create entity of type: " +
+                shared::api::logging::Log("Failed to create entity of type: " +
                     std::to_string(static_cast<int>(entityType)));
 
                 return false;
@@ -319,12 +316,12 @@ namespace projectfarm::engine::world
         {
             case shared::entities::EntityTypes::Unknown:
             {
-                this->LogMessage("Cannot create entity of type: Unknown");
+                shared::api::logging::Log("Cannot create entity of type: Unknown");
                 return nullptr;
             }
             case shared::entities::EntityTypes::World:
             {
-                this->LogMessage("Cannot create entity of type: World");
+                shared::api::logging::Log("Cannot create entity of type: World");
                 return nullptr;
             }
             case shared::entities::EntityTypes::Character:
@@ -345,19 +342,18 @@ namespace projectfarm::engine::world
 
         if (entity == nullptr)
         {
-            this->LogMessage("Unknown entity type: " +
+            shared::api::logging::Log("Unknown entity type: " +
                 std::to_string(static_cast<int>(entityType)));
 
             return nullptr;
         }
 
-        entity->SetLogger(this->_logger);
         entity->SetTimer(this->GetTimer());
         entity->SetEntityId(entityId);
 
         if (!entity->Load())
         {
-            this->LogMessage("Failed to load entity with type: " +
+            shared::api::logging::Log("Failed to load entity with type: " +
                              std::to_string(static_cast<int>(entityType)));
 
             return nullptr;
@@ -378,7 +374,7 @@ namespace projectfarm::engine::world
             }
         }
 
-        this->LogMessage("Created new entity");
+        shared::api::logging::Log("Created new entity");
 
         this->_entities.emplace_back(entity);
 
@@ -392,7 +388,7 @@ namespace projectfarm::engine::world
 
         if (entityIt == this->_entities.end())
         {
-            this->LogMessage("Failed to find entity with id: " + std::to_string(entityId) + " to remove it.");
+            shared::api::logging::Log("Failed to find entity with id: " + std::to_string(entityId) + " to remove it.");
             return;
         }
 

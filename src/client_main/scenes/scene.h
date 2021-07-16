@@ -10,7 +10,6 @@
 #include "networking/packet.h"
 #include "networking/consume_packet_sender.h"
 #include "consume_scene_manager.h"
-#include "logging/consume_logger.h"
 #include "graphics/consume_graphics.h"
 #include "data/consume_data_provider.h"
 #include "graphics/consume_font_manager.h"
@@ -28,7 +27,6 @@ namespace projectfarm::scenes
 	class SceneManager;
 
 	class Scene : public ConsumeSceneManager,
-				  public shared::ConsumeLogger,
 				  public graphics::ConsumeGraphics,
                   public shared::ConsumeDataProvider,
                   public graphics::ConsumeFontManager,

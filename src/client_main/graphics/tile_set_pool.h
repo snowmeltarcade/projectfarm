@@ -7,22 +7,21 @@
 
 #include "tile_set_pool_data.h"
 #include "consume_graphics.h"
-#include "logging/consume_logger.h"
 #include "data/consume_data_provider.h"
 
 namespace projectfarm::graphics
 {
     // this pool has no cleanup methods as it is unlikely that tilesets will need to
     // hang around, in case they are reloaded, like textures do
-    class TileSetPool final : public shared::ConsumeLogger,
-                              public ConsumeGraphics,
+    class TileSetPool final : public ConsumeGraphics,
                               public shared::ConsumeDataProvider
     {
     public:
         TileSetPool() = default;
         ~TileSetPool() override = default;
 
-        [[nodiscard]] std::shared_ptr<TileSet> Get(const std::string& name);
+        [[nodiscard]]
+        std::shared_ptr<TileSet> Get(const std::string& name);
 
         void Release(const std::string& name);
 

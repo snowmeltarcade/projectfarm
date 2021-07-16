@@ -1,4 +1,5 @@
 #include "shader_program.h"
+#include "api/logging/logging.h"
 
 namespace projectfarm::graphics
 {
@@ -29,7 +30,7 @@ namespace projectfarm::graphics
     {
         if (this->_isLinked)
         {
-            this->LogMessage("Cannot attach shader after shader program has linked.");
+            shared::api::logging::Log("Cannot attach shader after shader program has linked.");
             return false;
         }
 
@@ -42,7 +43,7 @@ namespace projectfarm::graphics
     {
         if (this->_isLinked)
         {
-            this->LogMessage("Shader program already linked.");
+            shared::api::logging::Log("Shader program already linked.");
             return false;
         }
 
@@ -52,7 +53,7 @@ namespace projectfarm::graphics
         glGetProgramiv(this->_programId, GL_LINK_STATUS, &linkSuccess);
         if (linkSuccess != GL_TRUE)
         {
-            this->LogMessage("Failed to link shader program.");
+            shared::api::logging::Log("Failed to link shader program.");
             this->LogErrors();
             return false;
         }
@@ -76,11 +77,11 @@ namespace projectfarm::graphics
         if (actualLogLength > 0)
         {
             std::string logString = log;
-            this->LogMessage(logString);
+            shared::api::logging::Log(logString);
         }
         else
         {
-            this->LogMessage("No error log returned.");
+            shared::api::logging::Log("No error log returned.");
         }
 
         delete[] log;

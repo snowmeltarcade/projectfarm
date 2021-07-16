@@ -3,14 +3,12 @@
 
 #include <memory>
 
-#include "logging/consume_logger.h"
 #include "data/consume_data_provider.h"
 #include "packet_sender_worker.h"
 
 namespace projectfarm::shared::networking
 {
-	class PacketSender final : public ConsumeLogger,
-	                           public ConsumeDataProvider
+	class PacketSender final : public ConsumeDataProvider
 	{
 	public:
 		PacketSender() = default;

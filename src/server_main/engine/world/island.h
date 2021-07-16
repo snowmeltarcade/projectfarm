@@ -6,7 +6,6 @@
 #include <fstream>
 #include <nlohmann/json.hpp>
 
-#include "logging/consume_logger.h"
 #include "plots.h"
 #include "world_change_log_entry.h"
 #include "time/consume_timer.h"
@@ -15,8 +14,7 @@
 
 namespace projectfarm::engine::world
 {
-    class Island final : public shared::ConsumeLogger,
-                         public shared::time::ConsumeTimer
+    class Island final : public shared::time::ConsumeTimer
     {
     public:
         Island() = default;

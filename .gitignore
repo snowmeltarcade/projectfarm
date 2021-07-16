@@ -4,6 +4,7 @@ build/*
 archives/*
 install/*
 .vscode/*
+.idea/*
 cmake-build-*/*
 data/*
 iosbuild/*

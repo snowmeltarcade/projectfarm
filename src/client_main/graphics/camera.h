@@ -4,7 +4,6 @@
 #include <string>
 #include <vector>
 
-#include "logging/consume_logger.h"
 #include "graphics/consume_graphics.h"
 #include "engine/actionable_entity.h"
 #include "engine/consume_debug_information.h"
@@ -15,8 +14,7 @@
 
 namespace projectfarm::graphics
 {
-    class Camera final : public shared::ConsumeLogger,
-                         public graphics::ConsumeGraphics,
+    class Camera final : public graphics::ConsumeGraphics,
                          public engine::ActionableEntity,
                          public engine::ConsumeDebugInformation
     {

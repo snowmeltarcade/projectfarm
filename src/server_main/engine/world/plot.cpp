@@ -1,4 +1,5 @@
 #include "plot.h"
+#include "api/logging/logging.h"
 
 namespace projectfarm::engine::world
 {
@@ -11,7 +12,7 @@ namespace projectfarm::engine::world
         {
             if (!this->SetDisallowedCharacterStates(*disallowedCharacterStates))
             {
-                this->LogMessage("Failed to set disallowed character states.");
+                shared::api::logging::Log("Failed to set disallowed character states.");
                 return false;
             }
         }

@@ -1,18 +1,19 @@
 #include "crypto_provider.h"
+#include "api/logging/logging.h"
 
 namespace projectfarm::shared::crypto
 {
     bool CryptoProvider::Initialize() const noexcept
     {
-        this->LogMessage("Initializing crypto provider...");
+        api::logging::Log("Initializing crypto provider...");
 
         if (sodium_init() == -1)
         {
-            this->LogMessage("Failed to initialize crypto provider.");
+            api::logging::Log("Failed to initialize crypto provider.");
             return false;
         }
 
-        this->LogMessage("Crypto provider initialized.");
+        api::logging::Log("Crypto provider initialized.");
 
         return true;
     }
@@ -31,7 +32,7 @@ namespace projectfarm::shared::crypto
         if (crypto_pwhash_str(result, secret.data(), size,
                               crypto_pwhash_OPSLIMIT_SENSITIVE, crypto_pwhash_MEMLIMIT_SENSITIVE) != 0)
         {
-            this->LogMessage("Failed to hash secret.");
+            api::logging::Log("Failed to hash secret.");
             return {};
         }
 

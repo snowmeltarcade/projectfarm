@@ -4,6 +4,7 @@
 #include "graphics/graphics.h"
 #include "scripting/function_types.h"
 #include "custom.h"
+#include "api/logging/logging.h"
 
 using namespace std::literals;
 
@@ -297,7 +298,7 @@ namespace projectfarm::graphics::ui
             }
             else
             {
-                this->LogMessage("Failed to find css class with selector: " + this->_cssClass);
+                shared::api::logging::Log("Failed to find css class with selector: " + this->_cssClass);
                 return false;
             }
         }
@@ -313,7 +314,7 @@ namespace projectfarm::graphics::ui
             // override any previous styles
             if (cssClass)
             {
-                this->_style = std::make_shared<ControlStyle>(*cssClass, this->_logger, this->_dataProvider);
+                this->_style = std::make_shared<ControlStyle>(*cssClass, this->_dataProvider);
             }
         }
 
@@ -360,7 +361,7 @@ namespace projectfarm::graphics::ui
         {
             if (!this->CallScriptFunction(this->_externalScript, parameters, functionName))
             {
-                this->LogMessage("Failed to find function with name: " + functionName);
+                shared::api::logging::Log("Failed to find function with name: " + functionName);
                 return false;
             }
         }
@@ -417,7 +418,7 @@ namespace projectfarm::graphics::ui
             auto name = fitType->get<std::string>();
             if (auto type = StringToFitTypes(name); !type)
             {
-                this->LogMessage("Invalid fit type value: " + name);
+                shared::api::logging::Log("Invalid fit type value: " + name);
                 return false;
             }
             else
@@ -431,7 +432,7 @@ namespace projectfarm::graphics::ui
             auto name = renderOriginPoint->get<std::string>();
             if (auto type = StringToRenderOriginPoints(name); !type)
             {
-                this->LogMessage("Invalid fit type value: " + name);
+                shared::api::logging::Log("Invalid fit type value: " + name);
                 return false;
             }
             else
@@ -467,7 +468,6 @@ namespace projectfarm::graphics::ui
         if (!this->_maskTexture)
         {
             this->_maskTexture = std::make_shared<graphics::Texture>();
-            this->_maskTexture->SetLogger(this->_logger);
             this->_maskTexture->SetGraphics(this->GetGraphics());
         }
 
@@ -523,7 +523,7 @@ namespace projectfarm::graphics::ui
 
         if (!this->_maskTexture->LoadFromSurface(this->_maskSurface))
         {
-            this->LogMessage("Failed to create mask texture.");
+            shared::api::logging::Log("Failed to create mask texture.");
             return false;
         }
 
@@ -562,7 +562,7 @@ namespace projectfarm::graphics::ui
 
             if (!this->UpdateMaskToParentBoundary())
             {
-                this->LogMessage("Failed to create mask from parent boundary.");
+                shared::api::logging::Log("Failed to create mask from parent boundary.");
                 return;
             }
         }

@@ -3,6 +3,7 @@
 
 #include "font.h"
 #include "utils/util.h"
+#include "api/logging/logging.h"
 
 namespace projectfarm::graphics
 {
@@ -11,24 +12,24 @@ namespace projectfarm::graphics
                     uint16_t size,
                     std::string_view name)
     {
-        this->LogMessage("Loading font: " + texturePath.u8string());
+        shared::api::logging::Log("Loading font: " + texturePath.u8string());
 
         if (!this->LoadTexture(texturePath))
         {
-            this->LogMessage("Failed to load font texture: " + texturePath.u8string());
+            shared::api::logging::Log("Failed to load font texture: " + texturePath.u8string());
             return false;
         }
 
         if (!this->LoadDetails(detailsPath))
         {
-            this->LogMessage("Failed to load font details: " + detailsPath.u8string());
+            shared::api::logging::Log("Failed to load font details: " + detailsPath.u8string());
             return false;
         }
 
         this->_size = size;
         this->_name = name;
 
-        this->LogMessage("Loaded font: " + texturePath.string());
+        shared::api::logging::Log("Loaded font: " + texturePath.string());
 
         return true;
     }
@@ -226,7 +227,7 @@ namespace projectfarm::graphics
         this->_surface = IMG_Load(path.u8string().c_str());
         if (!this->_surface)
         {
-            this->_logger->LogMessage("Failed to load the texture: " + path.u8string() + " with error: " +
+            shared::api::logging::Log("Failed to load the texture: " + path.u8string() + " with error: " +
                                       IMG_GetError());
             return false;
         }
@@ -240,7 +241,7 @@ namespace projectfarm::graphics
 
         if (!fp.is_open())
         {
-            this->LogMessage("Failed to open font details file: " + path.u8string());
+            shared::api::logging::Log("Failed to open font details file: " + path.u8string());
             return false;
         }
 
@@ -263,7 +264,7 @@ namespace projectfarm::graphics
             auto parts = pfu::split(" ", line);
             if (parts.size() != 17)
             {
-                this->LogMessage("Invalid line in font details file: " + line);
+                shared::api::logging::Log("Invalid line in font details file: " + line);
                 return false;
             }
 
