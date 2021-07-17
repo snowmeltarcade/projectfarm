@@ -8,6 +8,11 @@ namespace projectfarm::shared::game::world::controllers
     class MasterLogic final : public IController
     {
     public:
+        MasterLogic() = default;
+        ~MasterLogic() override = default;
+        MasterLogic(const MasterLogic&) = delete;
+        MasterLogic(MasterLogic&&) = default;
+
         void OnMessageReceive() override;
     };
 }

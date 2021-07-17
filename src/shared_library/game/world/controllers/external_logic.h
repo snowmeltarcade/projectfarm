@@ -8,6 +8,11 @@ namespace projectfarm::shared::game::world::controllers
     class ExternalLogic final : public IController
     {
     public:
+        ExternalLogic() = default;
+        ~ExternalLogic() override = default;
+        ExternalLogic(const ExternalLogic&) = delete;
+        ExternalLogic(ExternalLogic&&) = default;
+
         void OnMessageReceive() override;
     };
 }

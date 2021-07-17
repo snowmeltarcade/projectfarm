@@ -5,6 +5,11 @@ namespace projectfarm::shared::api::graphics
 {
     class IRenderTarget
     {
+    public:
+        IRenderTarget() = default;
+        virtual ~IRenderTarget() = default;
+        IRenderTarget(const IRenderTarget&) = delete;
+        IRenderTarget(IRenderTarget&&) = default;
     };
 }
 

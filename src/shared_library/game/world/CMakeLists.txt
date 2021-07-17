@@ -2,12 +2,9 @@ target_sources(
     "${SHARED_LIBRARY_PROJECT_NAME}"
     PRIVATE
         world.cpp
-        ecs.cpp
     PUBLIC
         world.h
-        ecs.h
-        iecs_system.h
-        iecs_component.h
 )
 
+add_subdirectory("ecs")
 add_subdirectory("controllers")
