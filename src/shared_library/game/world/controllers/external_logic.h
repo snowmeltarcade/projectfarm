@@ -7,6 +7,8 @@ namespace projectfarm::shared::game::world::controllers
 {
     class ExternalLogic final : public IController
     {
+    public:
+        void OnMessageReceive() override;
     };
 }
 

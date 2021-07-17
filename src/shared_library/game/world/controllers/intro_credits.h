@@ -7,6 +7,8 @@ namespace projectfarm::shared::game::world::controllers
 {
     class IntroCredits final : public IController
     {
+    public:
+        void OnMessageReceive() override;
     };
 }
 

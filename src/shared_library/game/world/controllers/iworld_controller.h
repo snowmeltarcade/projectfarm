@@ -5,6 +5,8 @@ namespace projectfarm::shared::game::world::controllers
 {
     class IController
     {
+    public:
+        virtual void OnMessageReceive() = 0;
     };
 }
 
