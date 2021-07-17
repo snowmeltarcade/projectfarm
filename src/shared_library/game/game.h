@@ -33,6 +33,9 @@ namespace projectfarm::shared::game
 
         void Shutdown() noexcept;
 
+        [[nodiscard]]
+        bool AddWorlds() noexcept;
+
         void Log(const std::string& message) const noexcept;
     };
 }

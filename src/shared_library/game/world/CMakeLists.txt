@@ -3,10 +3,14 @@ target_sources(
     PRIVATE
         world.cpp
         ecs.cpp
+        master_logic_input_source.cpp
+        external_input_source.cpp
     PUBLIC
         world.h
         ecs.h
         iworld_input_source.h
         iecs_system.h
         iecs_component.h
+        master_logic_input_source.h
+        external_input_source.h
 )
