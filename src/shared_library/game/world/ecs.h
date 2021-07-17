@@ -3,7 +3,7 @@
 
 namespace projectfarm::shared::game::world
 {
-    class ECS
+    class ECS final
     {
     };
 }

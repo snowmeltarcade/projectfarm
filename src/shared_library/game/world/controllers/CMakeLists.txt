@@ -1,0 +1,12 @@
+target_sources(
+    "${SHARED_LIBRARY_PROJECT_NAME}"
+    PRIVATE
+        master_logic.cpp
+        external_logic.cpp
+        intro_credits.cpp
+    PUBLIC
+        intro_credits.h
+        iworld_controller.h
+        master_logic.h
+        external_logic.h
+)

@@ -3,15 +3,15 @@
 
 #include <memory>
 
-#include "iworld_input_source.h"
+#include "controllers/iworld_controller.h"
 
 namespace projectfarm::shared::game::world
 {
     class World final
     {
     public:
-        World(std::unique_ptr<IWorldInputSource> inputSource)
-            : _inputSource(std::move(inputSource))
+        World(std::unique_ptr<controllers::IController> controller)
+            : _controller(std::move(controller))
         {}
         ~World()
         {
@@ -21,7 +21,7 @@ namespace projectfarm::shared::game::world
         World(World&& world) = default;
 
     private:
-        std::unique_ptr<IWorldInputSource> _inputSource;
+        std::unique_ptr<controllers::IController> _controller;
 
         void Shutdown();
     };

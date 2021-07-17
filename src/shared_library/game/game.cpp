@@ -1,7 +1,7 @@
 #include "game.h"
 #include "api/logging/logging.h"
-#include "world/external_input_source.h"
-#include "world/master_logic_input_source.h"
+#include "world/controllers/intro_credits.h"
+#include "world/controllers/master_logic.h"
 
 using namespace std::literals;
 
@@ -52,14 +52,14 @@ namespace projectfarm::shared::game
         if (this->_isClient)
         {
             // the client only has the one world, which is setup by whatever it receives from the server
-            world::World world(std::make_unique<world::ExternalInputSource>());
+            world::World world(std::make_unique<world::controllers::IntroCredits>());
 
             this->_worlds.emplace_back(std::move(world));
         }
         else
         {
             // the server has all worlds
-            world::World world(std::make_unique<world::MasterLogicInputSource>());
+            world::World world(std::make_unique<world::controllers::MasterLogic>());
 
             this->_worlds.emplace_back(std::move(world));
         }
