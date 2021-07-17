@@ -6,14 +6,15 @@
 #include <future>
 
 #include "systems/isystem.h"
+#include "components/icomponent_accessor.h"
 
 namespace projectfarm::shared::game::world::ecs
 {
-    class ECS final
+    class ECS final : public components::IComponentAccessor
     {
     public:
         ECS() = default;
-        ~ECS()
+        ~ECS() override
         {
             this->Shutdown();
         }
@@ -26,6 +27,10 @@ namespace projectfarm::shared::game::world::ecs
         }
 
         void RunSystems() noexcept;
+
+        void ReadComponents() noexcept override;
+
+        void WriteComponents() noexcept override;
 
     private:
         std::vector<std::unique_ptr<systems::ISystem>> _systems;

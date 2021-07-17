@@ -4,7 +4,7 @@ target_sources(
         ecs.cpp
     PUBLIC
         ecs.h
-        iecs_component.h
 )
 
 add_subdirectory("systems")
+add_subdirectory("components")

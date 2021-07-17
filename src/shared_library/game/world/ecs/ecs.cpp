@@ -16,6 +16,14 @@ namespace projectfarm::shared::game::world::ecs
         api::logging::Log("Started ECS systems.");
     }
 
+    void ECS::ReadComponents() noexcept
+    {
+    }
+
+    void ECS::WriteComponents() noexcept
+    {
+    }
+
     void ECS::Shutdown() noexcept
     {
         api::logging::Log("Waiting for ECS systems to stop...");

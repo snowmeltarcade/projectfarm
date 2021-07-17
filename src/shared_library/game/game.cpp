@@ -73,6 +73,9 @@ namespace projectfarm::shared::game
             auto renderSystem = std::make_unique<world::ecs::systems::Render>();
             world.AddECSSystem(std::move(renderSystem));
 
+            // add cameras...
+            // add render targets...
+
             this->_worlds.emplace_back(std::move(world));
         }
         else
