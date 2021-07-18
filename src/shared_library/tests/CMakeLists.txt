@@ -51,6 +51,7 @@ add_subdirectory("time")
 add_subdirectory("markdown")
 add_subdirectory("css")
 add_subdirectory("test_data")
+add_subdirectory("concurrency")
 
 set("TEST_DATA_DIRECTORY" "${CMAKE_CURRENT_LIST_DIR}")
 
