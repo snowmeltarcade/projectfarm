@@ -1,10 +1,8 @@
 #ifndef PROJECTFARM_CHANNEL_H
 #define PROJECTFARM_CHANNEL_H
 
-#include <string>
-#include <unordered_map>
 #include <vector>
-#include <mutex>
+#include <shared_mutex>
 
 namespace projectfarm::shared::concurrency
 {
@@ -14,34 +12,43 @@ namespace projectfarm::shared::concurrency
     {
     public:
         // this pushes a copy of `values` into the channel
-        static void Push(const std::string& key, T value) noexcept
+        void Push(T value) noexcept
         {
-            std::scoped_lock lock(channel::_mutex);
+            std::unique_lock lock(this->_mutex);
 
-            channel::_values[key].emplace_back(std::move(value));
+            this->_values.emplace_back(std::move(value));
         }
 
         [[nodiscard]]
         // this moves all values in the channel to the caller
-        static std::vector<T> GetAll(const std::string& key) noexcept
+        std::vector<T> GetAll() noexcept
         {
-            std::scoped_lock lock(channel::_mutex);
+            std::unique_lock lock(this->_mutex);
 
             std::vector<T> values;
 
-            for (auto& value : channel::_values[key])
+            for (auto& value : this->_values)
             {
                 values.template emplace_back(std::move(value));
             }
 
-            channel::_values[key].clear();
+            this->_values.clear();
 
+            // this will be a move due to RVO
             return values;
         }
 
+        [[nodiscard]]
+        bool HasValues() const noexcept
+        {
+            std::shared_lock lock(this->_mutex);
+
+            return !this->_values.empty();
+        }
+
     private:
-        static std::mutex _mutex;
-        static std::unordered_map<std::string, std::vector<T>> _values;
+        mutable std::shared_mutex _mutex;
+        std::vector<T> _values;
     };
 }
 
