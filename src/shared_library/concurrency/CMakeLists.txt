@@ -1,8 +1,9 @@
 target_sources(
     "${SHARED_LIBRARY_PROJECT_NAME}"
     PRIVATE
-        logging.cpp
+        channel.cpp
+        state.cpp
     PUBLIC
-        logging.h
-        log_levels.h
+        channel.h
+        state.h
 )
