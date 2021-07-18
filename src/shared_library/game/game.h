@@ -30,6 +30,7 @@ namespace projectfarm::shared::game
         std::string _name;
 
         std::vector<world::World> _worlds;
+        std::vector<std::future<void>> _worldPromises;
 
         void Shutdown() noexcept;
 

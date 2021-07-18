@@ -20,6 +20,18 @@ int main(int, char*[])
     shared::game::Game server(false, "server");
     shared::game::Game client(true, "client");
 
+    if (!server.Initialize())
+    {
+        shared::api::logging::Log("Failed to initialize server");
+        return 1;
+    }
+
+    if (!client.Initialize())
+    {
+        shared::api::logging::Log("Failed to initialize client");
+        return 1;
+    }
+
     auto serverPromise = std::async(std::launch::async, &shared::game::Game::Run, &server);
     auto clientPromise = std::async(std::launch::async, &shared::game::Game::Run, &client);
 

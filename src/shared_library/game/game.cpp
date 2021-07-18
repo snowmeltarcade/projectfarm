@@ -5,6 +5,8 @@
 #include "world/controllers/intro_credits.h"
 #include "world/controllers/master_logic.h"
 #include "world/ecs/systems/render.h"
+#include "concurrency_keys.h"
+#include "concurrency/state.h"
 
 using namespace std::literals;
 
@@ -31,24 +33,21 @@ namespace projectfarm::shared::game
     {
         this->Log("Running game...");
 
-        // this must be run on the same thread as run, so do this here
-        if (!this->Initialize())
-        {
-            this->Log("Failed to initialize.");
-            return;
-        }
+        concurrency::state::SetBool(ConcurrencyKeyRunning, true);
 
-        std::vector<std::future<void>> worldPromises;
+        this->_worldPromises.clear();
 
         for (auto& world : this->_worlds)
         {
             auto promise = std::async(std::launch::async, &world::World::Run, &world);
-            worldPromises.emplace_back(std::move(promise));
+            this->_worldPromises.emplace_back(std::move(promise));
         }
 
-        for (auto& promise : worldPromises)
+        concurrency::state::SetBool(ConcurrencyKeyRunning, false);
+
+        while (concurrency::state::GetBool(ConcurrencyKeyRunning))
         {
-            promise.wait();
+            std::this_thread::yield();
         }
 
         this->Log("Finished running game.");
@@ -57,6 +56,13 @@ namespace projectfarm::shared::game
     void Game::Shutdown() noexcept
     {
         this->Log("Shutting down game...");
+
+        for (auto& promise : this->_worldPromises)
+        {
+            promise.wait();
+        }
+
+        this->_worldPromises.clear();
 
         this->Log("Shut down game.");
     }
