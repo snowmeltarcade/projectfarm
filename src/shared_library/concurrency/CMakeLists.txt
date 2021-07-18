@@ -1,0 +1,9 @@
+target_sources(
+    "${SHARED_LIBRARY_PROJECT_NAME}"
+    PRIVATE
+        channel.cpp
+        state.cpp
+    PUBLIC
+        channel.h
+        state.h
+)
