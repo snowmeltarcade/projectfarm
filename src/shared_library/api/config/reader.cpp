@@ -4,6 +4,7 @@
 #include "reader.h"
 #include "nlohmann/json.hpp"
 #include "api/logging/logging.h"
+#include "utils/util.h"
 
 using namespace std::literals;
 
@@ -40,7 +41,8 @@ namespace projectfarm::shared::api::config
                 }
                 else if (value.is_number_float())
                 {
-                    item.Value = std::to_string(value.get<float>());
+                    // `std::to_string` will pad floats with '0'
+                    item.Value = pfu::rtrim(std::to_string(value.get<float>()), '0');
                 }
                 else
                 {
