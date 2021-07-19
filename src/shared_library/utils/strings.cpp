@@ -4,20 +4,42 @@
 
 namespace projectfarm::shared::utils
 {
-    std::string GetCharactersToTrim() noexcept
+    std::string GetCharactersToTrim(char c) noexcept
     {
         const static std::string charactersToTrim = " \n\t\v\r";
-        return charactersToTrim;
+
+        if (c == '\0')
+        {
+            return charactersToTrim;
+        }
+        else
+        {
+            // std::string has no constructor for `char`
+            std::string s;
+            s += c;
+            return s;
+        }
     }
 
-	std::string trim(std::string_view s) noexcept
+    std::string trim(std::string_view s) noexcept
+    {
+        return rtrim(ltrim(s));
+    }
+
+	std::string trim(std::string_view s, char c) noexcept
 	{
-		return rtrim(ltrim(s));
+		return rtrim(ltrim(s, c), c);
 	}
 
-	std::string ltrim(std::string_view s) noexcept
+    std::string ltrim(std::string_view s) noexcept
+    {
+        auto value = ltrim(s, '\0');
+        return value;
+    }
+
+	std::string ltrim(std::string_view s, char c) noexcept
 	{
-		auto i = s.find_first_not_of(GetCharactersToTrim());
+		auto i = s.find_first_not_of(GetCharactersToTrim(c));
 
 		// we must be all whitespace
 		if (i == std::string::npos)
@@ -31,18 +53,24 @@ namespace projectfarm::shared::utils
 
 	std::string rtrim(std::string_view s) noexcept
 	{
-		auto i = s.find_last_not_of(GetCharactersToTrim()) + 1;
+        auto value = rtrim(s, '\0');
+        return value;
+	}
 
-		if (i == std::string::npos ||
-			i >= s.length())
+    std::string rtrim(std::string_view s, char c) noexcept
+    {
+        auto i = s.find_last_not_of(GetCharactersToTrim(c)) + 1;
+
+        if (i == std::string::npos ||
+            i >= s.length())
         {
             return std::string(s);
         }
 
-		s.remove_suffix(s.length() - i);
+        s.remove_suffix(s.length() - i);
 
-		return std::string(s);
-	}
+        return std::string(s);
+    }
 
 	std::string tolower(std::string_view s) noexcept
 	{

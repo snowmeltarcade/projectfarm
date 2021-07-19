@@ -11,6 +11,11 @@ namespace projectfarm::shared::utils
 	std::string trim(std::string_view s) noexcept;
 	std::string ltrim(std::string_view s) noexcept;
 	std::string rtrim(std::string_view s) noexcept;
+
+    std::string trim(std::string_view s, char c) noexcept;
+    std::string ltrim(std::string_view s, char c) noexcept;
+    std::string rtrim(std::string_view s, char c) noexcept;
+
 	std::string tolower(std::string_view s) noexcept;
 	std::string toupper(std::string_view s) noexcept;
 
