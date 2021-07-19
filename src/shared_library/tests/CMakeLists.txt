@@ -42,6 +42,7 @@ if (WIN32)
 	set_property(TARGET "${SHARED_LIBRARY_TEST_PROJECT_NAME}" PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded")
 endif()
 
+add_subdirectory("api")
 add_subdirectory("math")
 add_subdirectory("scripts")
 add_subdirectory("utils")
