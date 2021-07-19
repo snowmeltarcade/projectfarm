@@ -54,6 +54,15 @@ TEST_CASE("trim - string with whitespace at beginning and end - returns trimmed 
     REQUIRE(res == expected);
 }
 
+TEST_CASE("trim - custom character - trims custom character", "[strings]")
+{
+    auto s = "0000text00000";
+    auto res = trim(s, '0');
+
+    auto expected = "text";
+    REQUIRE(res == expected);
+}
+
 /*********************************************
  * ltrim
  ********************************************/
@@ -83,6 +92,15 @@ TEST_CASE("ltrim - string with whitespace at beginning and end - returns left tr
     REQUIRE(res == expected);
 }
 
+TEST_CASE("ltrim - custom character - trims custom character", "[strings]")
+{
+    auto s = "00000text";
+    auto res = ltrim(s, '0');
+
+    auto expected = "text";
+    REQUIRE(res == expected);
+}
+
 /*********************************************
  * rtrim
  ********************************************/
@@ -109,6 +127,15 @@ TEST_CASE("rtrim - string with whitespace at beginning and end - returns right t
     auto res = rtrim(s);
 
     auto expected = "    my text";
+    REQUIRE(res == expected);
+}
+
+TEST_CASE("rtrim - custom character - trims custom character", "[strings]")
+{
+    auto s = "text00000";
+    auto res = rtrim(s, '0');
+
+    auto expected = "text";
     REQUIRE(res == expected);
 }
 
