@@ -13,3 +13,9 @@ std::filesystem::path GetCSSFilePath(std::filesystem::path fileName)
     auto path = CurrentWorkingDirectory / "../../src/shared_library/tests/test_data/css/" / fileName;
     return path.lexically_normal();
 }
+
+std::filesystem::path GetConfigFilePath(std::filesystem::path fileName)
+{
+    auto path = CurrentWorkingDirectory / "../../src/shared_library/tests/test_data/config/" / fileName;
+    return path.lexically_normal();
+}

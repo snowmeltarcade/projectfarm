@@ -9,4 +9,6 @@ std::filesystem::path GetScriptingFilePath(std::filesystem::path fileName);
 
 std::filesystem::path GetCSSFilePath(std::filesystem::path fileName);
 
+std::filesystem::path GetConfigFilePath(std::filesystem::path fileName);
+
 #endif
