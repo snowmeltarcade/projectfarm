@@ -5,7 +5,7 @@
 #include "platform/platform_id.h"
 #include "api/logging/logging.h"
 #include "game/game.h"
-#include "api/windowing/console.h"
+#include "api/windowing/window.h"
 
 using namespace projectfarm::shared;
 using namespace projectfarm::shared::api;
@@ -19,20 +19,8 @@ int main(int, char*[])
     logging::Log("Project Version: "s + PROJECT_VERSION);
 #endif
 
-    game::Game server(false, "server", std::make_unique<windowing::Console>());
-    game::Game client(true, "client", std::make_unique<windowing::Console>());
-
-    if (!server.Initialize())
-    {
-        logging::Log("Failed to initialize server");
-        return 1;
-    }
-
-    if (!client.Initialize())
-    {
-        logging::Log("Failed to initialize client");
-        return 1;
-    }
+    game::Game server(false, "server", std::make_unique<windowing::Window>());
+    game::Game client(true, "client", std::make_unique<windowing::Window>());
 
     auto serverPromise = std::async(std::launch::async, &game::Game::Run, &server);
     auto clientPromise = std::async(std::launch::async, &game::Game::Run, &client);

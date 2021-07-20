@@ -5,8 +5,19 @@
 
 namespace projectfarm::shared::api::windowing
 {
-    class Console : public IWindow
+    class Console final : public IWindow
     {
+    public:
+        Console() = default;
+        ~Console() override = default;
+        Console(const Console&) = delete;
+        Console(Console&&) = default;
+
+        [[nodiscard]]
+        bool LoadFromConfig(const std::filesystem::path& configPath) noexcept override
+        {
+            return true;
+        };
     };
 }
 

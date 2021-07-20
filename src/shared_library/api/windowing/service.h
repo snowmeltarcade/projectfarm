@@ -6,8 +6,19 @@
 namespace projectfarm::shared::api::windowing
 {
     // used for running as a service/daemon
-    class Service : public IWindow
+    class Service final : public IWindow
     {
+    public:
+        Service() = default;
+        ~Service() override = default;
+        Service(const Service&) = delete;
+        Service(Service&&) = default;
+
+        [[nodiscard]]
+        bool LoadFromConfig(const std::filesystem::path& configPath) noexcept override
+        {
+            return true;
+        };
     };
 }
 

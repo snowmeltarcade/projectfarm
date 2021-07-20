@@ -1,4 +1,5 @@
 #include <future>
+#include <filesystem>
 
 #include "game.h"
 #include "api/logging/logging.h"
@@ -18,6 +19,12 @@ namespace projectfarm::shared::game
 
         this->Log("Game being created as "s + (this->_isClient ? "client" : "server"));
 
+        if (!this->InitializeWindow())
+        {
+            this->Log("Failed to initialize window.");
+            return false;
+        }
+
         if (!this->AddWorlds())
         {
             this->Log("Failed to add worlds.");
@@ -32,6 +39,13 @@ namespace projectfarm::shared::game
     void Game::Run() noexcept
     {
         this->Log("Running game...");
+
+        // we want to initialize on the same thread that we will run on
+        if (!this->Initialize())
+        {
+            this->Log("Failed to initialize.");
+            return;
+        }
 
         concurrency::state::SetBool(ConcurrencyKeyRunning, true);
 
@@ -51,6 +65,26 @@ namespace projectfarm::shared::game
         }
 
         this->Log("Finished running game.");
+    }
+
+    bool Game::InitializeWindow() noexcept
+    {
+        if (!this->_window)
+        {
+            this->Log("Window is null.");
+            return false;
+        }
+
+        // TODO: Get from new data provider APi
+        std::filesystem::path configPath = "window.json";
+
+        if (!this->_window->LoadFromConfig(configPath))
+        {
+            this->Log("Failed to load window from config: " + configPath.u8string());
+            return false;
+        }
+
+        return true;
     }
 
     void Game::Shutdown() noexcept

@@ -39,6 +39,9 @@ namespace projectfarm::shared::game
         std::vector<world::World> _worlds;
         std::vector<std::future<void>> _worldPromises;
 
+        [[nodiscard]]
+        bool InitializeWindow() noexcept;
+
         void Shutdown() noexcept;
 
         [[nodiscard]]
