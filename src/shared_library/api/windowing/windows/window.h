@@ -1,6 +1,8 @@
 #ifndef PROJECTFARM_WINDOW_H
 #define PROJECTFARM_WINDOW_H
 
+#include <SDL.h>
+
 #include "iwindow.h"
 
 namespace projectfarm::shared::api::windowing::windows
@@ -11,6 +13,7 @@ namespace projectfarm::shared::api::windowing::windows
         Window() = default;
         ~Window() override
         {
+            this->Shutdown();
         }
 
         Window(const Window&) = delete;
@@ -18,6 +21,12 @@ namespace projectfarm::shared::api::windowing::windows
 
         [[nodiscard]]
         bool LoadFromConfig(const std::filesystem::path& configPath) noexcept override;
+
+    private:
+        SDL_Window* _window {nullptr};
+        SDL_GLContext _context {nullptr};
+
+        void Shutdown() noexcept;
     };
 }
 
