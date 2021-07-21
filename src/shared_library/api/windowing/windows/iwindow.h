@@ -3,7 +3,7 @@
 
 #include <filesystem>
 
-namespace projectfarm::shared::api::windowing
+namespace projectfarm::shared::api::windowing::windows
 {
     class IWindow
     {

@@ -1,22 +1,11 @@
 #include <SDL.h>
 
-#include "window.h"
+#include "system.h"
 #include "api/logging/logging.h"
 
-namespace projectfarm::shared::api::windowing
+namespace projectfarm::shared::api::windowing::system
 {
-    bool Window::LoadFromConfig(const std::filesystem::path& configPath) noexcept
-    {
-        if (!this->SetupSDL())
-        {
-            logging::Log("Failed to setup SDL.");
-            return false;
-        }
-
-        return true;
-    };
-
-    bool Window::SetupSDL() noexcept
+    bool Init() noexcept
     {
         logging::Log("Setting up SDL...");
 
@@ -32,7 +21,7 @@ namespace projectfarm::shared::api::windowing
         return true;
     }
 
-    void Window::ShutdownSDL() noexcept
+    void Shutdown() noexcept
     {
         logging::Log("Shutting down SDL...");
 

@@ -3,7 +3,7 @@
 
 #include "iwindow.h"
 
-namespace projectfarm::shared::api::windowing
+namespace projectfarm::shared::api::windowing::windows
 {
     class Window final : public IWindow
     {
@@ -11,7 +11,6 @@ namespace projectfarm::shared::api::windowing
         Window() = default;
         ~Window() override
         {
-            this->ShutdownSDL();
         }
 
         Window(const Window&) = delete;
@@ -19,12 +18,6 @@ namespace projectfarm::shared::api::windowing
 
         [[nodiscard]]
         bool LoadFromConfig(const std::filesystem::path& configPath) noexcept override;
-
-    private:
-        [[nodiscard]]
-        bool SetupSDL() noexcept;
-
-        void ShutdownSDL() noexcept;
     };
 }
 

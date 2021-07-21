@@ -6,7 +6,7 @@
 #include <string>
 
 #include "world/world.h"
-#include "api/windowing/iwindow.h"
+#include "api/windowing/windows/iwindow.h"
 
 namespace projectfarm::shared::game
 {
@@ -15,7 +15,7 @@ namespace projectfarm::shared::game
     public:
         Game(bool isClient,
              std::string name,
-             std::unique_ptr<api::windowing::IWindow> window) noexcept
+             std::unique_ptr<api::windowing::windows::IWindow> window) noexcept
             : _isClient(isClient),
               _name(std::move(name)),
               _window(std::move(window))
@@ -34,7 +34,7 @@ namespace projectfarm::shared::game
         bool _isClient {true};
         std::string _name;
 
-        std::unique_ptr<api::windowing::IWindow> _window;
+        std::unique_ptr<api::windowing::windows::IWindow> _window;
 
         std::vector<world::World> _worlds;
         std::vector<std::future<void>> _worldPromises;

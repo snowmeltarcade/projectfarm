@@ -3,7 +3,7 @@
 
 #include "iwindow.h"
 
-namespace projectfarm::shared::api::windowing
+namespace projectfarm::shared::api::windowing::windows
 {
     class Console final : public IWindow
     {

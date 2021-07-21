@@ -1,12 +1,9 @@
 target_sources(
     "${SHARED_LIBRARY_PROJECT_NAME}"
     PRIVATE
-        console.cpp
-        service.cpp
-        window.cpp
+        system.cpp
     PUBLIC
-        iwindow.h
-        console.h
-        service.h
-        window.h
+        system.h
 )
+
+add_subdirectory("windows")

@@ -3,7 +3,7 @@
 
 #include "iwindow.h"
 
-namespace projectfarm::shared::api::windowing
+namespace projectfarm::shared::api::windowing::windows
 {
     // used for running as a service/daemon
     class Service final : public IWindow
