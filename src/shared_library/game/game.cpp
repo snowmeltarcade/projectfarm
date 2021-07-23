@@ -6,8 +6,6 @@
 #include "world/controllers/intro_credits.h"
 #include "world/controllers/master_logic.h"
 #include "world/ecs/systems/render.h"
-#include "concurrency_keys.h"
-#include "concurrency/state.h"
 
 using namespace std::literals;
 
@@ -31,24 +29,6 @@ namespace projectfarm::shared::game
             return false;
         }
 
-        this->Log("Initialized game.");
-
-        return true;
-    }
-
-    void Game::Run() noexcept
-    {
-        this->Log("Running game...");
-
-        // we want to initialize on the same thread that we will run on
-        if (!this->Initialize())
-        {
-            this->Log("Failed to initialize.");
-            return;
-        }
-
-        concurrency::state::SetBool(ConcurrencyKeyRunning, true);
-
         this->_worldPromises.clear();
 
         for (auto& world : this->_worlds)
@@ -57,14 +37,19 @@ namespace projectfarm::shared::game
             this->_worldPromises.emplace_back(std::move(promise));
         }
 
-        concurrency::state::SetBool(ConcurrencyKeyRunning, false);
+        this->Log("Initialized game.");
 
-        while (concurrency::state::GetBool(ConcurrencyKeyRunning))
-        {
-            std::this_thread::yield();
-        }
+        return true;
+    }
 
-        this->Log("Finished running game.");
+    bool Game::RunFrame() noexcept
+    {
+        // window message pump
+
+        // process anything else that needs processing, such
+        // as network requests etc...
+
+        return true;
     }
 
     bool Game::InitializeWindow() noexcept

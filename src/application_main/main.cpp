@@ -1,9 +1,11 @@
 #include <iostream>
 #include <future>
+#include <vector>
 
 #include "version.h"
 #include "platform/platform_id.h"
 #include "api/logging/logging.h"
+#include "game/engine.h"
 #include "game/game.h"
 #include "api/windowing/system.h"
 #include "api/windowing/windows/window.h"
@@ -20,22 +22,23 @@ int main(int, char*[])
     logging::Log("Project Version: "s + PROJECT_VERSION);
 #endif
 
-    if (!api::windowing::system::Init())
+    std::vector<game::Game> games;
+    games.emplace_back(false, "server", std::make_unique<windowing::windows::Window>());
+    games.emplace_back(true, "client", std::make_unique<windowing::windows::Window>());
+
+    game::Engine engine(std::move(games));
+
+    if (!engine.Init())
     {
-        logging::Log("Failed to init windowing system.");
+        logging::Log("Failed to init engine.");
         return 1;
     }
 
-    game::Game server(false, "server", std::make_unique<windowing::windows::Window>());
-    game::Game client(true, "client", std::make_unique<windowing::windows::Window>());
-
-    auto serverPromise = std::async(std::launch::async, &game::Game::Run, &server);
-    auto clientPromise = std::async(std::launch::async, &game::Game::Run, &client);
-
-    clientPromise.wait();
-    serverPromise.wait();
-
-    api::windowing::system::Shutdown();
+    if (!engine.Run())
+    {
+        logging::Log("Failed to run engine.");
+        return 1;
+    }
 
     logging::Log("Exiting application...");
 

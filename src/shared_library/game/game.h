@@ -24,11 +24,20 @@ namespace projectfarm::shared::game
         {
             this->Shutdown();
         }
+        Game(const Game&) = delete;
+        Game(Game&&) = default;
 
         [[nodiscard]]
         bool Initialize() noexcept;
 
-        void Run() noexcept;
+        [[nodiscard]]
+        bool RunFrame() noexcept;
+
+        [[nodiscard]]
+        const std::string& GetName() const noexcept
+        {
+            return this->_name;
+        }
 
     private:
         bool _isClient {true};
