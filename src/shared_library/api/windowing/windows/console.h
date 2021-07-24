@@ -17,7 +17,11 @@ namespace projectfarm::shared::api::windowing::windows
         bool LoadFromConfig(const std::filesystem::path& configPath) noexcept override
         {
             return true;
-        };
+        }
+
+        void PumpMessages() override
+        {
+        }
     };
 }
 

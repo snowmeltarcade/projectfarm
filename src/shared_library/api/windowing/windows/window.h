@@ -22,6 +22,8 @@ namespace projectfarm::shared::api::windowing::windows
         [[nodiscard]]
         bool LoadFromConfig(const std::filesystem::path& configPath) noexcept override;
 
+        void PumpMessages() override;
+
     private:
         SDL_Window* _window {nullptr};
         SDL_GLContext _context {nullptr};

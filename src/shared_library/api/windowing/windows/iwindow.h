@@ -15,6 +15,8 @@ namespace projectfarm::shared::api::windowing::windows
 
         [[nodiscard]]
         virtual bool LoadFromConfig(const std::filesystem::path& configPath) noexcept = 0;
+
+        virtual void PumpMessages() = 0;
     };
 }
 

@@ -44,6 +44,7 @@ namespace projectfarm::shared::game
 
     bool Game::RunFrame() noexcept
     {
+        this->_window->PumpMessages();
         // window message pump
 
         // process anything else that needs processing, such

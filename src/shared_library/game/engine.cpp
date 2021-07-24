@@ -12,7 +12,7 @@ namespace projectfarm::shared::game
     {
         logging::Log("Initializing engine...");
 
-        if (!api::windowing::system::Init())
+        if (!windowing::system::Init())
         {
             logging::Log("Failed to init windowing system.");
             return 1;
@@ -51,8 +51,6 @@ namespace projectfarm::shared::game
 
             // render cameras, render targets
             // compose render targets...
-
-            concurrency::state::SetBool(ConcurrencyKeyRunning, false);
         }
 
         logging::Log("Finished running engine.");
