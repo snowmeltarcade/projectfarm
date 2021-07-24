@@ -1,44 +1,46 @@
 #include <iostream>
 #include <future>
+#include <vector>
 
 #include "version.h"
 #include "platform/platform_id.h"
 #include "api/logging/logging.h"
+#include "game/engine.h"
 #include "game/game.h"
+#include "api/windowing/system.h"
+#include "api/windowing/windows/window.h"
 
-using namespace projectfarm;
+using namespace projectfarm::shared;
+using namespace projectfarm::shared::api;
 using namespace std::literals;
 
 int main(int, char*[])
 {
-    shared::api::logging::Log("Starting application...");
+    logging::Log("Starting application...");
 #if !defined(IS_IOS)
-    shared::api::logging::Log("Project Name: "s + PROJECT_NAME);
-    shared::api::logging::Log("Project Version: "s + PROJECT_VERSION);
+    logging::Log("Project Name: "s + PROJECT_NAME);
+    logging::Log("Project Version: "s + PROJECT_VERSION);
 #endif
 
-    shared::game::Game server(false, "server");
-    shared::game::Game client(true, "client");
+    std::vector<game::Game> games;
+    games.emplace_back(false, "server", std::make_unique<windowing::windows::Window>());
+    games.emplace_back(true, "client", std::make_unique<windowing::windows::Window>());
 
-    if (!server.Initialize())
+    game::Engine engine(std::move(games));
+
+    if (!engine.Init())
     {
-        shared::api::logging::Log("Failed to initialize server");
+        logging::Log("Failed to init engine.");
         return 1;
     }
 
-    if (!client.Initialize())
+    if (!engine.Run())
     {
-        shared::api::logging::Log("Failed to initialize client");
+        logging::Log("Failed to run engine.");
         return 1;
     }
 
-    auto serverPromise = std::async(std::launch::async, &shared::game::Game::Run, &server);
-    auto clientPromise = std::async(std::launch::async, &shared::game::Game::Run, &client);
-
-    clientPromise.wait();
-    serverPromise.wait();
-
-    shared::api::logging::Log("Exiting application...");
+    logging::Log("Exiting application...");
 
 	return 0;
 }
