@@ -195,6 +195,20 @@ namespace projectfarm::shared::api::windowing::windows
         }
     }
 
+    bool Window::SetTitle(std::string_view title)
+    {
+        if (!this->_window)
+        {
+            logging::Log("Window is null - cannot set title.");
+            return false;
+        }
+
+        // ensure the title is null terminated
+        SDL_SetWindowTitle(this->_window, std::string(title).c_str());
+
+        return true;
+    }
+
     void Window::Shutdown() noexcept
     {
         if (this->_context)

@@ -1,6 +1,7 @@
 #ifndef PROJECTFARM_IWINDOW_H
 #define PROJECTFARM_IWINDOW_H
 
+#include <string>
 #include <filesystem>
 
 namespace projectfarm::shared::api::windowing::windows
@@ -17,6 +18,9 @@ namespace projectfarm::shared::api::windowing::windows
         virtual bool LoadFromConfig(const std::filesystem::path& configPath) noexcept = 0;
 
         virtual void PumpMessages() = 0;
+
+        [[nodiscard]]
+        virtual bool SetTitle(std::string_view title) = 0;
     };
 }
 

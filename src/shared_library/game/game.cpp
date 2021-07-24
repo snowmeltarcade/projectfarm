@@ -45,7 +45,6 @@ namespace projectfarm::shared::game
     bool Game::RunFrame() noexcept
     {
         this->_window->PumpMessages();
-        // window message pump
 
         // process anything else that needs processing, such
         // as network requests etc...
@@ -67,6 +66,12 @@ namespace projectfarm::shared::game
         if (!this->_window->LoadFromConfig(configPath))
         {
             this->Log("Failed to load window from config: " + configPath.u8string());
+            return false;
+        }
+
+        if (!this->_window->SetTitle(this->_name))
+        {
+            this->Log("Failed to set window title to: " + this->_name);
             return false;
         }
 

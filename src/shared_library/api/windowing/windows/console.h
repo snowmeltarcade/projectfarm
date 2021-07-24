@@ -22,6 +22,12 @@ namespace projectfarm::shared::api::windowing::windows
         void PumpMessages() override
         {
         }
+
+        [[nodiscard]]
+        bool SetTitle(std::string_view title) override
+        {
+            return true;
+        }
     };
 }
 

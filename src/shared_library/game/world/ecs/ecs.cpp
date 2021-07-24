@@ -5,7 +5,7 @@ namespace projectfarm::shared::game::world::ecs
 {
     void ECS::RunSystems() noexcept
     {
-        api::logging::Log("Start ECS systems...");
+        api::logging::Log("Starting ECS systems...");
 
         for (const auto& system : this->_systems)
         {
