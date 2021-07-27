@@ -1,12 +1,11 @@
 #include <future>
+#include <filesystem>
 
 #include "game.h"
 #include "api/logging/logging.h"
 #include "world/controllers/intro_credits.h"
 #include "world/controllers/master_logic.h"
 #include "world/ecs/systems/render.h"
-#include "concurrency_keys.h"
-#include "concurrency/state.h"
 
 using namespace std::literals;
 
@@ -18,22 +17,17 @@ namespace projectfarm::shared::game
 
         this->Log("Game being created as "s + (this->_isClient ? "client" : "server"));
 
+        if (!this->InitializeWindow())
+        {
+            this->Log("Failed to initialize window.");
+            return false;
+        }
+
         if (!this->AddWorlds())
         {
             this->Log("Failed to add worlds.");
             return false;
         }
-
-        this->Log("Initialized game.");
-
-        return true;
-    }
-
-    void Game::Run() noexcept
-    {
-        this->Log("Running game...");
-
-        concurrency::state::SetBool(ConcurrencyKeyRunning, true);
 
         this->_worldPromises.clear();
 
@@ -43,14 +37,45 @@ namespace projectfarm::shared::game
             this->_worldPromises.emplace_back(std::move(promise));
         }
 
-        concurrency::state::SetBool(ConcurrencyKeyRunning, false);
+        this->Log("Initialized game.");
 
-        while (concurrency::state::GetBool(ConcurrencyKeyRunning))
+        return true;
+    }
+
+    bool Game::RunFrame() noexcept
+    {
+        this->_window->PumpMessages();
+
+        // process anything else that needs processing, such
+        // as network requests etc...
+
+        return true;
+    }
+
+    bool Game::InitializeWindow() noexcept
+    {
+        if (!this->_window)
         {
-            std::this_thread::yield();
+            this->Log("Window is null.");
+            return false;
         }
 
-        this->Log("Finished running game.");
+        // TODO: Get from new data provider APi
+        std::filesystem::path configPath = "window.json";
+
+        if (!this->_window->LoadFromConfig(configPath))
+        {
+            this->Log("Failed to load window from config: " + configPath.u8string());
+            return false;
+        }
+
+        if (!this->_window->SetTitle(this->_name))
+        {
+            this->Log("Failed to set window title to: " + this->_name);
+            return false;
+        }
+
+        return true;
     }
 
     void Game::Shutdown() noexcept
