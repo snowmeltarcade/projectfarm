@@ -4,6 +4,5 @@ target_sources(
             data_provider.cpp
         PUBLIC
             data_provider.h
-            consume_data_provider.h
             data_provider_locations.h
 )
